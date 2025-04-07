@@ -17,7 +17,7 @@ public class RoleController : Controller
         _roleManager = roleManager;
         _userManager = userManager;
     }
-    
+
     [HttpPost("AddRole")]
     public async Task<IActionResult> AddRole(string roleName)
     {
@@ -68,5 +68,81 @@ public class RoleController : Controller
         }
 
         return StatusCode(500, "An error occurred while assigning the role.");
+    }
+
+    [HttpPut("UpdateRole")]
+    public async Task<IActionResult> UpdateRole(string oldRoleName, string newRoleName)
+    {
+        if (string.IsNullOrWhiteSpace(oldRoleName) || string.IsNullOrWhiteSpace(newRoleName))
+        {
+            return BadRequest("Both old and new role names are required.");
+        }
+
+        var role = await _roleManager.FindByNameAsync(oldRoleName);
+        if (role == null)
+        {
+            return NotFound("Original role does not exist.");
+        }
+
+        role.Name = newRoleName;
+        var result = await _roleManager.UpdateAsync(role);
+        if (result.Succeeded)
+        {
+            return Ok($"Role renamed from '{oldRoleName}' to '{newRoleName}'.");
+        }
+
+        return StatusCode(500, "An error occurred while updating the role.");
+    }
+
+    [HttpDelete("DeleteRole")]
+    public async Task<IActionResult> DeleteRole(string roleName)
+    {
+        if (string.IsNullOrWhiteSpace(roleName))
+        {
+            return BadRequest("Role name is required.");
+        }
+
+        var role = await _roleManager.FindByNameAsync(roleName);
+        if (role == null)
+        {
+            return NotFound("Role not found.");
+        }
+
+        var result = await _roleManager.DeleteAsync(role);
+        if (result.Succeeded)
+        {
+            return Ok($"Role '{roleName}' deleted successfully.");
+        }
+
+        return StatusCode(500, "An error occurred while deleting the role.");
+    }
+
+    [HttpPost("RemoveRoleFromUser")]
+    public async Task<IActionResult> RemoveRoleFromUser(string userEmail, string roleName)
+    {
+        if (string.IsNullOrWhiteSpace(userEmail) || string.IsNullOrWhiteSpace(roleName))
+        {
+            return BadRequest("User email and role name are required.");
+        }
+
+        var user = await _userManager.FindByEmailAsync(userEmail);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        var roleExists = await _roleManager.RoleExistsAsync(roleName);
+        if (!roleExists)
+        {
+            return NotFound("Role does not exist.");
+        }
+
+        var result = await _userManager.RemoveFromRoleAsync(user, roleName);
+        if (result.Succeeded)
+        {
+            return Ok($"Role '{roleName}' removed from user '{userEmail}'.");
+        }
+
+        return StatusCode(500, "An error occurred while removing the role.");
     }
 }
