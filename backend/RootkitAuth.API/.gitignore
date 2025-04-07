@@ -32,3 +32,12 @@ _UpgradeReport_Files/
 Thumbs.db
 Desktop.ini
 .DS_Store
+.name
+indexLayout.xml
+.idea/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/assetWizard.xml
+.idea/assetWizard.xml.lck
