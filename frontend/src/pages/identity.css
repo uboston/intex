@@ -1,31 +1,67 @@
 body {
-  background: #007bff;
-  background: linear-gradient(to right, #0062e6, #33aeff);
+  background: url('/movieimage.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  font-weight: 500;
+  font-family: Arial, sans-serif;
 }
+
 
 .btn-login {
   font-size: 0.9rem;
   letter-spacing: 0.05rem;
   padding: 0.75rem 1rem;
+  background-color: #e50914;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+
+.btn-login:hover {
+  background-color: #fd1c27;
 }
 
 .btn-google {
-  color: white !important;
+  color: #fff !important;
   background-color: #ea4335 !important;
 }
 
 .btn-facebook {
-  color: white !important;
+  color: #fff !important;
   background-color: #3b5998 !important;
 }
 
 .card-body {
   min-width: 400px;
+  background: rgba(51, 51, 51, 0.85); /* semi-transparent */
+  padding: 1rem;
+  border-radius: 5px;
 }
 
+
 .error {
-  color: red;
+  color: #e50914;
   font-weight: bold;
   text-align: center;
   margin-top: 10px;
+}
+label,
+.form-check-label {
+  color: #fff;
+}
+
+.card-title {
+  color: #fff;
+}
+input.form-control {
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+input.form-control:focus {
+  background-color: #111;
+  color: #fff;
+  border-color: #e50914;
+  box-shadow: none;
 }

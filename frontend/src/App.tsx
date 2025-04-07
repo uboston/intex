@@ -1,5 +1,5 @@
 import './App.css';
-import CompetitionPage from './pages/CompetitionPage';
+import CompetitionPage from './pages/MoviesPage';
 import {
   HashRouter as Router,
   Routes,
