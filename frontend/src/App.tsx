@@ -8,23 +8,25 @@ import {
 } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import MovieDetailPage from './pages/MovieDetailPage';
 
 function App() {
   return (
     <>
-        <Router>
-          <Routes>
-            <Route path="/" element={<CompetitionPage />} />
-            <Route path="/competition" element={<CompetitionPage />} />
-            {/* <Route
+      <Router>
+        <Routes>
+          <Route path="/" element={<CompetitionPage />} />
+          <Route path="/competition" element={<CompetitionPage />} />
+          {/* <Route
               path="/product/:rootbeerName/:rootbeerId/:currentRetailPrice"
               element={<ProductPage />}
             /> */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/signin-google" element={<Navigate to="/" />} />
-          </Routes>
-        </Router>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/detail" element={<MovieDetailPage />} />
+          <Route path="/signin-google" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
     </>
   );
 }
