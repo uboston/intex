@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 
-namespace RootkitAuth.API.Controllers;
+namespace CineNiche.API.Controllers;
 
 [Route("[controller]")]
 [ApiController]

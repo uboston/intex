@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace RootkitAuth.API.Data;
+namespace CineNiche.API.Data;
 
 public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {

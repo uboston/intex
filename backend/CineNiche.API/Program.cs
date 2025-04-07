@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using RootkitAuth.API.Data;
-using RootkitAuth.API.Services;
+using CineNiche.API.Data;
+using CineNiche.API.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add databases
-builder.Services.AddDbContext<CompetitionDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("CompetitionConnection")));
+builder.Services.AddDbContext<MoviesContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("MoviesConnection")));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>  
     options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
