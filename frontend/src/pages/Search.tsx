@@ -1,43 +1,51 @@
 // src/pages/Search.tsx
 import React, { useState } from 'react';
-import axios from 'axios';
 import Slider from 'react-slick';
+import { fetchMovies } from '../api/MoviesAPI';
 import './Search.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
+// Define an interface for your movie objects
 interface Movie {
   ShowId: string;
   Title: string;
   Poster?: string;
-  // add more movie fields if needed
+  // Add additional fields if necessary
 }
 
 const Search: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  // Triggered when the search form is submitted.
+  // Handle search form submission
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null);
     try {
-      // Replace the URL below with the actual endpoint your backend provides.
-      const response = await axios.get(
-        `https://localhost:5000/Movies/Search?title=${encodeURIComponent(searchQuery)}`
+      // Fetch movies from page 1 with a large page size (e.g., 100)
+      const data = await fetchMovies(1, 100, []);
+      // The helper returns an object with a "movies" property (adjust if necessary)
+      const allMovies: Movie[] = data.movies;
+      // Filter movies by Title (case-insensitive)
+      const filteredMovies = allMovies.filter((movie) =>
+        movie.Title?.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      // Assume the endpoint returns an object with a Movies property (an array of movies)
-      setMovies(response.data.Movies);
-    } catch (error) {
-      console.error('Error searching for movies:', error);
+      // Limit to 10 results maximum
+      setMovies(filteredMovies.slice(0, 10));
+    } catch (err: any) {
+      console.error('Error searching for movies:', err);
+      setError(err.message);
     }
   };
 
-  // Slider settings – you can tweak these settings as needed.
+  // Settings for the react-slick carousel
   const sliderSettings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 3, // for wider screens; adjust based on design
+    slidesToShow: 3,
     slidesToScroll: 1,
     responsive: [
       {
@@ -59,12 +67,16 @@ const Search: React.FC = () => {
             placeholder="Search movies by title..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            className="form-control"
           />
-          <button type="submit">Search</button>
+          <button type="submit" className="btn-search">
+            Search
+          </button>
         </form>
+        {error && <p className="error-message">Error: {error}</p>}
       </header>
 
-      {movies.length > 0 && (
+      {movies.length > 0 ? (
         <section className="carousel-section">
           <Slider {...sliderSettings}>
             {movies.map((movie) => (
@@ -83,6 +95,9 @@ const Search: React.FC = () => {
             ))}
           </Slider>
         </section>
+      ) : (
+        // Optionally display a message if no movies are found
+        <p className="no-results">No movies found</p>
       )}
     </div>
   );
