@@ -6,6 +6,15 @@
   font-family: Arial, sans-serif;
 } */
 
+/* Re‑enable the full‑page background wrapper */
+.login-background {
+  background: url('/movieimage.jpg') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  display: flex; /* center the inner container */
+  align-items: center;
+  justify-content: center;
+}
 .btn-login {
   font-size: 0.9rem;
   letter-spacing: 0.05rem;
@@ -30,7 +39,8 @@
   background-color: #3b5998 !important;
 }
 
-.card-body {
+/* Only make the login page card semi‑transparent */
+.login-page .card-body {
   min-width: 400px;
   background: rgba(51, 51, 51, 0.85); /* semi-transparent */
   padding: 1rem;
@@ -43,6 +53,7 @@
   text-align: center;
   margin-top: 10px;
 }
+
 label,
 .form-check-label {
   color: #fff;
@@ -51,6 +62,7 @@ label,
 .card-title {
   color: #fff;
 }
+
 input.form-control {
   background-color: #222;
   color: #fff;
@@ -66,7 +78,11 @@ input.form-control:focus {
 
 /* ===== MoviesPage Specific Styles ===== */
 .movies-page {
-  background: linear-gradient(to bottom, #000000, #333333); /* black to grey ombre */
+  background: linear-gradient(
+    to bottom,
+    #000000,
+    #333333
+  ); /* black to grey ombre */
   min-height: 100vh;
   padding: 1rem;
 }
