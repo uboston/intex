@@ -1,7 +1,20 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"], // Supports DOM and modern JavaScript features.
+    "allowJs": true, // Allows .js files (if you're mixing JS and TS).
+    "skipLibCheck": true, // Skips type checking of declaration files.
+    "esModuleInterop": true, // Enables default imports for commonjs modules.
+    "allowSyntheticDefaultImports": true, // Allows default imports even if there's no default export.
+    "strict": true, // Enables all strict type-checking options.
+    "forceConsistentCasingInFileNames": true, // Enforces case-sensitive file names.
+    "module": "ESNext", // Modern module system (could also be "commonjs" if preferred).
+    "moduleResolution": "node", // Tells TypeScript how to look for modules.
+    "resolveJsonModule": true, // Supports importing JSON files.
+    "isolatedModules": true, // Ensures each file is treated as a separate module.
+    "noEmit": true, // Prevents emitting output (useful when using a bundler like webpack or Vite).
+    "jsx": "react-jsx" // Use the new JSX transform (React 17+); otherwise, use "react".
+  },
+  "include": ["src"], // Includes all files in the src directory.
+  "exclude": ["node_modules"] // Excludes dependencies and other external modules.
 }

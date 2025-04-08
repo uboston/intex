@@ -1,11 +1,10 @@
-body {
+/* body {
   background: url('/movieimage.jpg') no-repeat center center fixed;
   background-size: cover;
   color: #fff;
   font-weight: 500;
   font-family: Arial, sans-serif;
-}
-
+} */
 
 .btn-login {
   font-size: 0.9rem;
@@ -38,7 +37,6 @@ body {
   border-radius: 5px;
 }
 
-
 .error {
   color: #e50914;
   font-weight: bold;
@@ -66,6 +64,7 @@ input.form-control:focus {
   box-shadow: none;
 }
 
+<<<<<<< HEAD
 /* ===== MoviesPage Specific Styles ===== */
 .movies-page {
   background: linear-gradient(to bottom, #000000, #333333); /* black to grey ombre */
@@ -98,3 +97,13 @@ input.form-control:focus {
 }
 
 /* ===== End MoviesPage Specific Styles ===== */
+=======
+/* .login-background {
+  background: url('/movieimage.jpg') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+>>>>>>> rbac

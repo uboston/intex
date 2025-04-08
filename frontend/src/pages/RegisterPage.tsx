@@ -47,20 +47,35 @@ function Register() {
           password: password,
         }),
       })
-        //.then((response) => response.json())
-        .then((data) => {
-          // handle success or error from the server
-          console.log(data);
-          if (data.ok) setError('Successful registration. Please log in.');
-          else setError('Error registering.');
-        })
-        .catch((error) => {
-          // handle network error
-          console.error(error);
-          setError('Error registering.');
-        });
+      .then(async (response) => {
+        let data = null;
+        try {
+          // Only try to parse JSON if there's content
+          const text = await response.text();
+          data = text ? JSON.parse(text) : null;
+        } catch (err) {
+          console.warn('Response is not valid JSON:', err);
+        }
+      
+        if (response.ok) {
+          setError('');
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+          navigate('/login');
+        } else {
+          const errors = data?.errors;
+          if (errors) {
+            const messages = Object.values(errors).flat().join(' ');
+            setError(messages);
+          } else {
+            setError('Error registering.');
+          }
+        }
+      })
     }
   };
+
 
   return (
     <div className="container">

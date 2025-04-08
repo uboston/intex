@@ -6,9 +6,6 @@ namespace CineNiche.API.Data;
 
 public partial class MoviesContext : DbContext
 {
-    public MoviesContext()
-    {
-    }
 
     public MoviesContext(DbContextOptions<MoviesContext> options)
         : base(options)
@@ -21,8 +18,14 @@ public partial class MoviesContext : DbContext
 
     public virtual DbSet<MoviesUser> MoviesUsers { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite("Data Source=Movies.sqlite");
+    public virtual DbSet<RecommenderContent> recommender_content { get; set; }
+
+    public virtual DbSet<RecommenderCollabItem> recommender_collab_item { get; set; }
+
+    public virtual DbSet<RecommenderCollabUser> recommender_collab_user { get; set; }
+
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //     => optionsBuilder.UseSqlite("Data Source=Movies.sqlite");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
