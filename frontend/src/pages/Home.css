@@ -6,7 +6,7 @@
 }
 
 /* Full‑page dark overlay */
-.background_img::before {
+/*body::before {
   content: '';
   position: fixed;
   top: 0;
