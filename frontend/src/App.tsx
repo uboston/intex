@@ -10,6 +10,8 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Privacy from './pages/Privacy'; // Import the Privacy page
 import MovieDetailPage from './pages/MovieDetailPage';
+import CookieConsentBanner from './components/CookieConsentBanner';
+
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/detail" element={<MovieDetailPage />} />
         </Routes>
+        <CookieConsentBanner />
       </Router>
     </>
   );

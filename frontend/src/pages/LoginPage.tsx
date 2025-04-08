@@ -49,6 +49,10 @@ function LoginPage() {
   //   };
   // }, []);
 
+  const handleFacebookLogin = () => {
+    // Redirect to the backend endpoint that initiates the Facebook challenge.
+    window.location.href = 'https://localhost:5000/external-login/facebook';
+  };
   // handle change events for input fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, checked, value } = e.target;
@@ -180,6 +184,7 @@ function LoginPage() {
               <div className="d-grid mb-2">
                 <button
                   className="btn btn-facebook btn-login text-uppercase fw-bold"
+                  onClick={handleFacebookLogin}
                   type="button"
                 >
                   <i className="fa-brands fa-facebook-f me-2"></i> Sign in with
