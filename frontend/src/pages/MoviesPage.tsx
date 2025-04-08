@@ -1,40 +1,44 @@
-import MovieCarousel from '../components/MovieCarousel'; // Assumes Carousel.tsx exports MovieCarousel
+import MovieCarousel from '../components/MovieCarousel'; // MovieCarousel now accepts a 'genre' prop for filtering/display purposes
 import Header from '../components/Header';
 import { useState } from 'react';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';
+import './MoviesPage.css';  // Import the CSS file from the same folder
+
+const genres = ["Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance"];
 
 function MoviePage() {
-  // If you need state for filtering or other sidebar functionality, you can keep it.
+  // State for optional sidebar/filter functionality (if needed)
   const [selectedContainers, setSelectedContainers] = useState<string[]>([]);
 
   return (
     <AuthorizeView>
-      <div className="container mt-4">
-        {/* Header and Logout Section */}
-        <div className="row mb-3">
-          <div className="col-12 d-flex justify-content-between align-items-center">
-            <Header />
-            <Logout>
-              Logout <AuthorizedUser value="email" />
-            </Logout>
-          </div>
-        </div>
-
-        {/* Content Section */}
-        <div className="row">
-          {/* Optional Sidebar (e.g., for filtering) */}
-          <div className="col-md-3">
-            {/* If you have a ContainerFilter component or similar, you can include it here:
-            <ContainerFilter 
-              selectedContainers={selectedContainers} 
-              setSelectedContainers={setSelectedContainers} 
-            /> */}
+      <div className="movies-page">
+        <div className="container mt-4">
+          {/* Header and Logout Section */}
+          <div className="row mb-3">
+            <div className="col-12 d-flex justify-content-between align-items-center">
+              <Header />
+            </div>
           </div>
 
-          {/* Movie Carousel Component */}
-          <div className="col-md-9">
-            <MovieCarousel />
+          {/* Main Content Section */}
+          <div className="row">
+            <div className="col-12">
+              {/* Top Carousel for Recommended Movies */}
+              <div className="mb-5">
+                <h3 className="mb-3">Recommended For You</h3>
+                <MovieCarousel genre="Recommended" />
+              </div>
+              
+              {/* Carousels for each genre */}
+              {genres.map((genre) => (
+                <div key={genre} className="mb-5">
+                  <h3 className="mb-3">{genre}</h3>
+                  <MovieCarousel genre={genre} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -43,4 +47,4 @@ function MoviePage() {
 }
 
 export default MoviePage;
-
+;
