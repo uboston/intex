@@ -145,6 +145,15 @@ namespace CineNiche.API.Controllers
             return Ok(returnMovies);
         }
 
+       /* [HttpGet("ContentReccomender")]
+        public IActionResult ContentReccomender(int showid = 10)
+        {
+            var foryou = _MoviesDbContext
+                .Movie
+                .Where()
+                ToList()
+        }*/
+
         [HttpGet("GetCategories")]
         public IActionResult GetCategories()
         {

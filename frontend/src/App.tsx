@@ -25,8 +25,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/signin-google" element={<Navigate to="/" />} />
-          <Route path="/privacy" element={<Privacy />} />{' '}
-          {/* Added Privacy route */}
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/detail" element={<MovieDetailPage />} />
           <Route path="/signin-google" element={<Navigate to="/" />} />
         </Routes>
