@@ -11,6 +11,7 @@ import Privacy from './pages/Privacy';
 import MovieDetailPage from './pages/MovieDetailPage';
 import CookieConsentBanner from './components/CookieConsentBanner';
 import AdminPage from './pages/AdminPage';
+import MoviesPage from './pages/MoviesPage';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/movies" element={<MoviesPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/detail" element={<MovieDetailPage />} />
