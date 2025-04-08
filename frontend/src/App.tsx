@@ -22,6 +22,12 @@ function App() {
         <Route path="/admin/page" element={<AdminPage />} />
         {/* For any undefined route, redirect to the login page */}
         <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* <Route path="/competition" element={<CompetitionPage />} /> */}
+        {/* <Route
+              path="/product/:rootbeerName/:rootbeerId/:currentRetailPrice"
+              element={<ProductPage />}
+            /> */}
+        <Route path="/signin-google" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );

@@ -194,7 +194,8 @@ const AdminMovies = () => {
   const fetchMovies = async () => {
     try {
       const response = await axios.get(
-        'https://localhost:5000/Movies/GetMovies'
+        'https://localhost:5000/Movies/GetMovies',
+        { withCredentials: true }
       );
       setMovies(response.data.Movies);
     } catch (error) {
@@ -220,7 +221,8 @@ const AdminMovies = () => {
     if (window.confirm(`Are you sure you want to delete "${movie.Title}"?`)) {
       try {
         await axios.delete(
-          `https://localhost:5000/Movies/DeleteMovie/${movie.ShowId}`
+          `https://localhost:5000/Movies/DeleteMovie/${movie.ShowId}`,
+          { withCredentials: true }
         );
         setMovies(movies.filter((m) => m.ShowId !== movie.ShowId));
       } catch (error) {
@@ -230,13 +232,13 @@ const AdminMovies = () => {
   };
 
   const handleFormSubmit = async (movieData: MovieFormData) => {
-    // Check if we are updating or creating a movie
     if (movieData.showId) {
-      // Update existing movie
+      // Update existing movie; note the updated full URL for consistency.
       try {
         const response = await axios.put(
-          `/Movies/UpdateMovie/${movieData.showId}`,
-          movieData
+          `https://localhost:5000/Movies/UpdateMovie/${movieData.showId}`,
+          movieData,
+          { withCredentials: true }
         );
         setMovies(
           movies.map((m) =>
@@ -251,7 +253,8 @@ const AdminMovies = () => {
       try {
         const response = await axios.post(
           'https://localhost:5000/Movies/CreateMovie',
-          movieData
+          movieData,
+          { withCredentials: true }
         );
         setMovies([...movies, response.data] as Movie[]);
       } catch (error) {
