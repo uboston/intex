@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Privacy from './pages/Privacy'; // Import the Privacy page
 import MovieDetailPage from './pages/MovieDetailPage';
+import AdminPage from './pages/AdminPage'; // Import the AdminMovies page/component
 
 function App() {
   return (
