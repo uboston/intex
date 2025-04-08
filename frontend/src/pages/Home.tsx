@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Home.css';
+import './Home.css'; // Assuming you have a CSS module for styles
 const Home: React.FC = () => {
   return (
     <div className="home-container">

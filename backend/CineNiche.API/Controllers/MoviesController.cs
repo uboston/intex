@@ -228,5 +228,20 @@ namespace CineNiche.API.Controllers
             _MoviesDbContext.SaveChanges();
             return Ok();
         }
+
+        [HttpGet("SearchMovies")]
+        public IActionResult SearchMovies([FromQuery] string searchTerm)
+        {
+            var queriedMovies = _MoviesDbContext.MoviesTitles
+                .Where(m => m.Title != null && m.Title.Contains(searchTerm))
+                .OrderBy(m => m.Title)
+                .Take(10)
+                .Select(m => new {
+                    m.ShowId,
+                    m.Title
+                })
+                .ToList();
+            return Ok(queriedMovies);
+        }
     }
 }
