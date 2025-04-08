@@ -43,7 +43,17 @@ const MovieForm = ({
   open,
   onClose,
   onSubmit,
-  initialData = {},
+  initialData = {
+    showId: '',
+    title: '',
+    director: '',
+    cast: '',
+    country: '',
+    releaseYear: '',
+    rating: '',
+    duration: '',
+    description: '',
+  },
 }: {
   open: boolean;
   onClose: () => void;
@@ -176,8 +186,8 @@ const MovieForm = ({
 };
 
 const AdminMovies = () => {
-  const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [openForm, setOpenForm] = useState(false);
 
   // Fetch movies from the backend
@@ -201,12 +211,12 @@ const AdminMovies = () => {
     setOpenForm(true);
   };
 
-  const handleEdit = (movie) => {
+  const handleEdit = (movie: Movie) => {
     setSelectedMovie(movie);
     setOpenForm(true);
   };
 
-  const handleDelete = async (movie) => {
+  const handleDelete = async (movie: Movie) => {
     if (window.confirm(`Are you sure you want to delete "${movie.Title}"?`)) {
       try {
         await axios.delete(
@@ -229,8 +239,10 @@ const AdminMovies = () => {
           movieData
         );
         setMovies(
-          movies.map((m) => (m.ShowId === movieData.showId ? response.data : m))
-        ) as Movie[];
+          movies.map((m) =>
+            m.ShowId === movieData.showId ? (response.data as Movie) : m
+          )
+        );
       } catch (error) {
         console.error('Error updating movie:', error);
       }
@@ -304,7 +316,31 @@ const AdminMovies = () => {
         open={openForm}
         onClose={() => setOpenForm(false)}
         onSubmit={handleFormSubmit}
-        initialData={selectedMovie || {}}
+        initialData={
+          selectedMovie
+            ? {
+                showId: selectedMovie.ShowId,
+                title: selectedMovie.Title,
+                director: selectedMovie.Director,
+                cast: selectedMovie.cast || '',
+                country: selectedMovie.country || '',
+                releaseYear: selectedMovie.ReleaseYear,
+                rating: selectedMovie.Rating,
+                duration: selectedMovie.duration || '',
+                description: selectedMovie.description || '',
+              }
+            : {
+                showId: '',
+                title: '',
+                director: '',
+                cast: '',
+                country: '',
+                releaseYear: '',
+                rating: '',
+                duration: '',
+                description: '',
+              }
+        }
       />
     </div>
   );
