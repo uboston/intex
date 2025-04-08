@@ -10,15 +10,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
+    "@mui/material": "^7.0.1",
+    "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.3",
+<<<<<<< HEAD
     "react": "^19.0.0",
     "react-cookie-consent": "^9.0.0",
     "react-dom": "^19.0.0",
+=======
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+>>>>>>> 9f551fd5d82a5383dd22caf536b7ee23fc696152
     "react-icons": "^5.5.0",
-    "react-router-dom": "^7.4.0"
+    "react-router-dom": "^7.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

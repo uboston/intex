@@ -4,20 +4,15 @@ import './identity.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 function LoginPage() {
-  // state variables for email and passwords
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [rememberme, setRememberme] = useState<boolean>(false);
-
-  // state variable for error messages
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
 
   const handleGoogleLogin = () => {
-    // Redirect to the backend endpoint that initiates the Google challenge.
     window.location.href = 'https://localhost:5000/external-login/google';
   };
-
   // useEffect(() => {
   //   const script = document.createElement('script');
   //   script.src = 'https://accounts.google.com/gsi/client';
@@ -86,12 +81,11 @@ function LoginPage() {
     try {
       const response = await fetch(loginUrl, {
         method: 'POST',
-        credentials: 'include', // ✅ Ensures cookies are sent & received
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
-      // Ensure we only parse JSON if there is content
       let data = null;
       const contentLength = response.headers.get('content-length');
       if (contentLength && parseInt(contentLength, 10) > 0) {
@@ -107,6 +101,18 @@ function LoginPage() {
       setError(error.message || 'Error logging in.');
       console.error('Fetch attempt failed:', error);
     }
+  };
+
+  // Inline style for the background using a template literal
+  const backgroundStyle: React.CSSProperties = {
+    backgroundImage: `url(/movieimage.jpg)`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   };
 
   return (
@@ -184,7 +190,6 @@ function LoginPage() {
               <div className="d-grid mb-2">
                 <button
                   className="btn btn-facebook btn-login text-uppercase fw-bold"
-                  onClick={handleFacebookLogin}
                   type="button"
                 >
                   <i className="fa-brands fa-facebook-f me-2"></i> Sign in with
