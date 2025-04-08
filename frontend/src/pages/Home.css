@@ -1,0 +1,155 @@
+
+/* OHH YEah Base body background + dark overlay */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: url('/movieimage.jpg') no-repeat center center/cover;
+}
+
+/* Full‑page dark overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.4;
+  z-index: 1;
+}
+
+/* The overall container takes up full width and height */
+.home-container {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* Header fills the viewport, with padding to clear the fixed nav */
+.home-header {
+  min-height: 100vh;
+  padding-top: 80px; /* adjust if you change nav height */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 2; /* above overlay */
+}
+
+/* === NAV BAR BACK IN PLACE === */
+/* Navigation bar fixed to the very top edges */
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between; /* corners */
+  align-items: center;
+  padding: 20px 40px;
+}
+
+/* === Nav “Sign In” outlined button override === */
+.nav-bar .nav-right .sign-in-btn {
+  display: inline-block;
+  text-decoration: none;
+  padding: 10px 20px;
+  background-color: transparent;
+  border: 2px solid #d2b48c;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 1rem;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.nav-bar .nav-right .sign-in-btn:hover {
+  background-color: #d2b48c;
+  color: #000;
+}
+
+/* Logo sizing */
+.primary-logo {
+  height: 50px;
+}
+
+/* Hero section: centered content */
+.hero {
+  text-align: center;
+  color: #fff;
+  padding: 20px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.center-logo {
+  height: 3rem;
+  vertical-align: middle;
+}
+
+.hero p {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+/* Email form styles */
+.email-form {
+  margin-top: 20px;
+}
+
+.email-form p {
+  font-size: 1.2rem;
+}
+
+.get-started {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.get-started input[type='text'] {
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  width: 300px;
+  max-width: 80%;
+  border-radius: 2px 0 0 2px;
+}
+
+.btn-lg {
+  text-decoration: none;
+  color: #fff;
+  background: #d2b48c;
+  padding: 10px 15px;
+  border-radius: 0 2px 2px 0;
+  font-size: 1.1rem;
+  transition: background 0.3s ease;
+}
+
+.btn-lg:hover {
+  background: #c1a178;
+}
+
+/* Responsive tweaks (optional) */
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  .hero p {
+    font-size: 1.2rem;
+  }
+  .get-started input[type='text'] {
+    width: 200px;
+  }
+}
