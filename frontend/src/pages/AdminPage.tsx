@@ -1,6 +1,12 @@
 // components/AdminMovies.js
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import axios from 'axios';
+import {
+  fetchMovies,
+  addMovie,
+  updateMovie,
+  deleteMovie,
+} from '../api/MoviesAPI';
+
 import {
   Table,
   TableBody,
@@ -16,8 +22,22 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
+import Pagination from '../components/Pagination';
 
-// MovieForm Component: used for both creating and editing a movie.
+interface movie {
+  showId: string;
+  type: string;
+  title: string;
+  director: string;
+  cast: string;
+  country: string;
+  releaseYear: string;
+  rating: string;
+  duration: string;
+  description: string;
+  categories: string[];
+}
+
 interface MovieFormData {
   showId?: string;
   title: string;
@@ -28,15 +48,6 @@ interface MovieFormData {
   rating: string;
   duration: string;
   description: string;
-}
-
-interface Movie {
-  ShowId: string;
-  Title: string;
-  Director: string;
-  ReleaseYear: string;
-  Rating: string;
-  [key: string]: any;
 }
 
 const MovieForm = ({
@@ -186,80 +197,107 @@ const MovieForm = ({
 };
 
 const AdminMovies = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const [movies, setMovies] = useState<movie[]>([]);
+  const [selectedMovie, setSelectedMovie] = useState<movie | null>(null);
   const [openForm, setOpenForm] = useState(false);
-
-  // Fetch movies from the backend
-  const fetchMovies = async () => {
-    try {
-      const response = await axios.get(
-        'https://localhost:5000/Movies/GetMovies',
-        { withCredentials: true }
-      );
-      setMovies(response.data.Movies);
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-    }
-  };
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [editingMovie, setEditingMovie] = useState<movie | null>(null);
 
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    const loadMovies = async () => {
+      try {
+        const data = await fetchMovies(pageSize, pageNumber, []);
+        setMovies(data.movies);
+        setTotalPages(Math.ceil(data.totalMovies / pageSize));
+      } catch (error) {
+        setError((error as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadMovies();
+  }, [pageSize, pageNumber]);
 
   const handleAdd = () => {
     setSelectedMovie(null);
     setOpenForm(true);
   };
 
-  const handleEdit = (movie: Movie) => {
+  const handleEdit = (movie: movie) => {
     setSelectedMovie(movie);
     setOpenForm(true);
   };
 
-  const handleDelete = async (movie: Movie) => {
-    if (window.confirm(`Are you sure you want to delete "${movie.Title}"?`)) {
-      try {
-        await axios.delete(
-          `https://localhost:5000/Movies/DeleteMovie/${movie.ShowId}`,
-          { withCredentials: true }
-        );
-        setMovies(movies.filter((m) => m.ShowId !== movie.ShowId));
-      } catch (error) {
-        console.error('Error deleting movie:', error);
-      }
+  const handleDelete = async (showId: string) => {
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete this Movie?'
+    );
+    if (!confirmDelete) return;
+    try {
+      await deleteMovie(showId);
+      setMovies(movies.filter((movie) => movie.showId !== showId));
+    } catch (error) {
+      setError((error as Error).message);
     }
   };
 
+  if (loading) return <p>Loading movies...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
+
   const handleFormSubmit = async (movieData: MovieFormData) => {
-    if (movieData.showId) {
-      // Update existing movie; note the updated full URL for consistency.
-      try {
-        const response = await axios.put(
-          `https://localhost:5000/Movies/UpdateMovie/${movieData.showId}`,
-          movieData,
-          { withCredentials: true }
+    try {
+      let updatedMovies: movie[];
+
+      // Convert string `showId` to number if needed for API
+      const numericShowId = movieData.showId
+        ? parseInt(movieData.showId)
+        : undefined;
+
+      if (numericShowId) {
+        const updated = await updateMovie(numericShowId, {
+          showId: movieData.showId || '', // backend expects string
+          type: '', // or however you handle this
+          title: movieData.title,
+          director: movieData.director,
+          cast: movieData.cast,
+          country: movieData.country,
+          releaseYear: movieData.releaseYear,
+          rating: movieData.rating,
+          duration: movieData.duration,
+          description: movieData.description,
+          categories: [], // or pull this from form if editable
+        });
+
+        updatedMovies = movies.map((m) =>
+          m.showId === updated.showId ? updated : m
         );
-        setMovies(
-          movies.map((m) =>
-            m.ShowId === movieData.showId ? (response.data as Movie) : m
-          )
-        );
-      } catch (error) {
-        console.error('Error updating movie:', error);
+      } else {
+        const added = await addMovie({
+          showId: '', // backend should auto-generate this
+          type: '', // default value
+          title: movieData.title,
+          director: movieData.director,
+          cast: movieData.cast,
+          country: movieData.country,
+          releaseYear: movieData.releaseYear,
+          rating: movieData.rating,
+          duration: movieData.duration,
+          description: movieData.description,
+          categories: [],
+        });
+
+        updatedMovies = [...movies, added];
       }
-    } else {
-      // Create new movie
-      try {
-        const response = await axios.post(
-          'https://localhost:5000/Movies/CreateMovie',
-          movieData,
-          { withCredentials: true }
-        );
-        setMovies([...movies, response.data] as Movie[]);
-      } catch (error) {
-        console.error('Error creating movie:', error);
-      }
+
+      setMovies(updatedMovies);
+      setOpenForm(false);
+    } catch (err) {
+      console.error('Form submission error:', err);
+      setError((err as Error).message);
     }
   };
 
@@ -287,13 +325,13 @@ const AdminMovies = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {movies.map((movie: Movie) => (
-              <TableRow key={movie.ShowId}>
-                <TableCell>{movie.ShowId}</TableCell>
-                <TableCell>{movie.Title}</TableCell>
-                <TableCell>{movie.Director}</TableCell>
-                <TableCell>{movie.ReleaseYear}</TableCell>
-                <TableCell>{movie.Rating}</TableCell>
+            {movies.map((movie: movie) => (
+              <TableRow key={movie.showId}>
+                <TableCell>{movie.showId}</TableCell>
+                <TableCell>{movie.title}</TableCell>
+                <TableCell>{movie.director}</TableCell>
+                <TableCell>{movie.releaseYear}</TableCell>
+                <TableCell>{movie.rating}</TableCell>
                 <TableCell>
                   <Button
                     variant="outlined"
@@ -305,7 +343,7 @@ const AdminMovies = () => {
                   <Button
                     variant="outlined"
                     color="error"
-                    onClick={() => handleDelete(movie)}
+                    onClick={() => handleDelete(movie.showId)}
                   >
                     Delete
                   </Button>
@@ -315,6 +353,16 @@ const AdminMovies = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination
+        currentPage={pageNumber}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        onPageChange={setPageNumber}
+        onPageSizeChange={(newSize) => {
+          setPageSize(newSize);
+          setPageNumber(1);
+        }}
+      />
       <MovieForm
         open={openForm}
         onClose={() => setOpenForm(false)}
@@ -322,13 +370,13 @@ const AdminMovies = () => {
         initialData={
           selectedMovie
             ? {
-                showId: selectedMovie.ShowId,
-                title: selectedMovie.Title,
-                director: selectedMovie.Director,
+                showId: selectedMovie.showId,
+                title: selectedMovie.title,
+                director: selectedMovie.director,
                 cast: selectedMovie.cast || '',
                 country: selectedMovie.country || '',
-                releaseYear: selectedMovie.ReleaseYear,
-                rating: selectedMovie.Rating,
+                releaseYear: selectedMovie.releaseYear,
+                rating: selectedMovie.rating,
                 duration: selectedMovie.duration || '',
                 description: selectedMovie.description || '',
               }
