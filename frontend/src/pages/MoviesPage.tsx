@@ -10,7 +10,6 @@ const genres = ["Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance"];
 function MoviePage() {
   // State for optional sidebar/filter functionality (if needed)
   const [selectedContainers, setSelectedContainers] = useState<string[]>([]);
-
   return (
     <AuthorizeView>
       <div className="movies-page">

@@ -95,4 +95,12 @@ input.form-control:focus {
   border-color: #888;
 }
 
+/* .login-background {
+  background: url('/movieimage.jpg') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
 /* ===== End MoviesPage Specific Styles ===== */

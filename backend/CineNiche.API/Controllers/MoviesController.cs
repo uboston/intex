@@ -9,7 +9,7 @@ namespace CineNiche.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class MoviesController : ControllerBase
     {
         private MoviesContext _MoviesDbContext;
@@ -145,7 +145,7 @@ namespace CineNiche.API.Controllers
                 var returnMovies = new
                 {
                     Movies = movies,
-                    TotalNumProjects = totalNumMovies
+                    TotalMovies = totalNumMovies
                 };
 
                 return Ok(returnMovies);
@@ -211,7 +211,7 @@ namespace CineNiche.API.Controllers
             movie.Duration = updatedMovie.Duration;
             movie.Description = updatedMovie.Description;
             // Update category flags or other properties if applicable.
-
+            _MoviesDbContext.MoviesTitles.Update(movie);
             _MoviesDbContext.SaveChanges();
             return Ok(movie);
         }
