@@ -9,7 +9,7 @@ namespace CineNiche.API.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-[Authorize]
+// [Authorize]
 public class RecommendController : ControllerBase
 {
     private MoviesContext _MoviesDbContext;
@@ -19,12 +19,36 @@ public class RecommendController : ControllerBase
         _MoviesDbContext = temp;
     }
     
-    /* [HttpGet("ContentReccomender")]
-        public IActionResult ContentReccomender(int showid = 10)
-        {
-            var foryou = _MoviesDbContext
-                .Movie
-                .Where()
-                ToList()
-        }*/
+    [HttpGet("RecommenderContent")]
+    public IActionResult RecommenderContent(string showId = "s1")
+    {
+        var similarShows = _MoviesDbContext
+            .recommender_content
+            .Where(x => x.show_id == showId)
+            .ToList();
+
+        return Ok(similarShows);
+    }
+    
+    [HttpGet("RecommenderCollabItem")]
+    public IActionResult RecommenderCollabItem(string showId = "s1004")
+    {
+        var similarShows = _MoviesDbContext
+            .recommender_collab_item
+            .Where(x => x.show_id == showId)
+            .ToList();
+
+        return Ok(similarShows);
+    }
+    
+    [HttpGet("RecommenderCollabUser")]
+    public IActionResult RecommenderCollabUser(string userId = "1")
+    {
+        var similarShows = _MoviesDbContext
+            .recommender_collab_user
+            .Where(x => x.user_id == userId)
+            .ToList();
+
+        return Ok(similarShows);
+    }
 }
