@@ -81,6 +81,7 @@ app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseStaticFiles(); // This is for the wwwroot movie posters
 
 app.MapControllers();
 app.MapIdentityApi<IdentityUser>();
