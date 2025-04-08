@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './ContainerFilter.css'; // Assuming you have some CSS for styling
+import './ContainerFilter.css';
 
 function ContainerFilter({
   selectedContainers,
@@ -22,9 +22,7 @@ function ContainerFilter({
 
         const data = await response.json();
         setContainers(data);
-
-        // Automatically check all fetched containers
-        setSelectedContainers(data);
+        setSelectedContainers(data); // Automatically select all initially
       } catch (error) {
         console.error('Error fetching container types', error);
       }
@@ -41,11 +39,11 @@ function ContainerFilter({
   }
 
   return (
-    <div className="container-filter">
-      <h5>Container Types</h5>
-      <div className="container-list">
+    <div className="container-filter movies-container-filter">
+      <h5 className="filter-title">Container Types</h5>
+      <div className="container-list filter-carousel">
         {containers.map((c) => (
-          <div key={c} className="container-item">
+          <div key={c} className="container-item filter-item">
             <input
               type="checkbox"
               id={c}
@@ -64,3 +62,4 @@ function ContainerFilter({
 }
 
 export default ContainerFilter;
+

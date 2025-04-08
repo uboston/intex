@@ -1,67 +1,25 @@
-body {
-    background: url('C:\Users\jaxon\OneDrive\Desktop\Intex\intex\frontend\public\movieimage.jpg') no-repeat center center fixed;
-    background-size: cover;
-    color: #fff;
-    font-weight: 500;
-    font-family: Arial, sans-serif;
+.movies-page {
+    background-color: #141414;
+    color: white;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    font-family: 'Helvetica Neue', sans-serif;
   }
   
-  
-  .btn-login {
-    font-size: 0.9rem;
-    letter-spacing: 0.05rem;
-    padding: 0.75rem 1rem;
-    background-color: #e50914;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
+  .logout-bar {
+    text-align: right;
+    padding: 10px 20px;
+    font-size: 14px;
   }
   
-  .btn-login:hover {
-    background-color: #fd1c27;
+  .filter-row {
+    padding: 10px 20px;
+    background-color: #1f1f1f;
+    border-bottom: 1px solid #333;
   }
   
-  .btn-google {
-    color: #fff !important;
-    background-color: #ea4335 !important;
+  .movie-section {
+    padding: 20px;
   }
   
-  .btn-facebook {
-    color: #fff !important;
-    background-color: #3b5998 !important;
-  }
-  
-  .card-body {
-    min-width: 400px;
-    background: rgba(51, 51, 51, 0.85); /* semi-transparent */
-    padding: 1rem;
-    border-radius: 5px;
-  }
-  
-  
-  .error {
-    color: #e50914;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
-  }
-  label,
-  .form-check-label {
-    color: #fff;
-  }
-  
-  .card-title {
-    color: #fff;
-  }
-  input.form-control {
-    background-color: #222;
-    color: #fff;
-    border: 1px solid #444;
-  }
-  
-  input.form-control:focus {
-    background-color: #111;
-    color: #fff;
-    border-color: #e50914;
-    box-shadow: none;
-  }

@@ -1,34 +1,38 @@
-import ContainerFilter from '../components/ContainerFilter';
-import CompetitionList from '../components/CompetitionList';
-import Header from '../components/Header';
-import { useState } from 'react';
-import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
-import Logout from '../components/Logout';
+import { useState } from "react";
+import AuthorizeView, { AuthorizedUser } from "../components/AuthorizeView";
+import Header from "../components/Header";
+import Logout from "../components/Logout";
+import ContainerFilter from "../components/ContainerFilter";
+import CompetitionList from "../components/CompetitionList";
+import "./MoviesPage.css"; // new css file for layout
 
 function CompetitionPage() {
   const [selectedContainers, setSelectedContainers] = useState<string[]>([]);
+
   return (
     <AuthorizeView>
-      <span>
-        <Logout>
-          Logout <AuthorizedUser value="email" />
-        </Logout>
-      </span>
-      <div className="Container mt-4">
+      <div className="movies-page">
+        <div className="logout-bar">
+          <Logout>
+            Logout <AuthorizedUser value="email" />
+          </Logout>
+        </div>
+
         <Header />
-        <div className="row">
-          <div className="col-md-3">
-            <ContainerFilter
-              selectedContainers={selectedContainers}
-              setSelectedContainers={setSelectedContainers}
-            />
-          </div>
-          <div className="col-md-9">
-            <CompetitionList selectedContainers={selectedContainers} />
-          </div>
+
+        <div className="filter-row">
+          <ContainerFilter
+            selectedContainers={selectedContainers}
+            setSelectedContainers={setSelectedContainers}
+          />
+        </div>
+
+        <div className="movie-section">
+          <CompetitionList selectedContainers={selectedContainers} />
         </div>
       </div>
     </AuthorizeView>
   );
 }
+
 export default CompetitionPage;
