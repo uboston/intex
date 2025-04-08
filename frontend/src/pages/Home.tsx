@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import './Home.css';
 const Home: React.FC = () => {
   return (
-    <div className="home-container">
-      <header className="home-header">
+    <div className="home-container background-img">
+      <header className="home-header root-styles">
         {/* Navigation Bar */}
         <nav className="nav-bar">
           <div className="nav-left">
@@ -28,7 +28,7 @@ const Home: React.FC = () => {
           </h1>
           <p>Unlimited movies, TV shows, and more.</p>
           <div className="email-form">
-            <p>Ready to watch? Please Log in above!</p>
+            <p>Ready to watch? Please Sign in above!</p>
             <div className="get-started">
               <input type="text" placeholder="Email address" />
               <a href="#" className="btn-lg">
