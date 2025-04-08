@@ -1,5 +1,5 @@
 import './App.css';
-import CompetitionPage from './pages/CompetitionPage';
+import CompetitionPage from './pages/MoviesPage';
 import {
   HashRouter as Router,
   Routes,
@@ -14,19 +14,24 @@ import AdminPage from './pages/AdminPage'; // Import the AdminMovies page/compon
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<CompetitionPage />} />
-        <Route path="/competition" element={<CompetitionPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/signin-google" element={<Navigate to="/" />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/detail" element={<MovieDetailPage />} />
-        <Route path="/signin-google" element={<Navigate to="/" />} />
-        <Route path="/adminpage" element={<AdminPage />} />
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<CompetitionPage />} />
+          <Route path="/competition" element={<CompetitionPage />} />
+          {/* <Route
+              path="/product/:rootbeerName/:rootbeerId/:currentRetailPrice"
+              element={<ProductPage />}
+            /> */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/signin-google" element={<Navigate to="/" />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/detail" element={<MovieDetailPage />} />
+          <Route path="/signin-google" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 
