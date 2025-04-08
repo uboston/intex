@@ -43,7 +43,17 @@ const MovieForm = ({
   open,
   onClose,
   onSubmit,
-  initialData = {},
+  initialData = {
+    showId: '',
+    title: '',
+    director: '',
+    cast: '',
+    country: '',
+    releaseYear: '',
+    rating: '',
+    duration: '',
+    description: '',
+  },
 }: {
   open: boolean;
   onClose: () => void;
@@ -176,15 +186,16 @@ const MovieForm = ({
 };
 
 const AdminMovies = () => {
-  const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [openForm, setOpenForm] = useState(false);
 
   // Fetch movies from the backend
   const fetchMovies = async () => {
     try {
       const response = await axios.get(
-        'https://localhost:5000/Movies/GetMovies'
+        'https://localhost:5000/Movies/GetMovies',
+        { withCredentials: true }
       );
       setMovies(response.data.Movies);
     } catch (error) {
@@ -201,16 +212,17 @@ const AdminMovies = () => {
     setOpenForm(true);
   };
 
-  const handleEdit = (movie) => {
+  const handleEdit = (movie: Movie) => {
     setSelectedMovie(movie);
     setOpenForm(true);
   };
 
-  const handleDelete = async (movie) => {
+  const handleDelete = async (movie: Movie) => {
     if (window.confirm(`Are you sure you want to delete "${movie.Title}"?`)) {
       try {
         await axios.delete(
-          `https://localhost:5000/Movies/DeleteMovie/${movie.ShowId}`
+          `https://localhost:5000/Movies/DeleteMovie/${movie.ShowId}`,
+          { withCredentials: true }
         );
         setMovies(movies.filter((m) => m.ShowId !== movie.ShowId));
       } catch (error) {
@@ -220,17 +232,19 @@ const AdminMovies = () => {
   };
 
   const handleFormSubmit = async (movieData: MovieFormData) => {
-    // Check if we are updating or creating a movie
     if (movieData.showId) {
-      // Update existing movie
+      // Update existing movie; note the updated full URL for consistency.
       try {
         const response = await axios.put(
-          `/Movies/UpdateMovie/${movieData.showId}`,
-          movieData
+          `https://localhost:5000/Movies/UpdateMovie/${movieData.showId}`,
+          movieData,
+          { withCredentials: true }
         );
         setMovies(
-          movies.map((m) => (m.ShowId === movieData.showId ? response.data : m))
-        ) as Movie[];
+          movies.map((m) =>
+            m.ShowId === movieData.showId ? (response.data as Movie) : m
+          )
+        );
       } catch (error) {
         console.error('Error updating movie:', error);
       }
@@ -239,7 +253,8 @@ const AdminMovies = () => {
       try {
         const response = await axios.post(
           'https://localhost:5000/Movies/CreateMovie',
-          movieData
+          movieData,
+          { withCredentials: true }
         );
         setMovies([...movies, response.data] as Movie[]);
       } catch (error) {
@@ -304,7 +319,31 @@ const AdminMovies = () => {
         open={openForm}
         onClose={() => setOpenForm(false)}
         onSubmit={handleFormSubmit}
-        initialData={selectedMovie || {}}
+        initialData={
+          selectedMovie
+            ? {
+                showId: selectedMovie.ShowId,
+                title: selectedMovie.Title,
+                director: selectedMovie.Director,
+                cast: selectedMovie.cast || '',
+                country: selectedMovie.country || '',
+                releaseYear: selectedMovie.ReleaseYear,
+                rating: selectedMovie.Rating,
+                duration: selectedMovie.duration || '',
+                description: selectedMovie.description || '',
+              }
+            : {
+                showId: '',
+                title: '',
+                director: '',
+                cast: '',
+                country: '',
+                releaseYear: '',
+                rating: '',
+                duration: '',
+                description: '',
+              }
+        }
       />
     </div>
   );
