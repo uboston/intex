@@ -19,7 +19,7 @@ public class RoleController : Controller
     }
 
     [HttpPost("AddRole")]
-    public async Task<IActionResult> AddRole(string roleName)
+    public async Task<IActionResult> AddRole([FromQuery] string roleName)
     {
         if (string.IsNullOrWhiteSpace(roleName))
         {
