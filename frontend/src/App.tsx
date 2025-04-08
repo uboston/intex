@@ -28,14 +28,12 @@ function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/detail" element={<MovieDetailPage />} />
         <Route path="/admin" element={<AdminPage />} />
-        {/* For any undefined route, redirect to the login page */}
         <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="/signin-google" element={<Navigate to="/" />} />
         {/* <Route
               path="/product/:rootbeerName/:rootbeerId/:currentRetailPrice"
               element={<ProductPage />}
             /> */}
-          <Route path="/signin-google" element={<Navigate to="/" />} />
-
         </Routes>
         <CookieConsentBanner />
       </Router>
