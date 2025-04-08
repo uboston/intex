@@ -13,6 +13,7 @@ import CookieConsentBanner from './components/CookieConsentBanner';
 import AdminPage from './pages/AdminPage';
 import MoviesPage from './pages/MoviesPage';
 import Home from './pages/Home';
+import MovieDescription from './pages/MovieDescription';
 
 
 
@@ -28,6 +29,7 @@ function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/detail" element={<MovieDetailPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/moviedescription/:id" element={<MovieDescription />} />
         {/* For any undefined route, redirect to the login page */}
         <Route path="*" element={<Navigate to="/login" replace />} />
         {/* <Route
