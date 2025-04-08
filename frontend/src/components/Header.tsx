@@ -1,8 +1,11 @@
+import './Header.css';
+
 function Header() {
   return (
-    <div className="row bg-secondary text-white">
-      <h1 className="RKHeader">Competition</h1>
+    <div className="header-bar">
+      <h1 className="header-title">Movies</h1>
     </div>
   );
 }
+
 export default Header;

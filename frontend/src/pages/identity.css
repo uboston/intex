@@ -64,6 +64,40 @@ input.form-control:focus {
   box-shadow: none;
 }
 
+<<<<<<< HEAD
+/* ===== MoviesPage Specific Styles ===== */
+.movies-page {
+  background: linear-gradient(to bottom, #000000, #333333); /* black to grey ombre */
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.movies-page .card-body {
+  background-color: rgba(20, 20, 20, 0.9);
+  border: 1px solid #555;
+}
+
+.movies-page .btn-login {
+  background-color: #444;
+  color: #fff;
+}
+
+.movies-page .btn-login:hover {
+  background-color: #666;
+}
+
+.movies-page input.form-control {
+  background-color: #111;
+  color: #eee;
+  border: 1px solid #666;
+}
+
+.movies-page input.form-control:focus {
+  border-color: #888;
+}
+
+/* ===== End MoviesPage Specific Styles ===== */
+=======
 /* .login-background {
   background: url('/movieimage.jpg') no-repeat center center fixed;
   background-size: cover;
@@ -72,3 +106,4 @@ input.form-control:focus {
   align-items: center;
   justify-content: center;
 } */
+>>>>>>> rbac
