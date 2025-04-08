@@ -1,0 +1,35 @@
+.movie-detail-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .movie-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .movie-text {
+    flex: 1;
+    padding-right: 20px;
+  }
+  
+  .movie-poster {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .movie-poster img {
+    width: 100%; /* Adjust based on your layout */
+    max-width: 300px;
+  }
+  
+  .related-movies {
+    width: 100%;
+  }
+  

@@ -5,16 +5,18 @@ import './MovieCarousel.css';
 interface Movie {
   id: string;
   title: string;
+  imageUrl?: string;  // Assuming imageUrl might be part of Movie, adjust as necessary
 }
 
 interface MovieCarouselProps {
   genre: string;
+  movies?: Movie[]; // Optional movies array to be used instead of generated ones
 }
 
 // Helper function to generate 10 dummy movies based on the given genre.
 const generateMovies = (genre: string): Movie[] => {
   return Array.from({ length: 10 }, (_, index) => ({
-    id: index + 1,
+    id: `${genre}-${index + 1}`, // Ensure unique IDs in case of similar genre names
     title: `${genre} Movie ${index + 1}`,
     imageUrl: `https://via.placeholder.com/200x300?text=${encodeURIComponent(
       genre
@@ -22,9 +24,9 @@ const generateMovies = (genre: string): Movie[] => {
   }));
 };
 
-const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre }) => {
+const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, movies }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
-  const movies = generateMovies(genre);
+  const movieList = movies || generateMovies(genre); // Use provided movies if available, else generate based on genre
 
   const scrollLeft = () => {
     if (carouselRef.current) {
@@ -44,7 +46,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre }) => {
         {'<'}
       </button>
       <div className="carousel" ref={carouselRef}>
-        {movies.map((movie) => (
+        {movieList.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>

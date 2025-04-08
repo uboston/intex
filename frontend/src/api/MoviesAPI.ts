@@ -4,6 +4,20 @@ interface FetchMoviesResponse {
   totalPages: number;
 }
 
+interface movie {
+  showId: string;
+  type: string;
+  title: string;
+  director: string;
+  cast: string;
+  country: string;
+  releaseYear: string;
+  rating: string;
+  duration: string;
+  description: string;
+  categories: string[];
+}
+
 const API_URL = 'https://localhost:5000';
 
 export const fetchMovies = async (
