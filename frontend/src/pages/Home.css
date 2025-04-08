@@ -8,7 +8,7 @@ body {
 }
 
 /* Full‑page dark overlay */
-/*body::before {
+body::before {
   content: '';
   position: fixed;
   top: 0;
