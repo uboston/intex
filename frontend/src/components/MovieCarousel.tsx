@@ -3,9 +3,8 @@ import MovieCard from './MovieCard';
 import './MovieCarousel.css';
 
 interface Movie {
-  id: number;
+  id: string;
   title: string;
-  imageUrl: string;
 }
 
 interface MovieCarouselProps {
