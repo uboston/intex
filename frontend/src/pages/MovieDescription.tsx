@@ -50,13 +50,13 @@ function MovieDetailPage() {
       <div className="movie-info">
         <div className="movie-text">
           <h1>{movie.title}</h1>
+          <p>{movie.description}</p>
+          <p><strong>Rating:</strong> {movie.rating}</p>
           <p><strong>Director:</strong> {movie.director}</p>
           <p><strong>Release Year:</strong> {movie.releaseYear}</p>
-          <p><strong>Rating:</strong> {movie.rating}</p>
           <p><strong>Duration:</strong> {movie.duration}</p>
           <p><strong>Cast:</strong> {movie.cast}</p>
           <p><strong>Categories:</strong> {movie.categories.join(', ')}</p>
-          <p><strong>Description:</strong> {movie.description}</p>
         </div>
         <div className="movie-poster">
           <img src={posterUrl} alt={`Poster for ${movie.title}`} />
