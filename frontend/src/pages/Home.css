@@ -1,6 +1,4 @@
-
-/* OHH YEah Base body background + dark overlay */
-body {
+.background_img {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -8,7 +6,7 @@ body {
 }
 
 /* Full‑page dark overlay */
-body::before {
+.background_img::before {
   content: '';
   position: fixed;
   top: 0;

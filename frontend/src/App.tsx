@@ -13,31 +13,31 @@ import CookieConsentBanner from './components/CookieConsentBanner';
 import AdminPage from './pages/AdminPage';
 import MoviesPage from './pages/MoviesPage';
 import Home from './pages/Home';
-
-
+import Search from './pages/Search';
 
 function App() {
   return (
     <>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/movies" element={<MoviesPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/detail" element={<MovieDetailPage />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-        <Route path="/signin-google" element={<Navigate to="/" />} />
-        {/* <Route
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/movies" element={<MoviesPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/detail" element={<MovieDetailPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="/signin-google" element={<Navigate to="/" />} />
+          {/* <Route
               path="/product/:rootbeerName/:rootbeerId/:currentRetailPrice"
               element={<ProductPage />}
             /> */}
         </Routes>
         <CookieConsentBanner />
       </Router>
- </>
+    </>
   );
 }
 
