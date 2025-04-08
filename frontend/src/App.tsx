@@ -10,28 +10,23 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Privacy from './pages/Privacy'; // Import the Privacy page
 import MovieDetailPage from './pages/MovieDetailPage';
+import AdminPage from './pages/AdminPage'; // Import the AdminMovies page/component
 
 function App() {
   return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<CompetitionPage />} />
-          <Route path="/competition" element={<CompetitionPage />} />
-          {/* <Route
-              path="/product/:rootbeerName/:rootbeerId/:currentRetailPrice"
-              element={<ProductPage />}
-            /> */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/signin-google" element={<Navigate to="/" />} />
-          <Route path="/privacy" element={<Privacy />} />{' '}
-          {/* Added Privacy route */}
-          <Route path="/detail" element={<MovieDetailPage />} />
-          <Route path="/signin-google" element={<Navigate to="/" />} />
-        </Routes>
-      </Router>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<CompetitionPage />} />
+        <Route path="/competition" element={<CompetitionPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/signin-google" element={<Navigate to="/" />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/detail" element={<MovieDetailPage />} />
+        <Route path="/signin-google" element={<Navigate to="/" />} />
+        <Route path="/adminpage" element={<AdminPage />} />
+      </Routes>
+    </Router>
   );
 }
 
