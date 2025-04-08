@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using CineNiche.API.Data;
 using CineNiche.API.Services;
 
+// Override Connection String
+DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 

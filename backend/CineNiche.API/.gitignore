@@ -1,6 +1,6 @@
 # Common IntelliJ Platform excludes
 
-appsettings.json
+.env
 
 # User specific
 **/.idea/**/workspace.xml
