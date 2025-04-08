@@ -13,6 +13,8 @@ import CookieConsentBanner from './components/CookieConsentBanner';
 import AdminPage from './pages/AdminPage';
 import MoviesPage from './pages/MoviesPage';
 
+import MoviesPage from './pages/MoviesPage';
+
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/movies" element={<MoviesPage />} />
         <Route path="/movies" element={<MoviesPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/privacy" element={<Privacy />} />
@@ -31,12 +34,14 @@ function App() {
               path="/product/:rootbeerName/:rootbeerId/:currentRetailPrice"
               element={<ProductPage />}
             /> */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/signin-google" element={<Navigate to="/" />} />
 
         </Routes>
         <CookieConsentBanner />
       </Router>
-    </>
+ </>
   );
 }
 
