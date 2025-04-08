@@ -51,4 +51,37 @@ public class RecommendController : ControllerBase
 
         return Ok(similarShows);
     }
+
+    [HttpGet("TopTrending")]
+    public IActionResult TopTrending()
+    {
+        var topRated = _MoviesDbContext.MoviesRatings
+            .Where(r => r.Rating != null && r.ShowId != null)
+            .GroupBy(r => r.ShowId)
+            .Select(group => new
+            {
+                ShowId = group.Key!,
+                AverageRating = group.Average(r => r.Rating!.Value)
+            })
+            .OrderByDescending(r => r.AverageRating)
+            .Take(10)
+            .ToList();
+
+        // Join with MoviesTitles to get the movie titles
+        var result = topRated
+            .Join(_MoviesDbContext.MoviesTitles,
+                rating => rating.ShowId,
+                movie => movie.ShowId,
+                (rating, movie) => new
+                {
+                    rating.ShowId,
+                    movie.Title,
+                    rating.AverageRating
+                })
+            .ToList();
+
+        return Ok(result);
+    }
+
+
 }
