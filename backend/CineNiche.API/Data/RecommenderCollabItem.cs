@@ -6,7 +6,7 @@ namespace CineNiche.API.Data;
 public partial class RecommenderCollabItem
 {
     [Key]
-    public string show_id { get; set; }
+    public string? show_id { get; set; }
 
     public string? rec_1 { get; set; }
 
