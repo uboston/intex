@@ -9,12 +9,9 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Privacy from './pages/Privacy';
 import MovieDetailPage from './pages/MovieDetailPage';
-<<<<<<< HEAD
 import CookieConsentBanner from './components/CookieConsentBanner';
-
-=======
 import AdminPage from './pages/AdminPage';
->>>>>>> 9f551fd5d82a5383dd22caf536b7ee23fc696152
+
 
 function App() {
   return (
@@ -32,7 +29,6 @@ function App() {
               path="/product/:rootbeerName/:rootbeerId/:currentRetailPrice"
               element={<ProductPage />}
             /> */}
-<<<<<<< HEAD
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/signin-google" element={<Navigate to="/" />} />
@@ -41,12 +37,6 @@ function App() {
         </Routes>
         <CookieConsentBanner />
       </Router>
-    </>
-=======
-        <Route path="/signin-google" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
->>>>>>> 9f551fd5d82a5383dd22caf536b7ee23fc696152
   );
 }
 
