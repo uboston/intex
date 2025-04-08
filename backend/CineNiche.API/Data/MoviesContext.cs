@@ -21,6 +21,12 @@ public partial class MoviesContext : DbContext
 
     public virtual DbSet<MoviesUser> MoviesUsers { get; set; }
 
+    public virtual DbSet<RecommenderContent> RecommenderContents { get; set; }
+
+    public virtual DbSet<RecommenderCollabItem> RecommenderCollabItems { get; set; }
+
+    public virtual DbSet<RecommenderCollabUser> RecommenderCollabUsers { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlite("Data Source=Movies.sqlite");
 

@@ -19,12 +19,36 @@ public class RecommendController : ControllerBase
         _MoviesDbContext = temp;
     }
     
-    /* [HttpGet("ContentReccomender")]
-        public IActionResult ContentReccomender(int showid = 10)
-        {
-            var foryou = _MoviesDbContext
-                .Movie
-                .Where()
-                ToList()
-        }*/
+    [HttpGet("RecommenderContent")]
+    public IActionResult RecommenderContent(string showId = "s1")
+    {
+        var similarShows = _MoviesDbContext
+            .RecommenderContents
+            .Where(x => x.ShowId == showId)
+            .ToList();
+
+        return Ok(similarShows);
+    }
+    
+    [HttpGet("RecommenderCollabItem")]
+    public IActionResult RecommenderCollabItem(string showId = "s1")
+    {
+        var similarShows = _MoviesDbContext
+            .RecommenderCollabItems
+            .Where(x => x.ShowId == showId)
+            .ToList();
+
+        return Ok(similarShows);
+    }
+    
+    [HttpGet("RecommenderCollabUser")]
+    public IActionResult RecommenderCollabUser(int userId = 1)
+    {
+        var similarShows = _MoviesDbContext
+            .RecommenderCollabUsers
+            .Where(x => x.UserId == userId)
+            .ToList();
+
+        return Ok(similarShows);
+    }
 }
