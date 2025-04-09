@@ -10,7 +10,7 @@ namespace CineNiche.API.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-// [Authorize]
+//[Authorize]
 public class RecommendController : ControllerBase
 {
     private MoviesContext _MoviesDbContext;
