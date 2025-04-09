@@ -161,4 +161,25 @@ export const fetchCategories = async (): Promise<string[]> => {
     console.error('Error fetching categories:', error);
     throw error;
   }
-}
+};
+
+export const getRecommendedMovies = async (): Promise<{
+  recommendType: string;
+  moviesList: movie[];
+}> => {
+  try {
+    const response = await fetch(`${API_URL}/Recommend/TrendingOrForYou`, {
+      method: 'GET',
+      credentials: 'include', // send credentials to get cookies
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch getRecommendedMovies');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching movies from trending or for you:', error);
+    throw error;
+  }
+};
