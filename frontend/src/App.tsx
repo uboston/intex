@@ -14,8 +14,7 @@ import MoviesPage from './pages/MoviesPage';
 import Home from './pages/Home';
 import Search from './pages/Search';
 import MovieDescription from './pages/MovieDescription';
-
-
+import MovieDetailPage from './pages/MovieDescription';
 
 function App() {
   return (
@@ -43,9 +42,9 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/moviedescription/:id" element={<MovieDescription />} />
         {/* For any undefined route, redirect to the login page */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
-        <Route path="/signin-google" element={<Navigate to="/" />} />
-        {/* <Route
+          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="/signin-google" element={<Navigate to="/" />} />
+          {/* <Route
               path="/product/:rootbeerName/:rootbeerId/:currentRetailPrice"
               element={<ProductPage />}
             /> */}

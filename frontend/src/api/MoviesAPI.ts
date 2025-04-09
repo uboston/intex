@@ -29,7 +29,7 @@ export const fetchMovies = async (
     .map((category) => `&categories=${encodeURIComponent(category)}`)
     .join('&');
   const response = await fetch(
-    `${API_URL}/Movies/?pageSize=${pageSize}&pageNumber=${pageNumber}&${categoryParams}`,
+    `${API_URL}/Movies/GetMovies?pageSize=${pageSize}&pageNumber=${pageNumber}&${categoryParams}`,
     {
       method: 'GET',
       credentials: 'include', // Include cookies in the request
