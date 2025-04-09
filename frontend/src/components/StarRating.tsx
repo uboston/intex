@@ -1,21 +1,28 @@
 import { useState, CSSProperties } from "react";
 import { FaStar } from "react-icons/fa";
+import { updateStarRating } from "../api/MoviesAPI"; // Assuming the function is in this file
 
 type StarRatingProps = {
+  showId: string; // Pass in showId to identify the item being rated
   totalStars?: number;
-  onRatingChange?: (rating: number) => void;
+  initialRating?: number; // Optionally pass an initial rating
 };
 
-const StarRating: React.FC<StarRatingProps> = ({
+const StarRating: React.FC<StarRatingProps> = ({ showId,
   totalStars = 5,
-  onRatingChange,
+  initialRating = 0,
 }) => {
-  const [rating, setRating] = useState<number>(0);
+  const [rating, setRating] = useState<number>(initialRating);
   const [hovered, setHovered] = useState<number>(0);
 
-  const handleClick = (index: number) => {
+  const handleClick = async (index: number) => {
     setRating(index);
-    if (onRatingChange) onRatingChange(index);
+    try {
+      // Call the function to send the updated rating to the backend
+      await updateStarRating(showId, index);
+    } catch (error) {
+      console.error("Error updating rating:", error);
+    }
   };
 
   // Remove button styles so only the star icon is visible

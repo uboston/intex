@@ -79,14 +79,12 @@ function MoviePage() {
             <div className="col-12">
               {/* Top Carousel for Recommended Movies */}
               <div className="mb-5">
-                <h3 className="mb-3">Recommended For You</h3>
                 <MovieCarousel genre="Recommended" />
               </div>
 
               {/* Carousels for each genre */}
               {genres.map((genre) => (
                 <div key={genre} className="mb-5">
-                  <h3 className="mb-3">{genre}</h3>
                   <MovieCarousel genre={genre} />
                 </div>
               ))}
