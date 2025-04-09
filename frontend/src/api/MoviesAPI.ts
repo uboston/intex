@@ -162,3 +162,65 @@ export const fetchCategories = async (): Promise<string[]> => {
     throw error;
   }
 }
+
+export const fetchRatingCategories = async (): Promise<string[]> => {
+  try {
+    const response = await fetch(`${API_URL}/Movies/GetRatingCategories`);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch rating categories');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching rating categories:', error);
+    throw error;
+  }
+}
+
+
+
+export const getRecommendedMovies = async (): Promise<{
+  recommendType: string;
+  moviesList: movie[];
+}> => {
+  try {
+    const response = await fetch(`${API_URL}/Recommend/TrendingOrForYou`, {
+      method: 'GET',
+      credentials: 'include', // send credentials to get cookies
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch getRecommendedMovies');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching movies from trending or for you:', error);
+    throw error;
+  }
+};
+
+export const updateStarRating = async (showId: string, rating: number) => {
+  try {
+    const response = await fetch(`${API_URL}/Recommend/TrendingOrForYou`, {
+      method: 'POST',
+      credentials: 'include', // send credentials to get cookies
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        showId: showId,
+        rating: rating,
+      }),
+    });
+
+    if (!response.ok) {
+      alert('Update failed to save.');
+      throw new Error('Failed to fetch getRecommendedMovies');
+    }
+  } catch (error) {
+    console.error('Error updating star rating:', error);
+    throw error;
+  }
+};

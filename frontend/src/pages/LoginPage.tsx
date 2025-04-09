@@ -13,42 +13,11 @@ function LoginPage() {
   const handleGoogleLogin = () => {
     window.location.href = 'https://localhost:5000/external-login/google';
   };
-  // useEffect(() => {
-  //   const script = document.createElement('script');
-  //   script.src = 'https://accounts.google.com/gsi/client';
-  //   script.async = true;
-  //   script.defer = true;
-  //   script.onload = () => {
-  //     // Use a type assertion so TypeScript doesn't complain
-  //     const google = (window as any).google;
-  //     if (google && google.accounts) {
-  //       google.accounts.id.initialize({
-  //         client_id:
-  //           '502286415472-a6q0duatohbvu7mdf43jbuiulhg3p381.apps.googleusercontent.com',
-  //         callback: handleGoogleResponse,
-  //       });
-
-  //       google.accounts.id.renderButton(
-  //         document.getElementById('g_id_signin'),
-  //         { theme: 'outline', size: 'large' }
-  //       );
-  //     } else {
-  //       console.error('Google API failed to load.');
-  //     }
-  //   };
-
-  //   document.body.appendChild(script);
-
-  //   return () => {
-  //     document.body.removeChild(script);
-  //   };
-  // }, []);
 
   const handleFacebookLogin = () => {
-    // Redirect to the backend endpoint that initiates the Facebook challenge.
     window.location.href = 'https://localhost:5000/external-login/facebook';
   };
-  // handle change events for input fields
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, checked, value } = e.target;
     if (type === 'checkbox') {
@@ -64,7 +33,6 @@ function LoginPage() {
     navigate('/register');
   };
 
-  // handle submit event for the form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(''); // Clear any previous errors
@@ -105,8 +73,12 @@ function LoginPage() {
 
   return (
     <div className="login-background">
+      {/* 
+        Override Bootstrap container and row constraints in CSS
+        to prevent horizontal scrolling.
+      */}
       <div className="container login-page">
-        <div className="row">
+        <div className="row justify-content-center">
           <div className="card border-0 shadow rounded-3">
             <div className="card-body p-4 p-sm-5">
               <h5 className="form-check-label text-center mb-5 fw-light fs-5">
@@ -135,12 +107,10 @@ function LoginPage() {
                   />
                   <label htmlFor="password">Password</label>
                 </div>
-
                 <div className="form-check mb-3">
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    value=""
                     id="rememberme"
                     name="rememberme"
                     checked={rememberme}
@@ -162,6 +132,7 @@ function LoginPage() {
                   <button
                     className="btn-login btn-primary text-uppercase fw-bold"
                     onClick={handleRegisterClick}
+                    type="button"
                   >
                     Register
                   </button>
@@ -182,8 +153,8 @@ function LoginPage() {
                     onClick={handleFacebookLogin}
                     type="button"
                   >
-                    <i className="fa-brands fa-facebook-f me-2"></i> Sign in
-                    with Facebook
+                    <i className="fa-brands fa-facebook-f me-2"></i>
+                    Sign in with Facebook
                   </button>
                 </div>
               </form>

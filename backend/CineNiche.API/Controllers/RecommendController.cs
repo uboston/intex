@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Net.Http.Headers;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
@@ -28,6 +29,8 @@ public class RecommendController : ControllerBase
         var similarShows = _MoviesDbContext
             .recommender_content
             .Where(x => x.show_id == showId)
+            .OrderByDescending(x => x.similarity)
+            .Take(10)
             .ToList();
 
         return Ok(similarShows);
@@ -241,4 +244,97 @@ public class RecommendController : ControllerBase
             return Ok(randomGenres);
         }
     }
+
+    [HttpGet("TrendingOrForYou")]
+    public IActionResult TrendingOrForYou(string userId = "1")
+    {
+        var userCookieId = User?.Identity?.Name;
+        if (!string.IsNullOrEmpty(userCookieId))
+        {
+            userId = Math.Abs(userCookieId.GetHashCode()).ToString();
+            // Debug lines to make sure the id is constant for a user
+            Console.WriteLine("*****************************************************");
+            Console.WriteLine("Cookie Result: " + userCookieId);
+            Console.WriteLine("Hashed ID: " + userId);
+        }
+
+        // Check if user has rated any movies
+        var hasUserRated = _MoviesDbContext.MoviesRatings
+            .Any(x => x.UserId == Int32.Parse(userId));
+
+        // Case 1: User has rated movies, check if they are in the recommender table
+        if (hasUserRated)
+        {
+            // Fetch user recommendations from the recommender table
+            var recommendations = _MoviesDbContext.recommender_collab_user
+                .Where(x => x.user_id == userId)
+                .SingleOrDefault(); // Use SingleOrDefault to handle case where the user isn't found
+
+            // If the user exists in the recommender table, fetch their movie recommendations
+            if (recommendations != null)
+            {
+                // Get movie titles and all columns for the recommended show IDs
+                var movieRecommendations = _MoviesDbContext.MoviesTitles
+                    .Where(m => new[] { recommendations.rec_1, recommendations.rec_2, recommendations.rec_3, recommendations.rec_4, recommendations.rec_5, recommendations.rec_6, recommendations.rec_7, recommendations.rec_8, recommendations.rec_9, recommendations.rec_10 }
+                                .Contains(m.ShowId))
+                    .ToList();
+
+                // Combine recommendations with movie titles
+                var recommendedMovies = new List<object>();
+                foreach (var recId in new[] { recommendations.rec_1, recommendations.rec_2, recommendations.rec_3, recommendations.rec_4, recommendations.rec_5, recommendations.rec_6, recommendations.rec_7, recommendations.rec_8, recommendations.rec_9, recommendations.rec_10 })
+                {
+                    var movie = movieRecommendations.FirstOrDefault(m => m.ShowId == recId);
+                    if (movie != null)
+                    {
+                        recommendedMovies.Add(movie); // Add the entire movie record
+                    }
+                }
+
+                var result = new
+                {
+                    recommendType = "Recommended For You", // Indicating the path taken
+                    moviesList = recommendedMovies // List of recommended movies
+                };
+
+                return Ok(result);
+            }
+        }
+
+        // Case 2: If the user has not rated any movies or they are not in the recommender table, fall back to Top Trending
+        return GetTopTrendingMovies();
+    }
+
+    private IActionResult GetTopTrendingMovies()
+    {
+        // Fetch TopTrending movies
+        var topRated = _MoviesDbContext.MoviesRatings
+            .Where(r => r.Rating != null && r.ShowId != null)
+            .GroupBy(r => r.ShowId)
+            .Select(group => new
+            {
+                ShowId = group.Key!,
+                AverageRating = group.Average(r => r.Rating!.Value)
+            })
+            .OrderByDescending(r => r.AverageRating)
+            .Skip(30)
+            .Take(10)
+            .ToList();
+
+        // Join with MoviesTitles to get the entire movie record
+        var topTrendingMovies = topRated
+            .Join(_MoviesDbContext.MoviesTitles,
+                rating => rating.ShowId,
+                movie => movie.ShowId,
+                (rating, movie) => movie) // Return the entire movie record
+            .ToList();
+
+        var result = new
+        {
+            recommendType = "Top Trending", // Indicating the path taken
+            moviesList = topTrendingMovies // List of top trending movies
+        };
+
+        return Ok(result);
+    }
+
 }

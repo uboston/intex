@@ -29,6 +29,8 @@ public partial class MoviesContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<RecommenderContent>().HasNoKey();
+
         modelBuilder.Entity<MoviesRating>(entity =>
         {
             entity

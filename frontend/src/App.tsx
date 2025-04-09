@@ -26,7 +26,7 @@ function App() {
           <Route path="/movies" element={<MoviesPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/privacy" element={<Privacy />} />
-          <Route path="/detail" element={<MovieDetailPage />} />
+          <Route path="/detail/:movieId" element={<MovieDetailPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/search" element={<Search />} />
           <Route path="*" element={<Navigate to="/login" replace />} />

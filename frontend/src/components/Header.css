@@ -1,13 +1,19 @@
-
 .header-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Keep this to space out left and right sections */
-  background-color: #000; /* Dark background */
-  padding: 0.75rem 1rem; /* Consider changing padding to 0.75rem 2% for responsiveness */
+  justify-content: space-between; /* Space out left and right sections */
+  background-color: transparent; /* Transparent background */
+  padding: 0.75rem 1rem;  /* You could also use percentages if you prefer */
   color: #fff;
-  width: 100%; /* Ensure the header takes full width */
-  box-sizing: border-box; /* Ensures padding doesn't affect overall width */
+  box-sizing: border-box;
+
+  /* Make the header full width of the viewport */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
 /* Left Section */
@@ -18,7 +24,7 @@
 }
 
 .header-logo {
-  width: 100px; /* Slightly larger logo */
+  width: 250px; /* Slightly larger logo */
   height: auto;
   margin-right: 1rem;
 }
@@ -57,17 +63,14 @@
 /* Circular Profile */
 .header-profile {
   position: relative;
+  cursor: pointer;
 }
 
 .header-profile-img {
-  width: 50px; /* Larger profile image */
-  height: 50px; /* Maintain aspect ratio */
+  width: 75px; /* Larger profile image */
+  height: 75px; /* Maintain aspect ratio */
   border-radius: 50%;
   object-fit: cover;
-  cursor: pointer;
-}
-.header-profile {
-  position: relative;
   cursor: pointer;
 }
 
@@ -78,7 +81,7 @@
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 5px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
 
