@@ -29,6 +29,8 @@ public class RecommendController : ControllerBase
         var similarShows = _MoviesDbContext
             .recommender_content
             .Where(x => x.show_id == showId)
+            .OrderByDescending(x => x.similarity)
+            .Take(10)
             .ToList();
 
         return Ok(similarShows);
@@ -314,6 +316,7 @@ public class RecommendController : ControllerBase
                 AverageRating = group.Average(r => r.Rating!.Value)
             })
             .OrderByDescending(r => r.AverageRating)
+            .Skip(30)
             .Take(10)
             .ToList();
 
