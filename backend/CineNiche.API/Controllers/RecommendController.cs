@@ -13,11 +13,13 @@ namespace CineNiche.API.Controllers;
 // [Authorize]
 public class RecommendController : ControllerBase
 {
-    private MoviesContext _MoviesDbContext;
+    private readonly MoviesContext _MoviesDbContext;
+    private readonly ApplicationDbContext _AppDbContext;
 
-    public RecommendController(MoviesContext temp)
+    public RecommendController(MoviesContext moviesDbContext, ApplicationDbContext appDbContext)
     {
-        _MoviesDbContext = temp;
+        _MoviesDbContext = moviesDbContext;
+        _AppDbContext = appDbContext;
     }
     
     [HttpGet("RecommenderContent")]
@@ -94,6 +96,16 @@ public class RecommendController : ControllerBase
         4. Using those genres, get a list of 5 of them
         5. Return list to user
         */
+        // var userCookieId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var userCookieId = User?.Identity?.Name;
+        if (!string.IsNullOrEmpty(userCookieId))
+        {
+            userId = Math.Abs(userCookieId.GetHashCode()).ToString();
+            // Debug lines to make sure the id is constant for a user
+            Console.WriteLine("*****************************************************");
+            Console.WriteLine("Cookie Result: " + userCookieId);
+            Console.WriteLine("Hashed ID: " + userId);
+        }
 
         // Check if user has rated any movies
         var hasUserRated = _MoviesDbContext.MoviesRatings
@@ -102,7 +114,7 @@ public class RecommendController : ControllerBase
         if (!hasUserRated)
         {
             // Fallback default list
-            var fallback = new List<string> { "Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance" };
+            var fallback = new List<string> { "Action", "Comedies", "Dramas", "Documentaries", "Children", "Spirituality" };
             return Ok(fallback);
         }
 
@@ -111,7 +123,7 @@ public class RecommendController : ControllerBase
 
         if (recommendation == null)
         {
-            var fallback = new List<string> { "Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance" };
+            var fallback = new List<string> { "Action", "Comedies", "Dramas", "Documentaries", "Children", "Spirituality" };
             return Ok(fallback);
         }
 
@@ -179,10 +191,8 @@ public class RecommendController : ControllerBase
                 break;
         }
         var result = genres.Take(5).ToList();
-        var test = User?.Identity?.Name;
-        Console.WriteLine("*****************************************");
-        // Console.WriteLine(User?.Identity?.AspNetCore);
-        Console.WriteLine("*****************************************");
+        Console.WriteLine("*****************************************************");
+        Console.WriteLine("Result: " + result); // Debug line
 
         return Ok(result);
     }
