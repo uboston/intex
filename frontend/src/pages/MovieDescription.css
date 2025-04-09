@@ -1,35 +1,75 @@
+/* Movie Description Page Styles */
 .movie-detail-page {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  /* Black to dark grey gradient background */
+  background: linear-gradient(135deg, #000000, #424242);
+  color: #f0f0f0; /* Light text color */
+  min-height: 100vh;
+}
+
+.movie-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.movie-text {
+  flex: 1;
+  padding-right: 20px;
+  text-align: left; /* Left-align text */
+}
+
+.movie-text h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.movie-text p {
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+.movie-poster {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.movie-poster img {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.related-movies {
+  width: 100%;
+}
+
+.related-movies h2 {
+  margin-bottom: 10px;
+  color: #e0e0e0;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .movie-info {
     flex-direction: column;
     align-items: center;
-    padding: 20px;
   }
-  
-  .movie-info {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  
+
   .movie-text {
-    flex: 1;
-    padding-right: 20px;
+    padding-right: 0;
+    text-align: left; /* maintain left alignment on mobile */
   }
   
   .movie-poster {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 20px;
   }
-  
-  .movie-poster img {
-    width: 100%; /* Adjust based on your layout */
-    max-width: 300px;
-  }
-  
-  .related-movies {
-    width: 100%;
-  }
-  
+}

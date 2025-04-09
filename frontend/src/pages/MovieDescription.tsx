@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import "./MovieDescription.css";
-import MovieCarousel from '../components/MovieCarousel'; 
+import MovieCarousel from '../components/MovieCarousel';
+import Header from '../components/Header';            // Import Header component
+import StarRating from '../components/StarRating';      // Import StarRating component
 
 // Define the interface for a movie
 interface Movie {
@@ -46,25 +48,30 @@ function MovieDetailPage() {
   const posterUrl = `https://showposters.blob.core.windows.net/poster/Movie%20Posters/${encodeURIComponent(movie.title)}.jpg`;
 
   return (
-    <div className="movie-detail-page">
-      <div className="movie-info">
-        <div className="movie-text">
-          <h1>{movie.title}</h1>
-          <p>{movie.description}</p>
-          <p><strong>Rating:</strong> {movie.rating}</p>
-          <p><strong>Director:</strong> {movie.director}</p>
-          <p><strong>Release Year:</strong> {movie.releaseYear}</p>
-          <p><strong>Duration:</strong> {movie.duration}</p>
-          <p><strong>Cast:</strong> {movie.cast}</p>
-          <p><strong>Categories:</strong> {movie.categories.join(', ')}</p>
+    <div>
+      <Header />
+      <div className="movie-detail-page">
+        <div className="movie-info">
+          <div className="movie-text">
+            <h1>{movie.title}</h1>
+            {/* Star rating appears just underneath the title */} 
+            <p>{movie.description}</p>
+            <p><strong>Rating:</strong> {movie.rating}</p>
+            <p><strong>Director:</strong> {movie.director}</p>
+            <p><strong>Release Year:</strong> {movie.releaseYear}</p>
+            <p><strong>Duration:</strong> {movie.duration}</p>
+            <p><strong>Cast:</strong> {movie.cast}</p>
+            <p><strong>Your Rating:</strong></p>
+            <StarRating rating={movie.rating} />
+          </div>
+          <div className="movie-poster">
+            <img src={posterUrl} alt={`Poster for ${movie.title}`} />
+          </div>
         </div>
-        <div className="movie-poster">
-          <img src={posterUrl} alt={`Poster for ${movie.title}`} />
+        <div className="related-movies">
+          <h2>Similar Movies</h2>
+          <MovieCarousel movies={relatedMovies} genre={''} />
         </div>
-      </div>
-      <div className="related-movies">
-        <h2>Similar Movies</h2>
-        <MovieCarousel movies={relatedMovies} genre={''} />
       </div>
     </div>
   );

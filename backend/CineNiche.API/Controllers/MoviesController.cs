@@ -10,7 +10,7 @@ namespace CineNiche.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class MoviesController : ControllerBase
     {
         private MoviesContext _MoviesDbContext;
@@ -357,4 +357,5 @@ namespace CineNiche.API.Controllers
 
         return Ok(movies);
     }
+}
 }
