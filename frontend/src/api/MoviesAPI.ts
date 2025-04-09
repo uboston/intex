@@ -161,6 +161,23 @@ export const fetchCategories = async (): Promise<string[]> => {
     console.error('Error fetching categories:', error);
     throw error;
   }
+}
+
+export const fetchRatingCategories = async (): Promise<string[]> => {
+  try {
+    const response = await fetch(`${API_URL}/Movies/GetRatingCategories`);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch rating categories');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching rating categories:', error);
+    throw error;
+  }
+}
+
 };
 
 export const getRecommendedMovies = async (): Promise<{

@@ -36,9 +36,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   }, [imagePath]);
 
   return (
-    <Link
-      to={`/moviedescription/${movie.showId}`} // Fixed path here
-      className="movie-card"
+    <Link to={`/detail/${movie.showId}`} className="movie-card"
+
       style={{ textDecoration: 'none' }}
     >
       <img

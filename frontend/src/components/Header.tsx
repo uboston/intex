@@ -41,7 +41,7 @@ function Header() {
           src="/Logo.png"
           alt="CineNiche Logo"
           className="header-logo"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/movies')}
         />
       </div>
 
@@ -58,8 +58,8 @@ function Header() {
           />
           {isDropdownVisible && (
             <div className="profile-dropdown">
-              <button onClick={() => navigate('/admin')}>Admin</button>
               <button onClick={() => navigate('/movies')}>Home</button>
+              <button onClick={() => navigate('/admin')}>Admin</button>
               <button onClick={() => navigate('/')}>Logout</button>
             </div>
           )}

@@ -148,22 +148,43 @@ namespace CineNiche.API.Controllers
         }
 
         [HttpPost("MoviesRating")]
-        public IActionResult SubmitRating([FromBody] MoviesRating rating)
+        public IActionResult SubmitRating([FromBody] SubmitRatingDto dto, string userId = "1")
         {
-            if (rating.Rating is < 1 or > 5)
+            var userCookieId = User?.Identity?.Name;
+            if (!string.IsNullOrEmpty(userCookieId))
+            {
+                userId = Math.Abs(userCookieId.GetHashCode()).ToString();
+                // Debug lines to make sure the id is constant for a user
+                Console.WriteLine("*****************************************************");
+                Console.WriteLine("Cookie Result: " + userCookieId);
+                Console.WriteLine("Hashed ID: " + userId);
+            }
+            if (dto.Rating is < 1 or > 5)
             {
                 return BadRequest("Rating must be between 1 and 5.");
             }
 
-            if (string.IsNullOrWhiteSpace(rating.ShowId) || rating.UserId == null)
+            if (string.IsNullOrWhiteSpace(dto.ShowId))
             {
-                return BadRequest("ShowId and UserId are required.");
+                return BadRequest("ShowId is required.");
             }
+
+            var rating = new MoviesRating
+            {
+                ShowId = dto.ShowId,
+                Rating = dto.Rating,
+                UserId = Int32.Parse(userId)
+            };
 
             _MoviesDbContext.MoviesRatings.Add(rating);
             _MoviesDbContext.SaveChanges();
 
             return Ok(new { message = "Rating submitted successfully." });
+        }
+        public class SubmitRatingDto
+        {
+            public string ShowId { get; set; }
+            public int Rating { get; set; }
         }
 
         [HttpGet("MoviesByGenre")]
