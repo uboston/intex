@@ -1,4 +1,5 @@
 using CineNiche.API.Data;
+using CineNiche.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -101,12 +102,10 @@ public class RecommendController : ControllerBase
         4. Using those genres, get a list of 5 of them
         5. Return list to user
         */
-        // var userCookieId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         var userCookieId = User?.Identity?.Name;
         if (!string.IsNullOrEmpty(userCookieId))
         {
-            userId = Math.Abs(userCookieId.GetHashCode()).ToString();
-            // Debug lines to make sure the id is constant for a user
+            userId = EmailHasher.GetStableHash(userCookieId);
             Console.WriteLine("*****************************************************");
             Console.WriteLine("Cookie Result: " + userCookieId);
             Console.WriteLine("Hashed ID: " + userId);
@@ -253,8 +252,7 @@ public class RecommendController : ControllerBase
         var userCookieId = User?.Identity?.Name;
         if (!string.IsNullOrEmpty(userCookieId))
         {
-            userId = Math.Abs(userCookieId.GetHashCode()).ToString();
-            // Debug lines to make sure the id is constant for a user
+            userId = EmailHasher.GetStableHash(userCookieId);
             Console.WriteLine("*****************************************************");
             Console.WriteLine("Cookie Result: " + userCookieId);
             Console.WriteLine("Hashed ID: " + userId);
