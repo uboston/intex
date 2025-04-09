@@ -19,7 +19,7 @@ namespace CineNiche.API.Controllers
         }
 
         [HttpGet("GetMovies")]
-        public IActionResult GetMovies(int pageSize = 10, int pageNum = 1, [FromQuery] List<string>? categories = null)
+        public IActionResult GetMovies(int pageSize = 50, int pageNum = 2, [FromQuery] List<string>? categories = null)
         {
             try
             {
@@ -134,10 +134,14 @@ namespace CineNiche.API.Controllers
                 }
 
                 // Adding a stable ordering clause before Skip/Take
-                query = query.OrderBy(m => m.ShowId);
 
                 var totalNumMovies = query.Count();
-                var movies = query
+                var movies = query.ToList()
+                    .OrderBy(m =>
+                    {
+                        var digitsOnly = new string(m.ShowId.SkipWhile(c => !char.IsDigit(c)).ToArray());
+                        return int.TryParse(digitsOnly, out var num) ? num : int.MaxValue;
+                    })
                     .Skip((pageNum - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();

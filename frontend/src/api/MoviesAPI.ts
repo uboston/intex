@@ -21,15 +21,15 @@ interface movie {
 const API_URL = 'https://localhost:5000';
 
 export const fetchMovies = async (
-  pageNumber: number,
   pageSize: number,
+  pageNumber: number,
   selectedCategories: string[]
 ): Promise<FetchMoviesResponse> => {
   const categoryParams = selectedCategories
     .map((category) => `&categories=${encodeURIComponent(category)}`)
     .join('&');
   const response = await fetch(
-    `${API_URL}/Movies/GetMovies?pageSize=${pageSize}&pageNumber=${pageNumber}&${categoryParams}`,
+    `${API_URL}/Movies/GetMovies?pageSize=${pageSize}&pageNum=${pageNumber}&${categoryParams}`,
     {
       method: 'GET',
       credentials: 'include', // Include cookies in the request
