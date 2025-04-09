@@ -55,6 +55,6 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, movies }) => {
       </button>
     </div>
   );
-};
+}; 
 
 export default MovieCarousel;

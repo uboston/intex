@@ -27,7 +27,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/admin" element={<AdminPage />} />
-        <Route path="/moviedescription/:id" element={<MovieDescription />} />
+        <Route path="/moviedescription/:movieId" element={<MovieDescription />} />
         {/* For any undefined route, redirect to the login page */}
         <Route path="*" element={<Navigate to="/login" replace />} />
         <Route path="/signin-google" element={<Navigate to="/" />} />

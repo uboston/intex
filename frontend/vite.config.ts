@@ -10,17 +10,17 @@ export default defineConfig({
       'Content-Security-Policy':
         "default-src 'self'; " +
         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com; " +
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +  // Removed duplicate accounts.google.com, as it's not typically needed for styles
-        "img-src 'self' data: https://showposters.blob.core.windows.net/poster/Movie%20Posters/; " +  // Correctly added your image source
+        "style-src 'self' 'unsafe-inline' fonts.googleapis.com https://accounts.google.com; " +
+        "img-src 'self' data: https://showposters.blob.core.windows.net/poster/Movie%20Posters/ https://localhost:5000/; " +
         "frame-ancestors 'none'; " +
-        "font-src 'self' https://fonts.gstatic.com data:; " +  // Use HTTPS for fonts.gstatic.com
-        "connect-src 'self' https://localhost:5000 https://accounts.google.com https://oauth2.googleapis.com; " +
+        "font-src 'self' fonts.gstatic.com data:; " +
+        "connect-src 'self' https://localhost:5000 https://accounts.google.com https://oauth2.googleapis.com https://showposters.blob.core.windows.net; " + // ✅ Allow OAuth token exchange, plus showposters domain for images fetch requests
         "object-src 'none'; " +
         "base-uri 'self'; " +
         "form-action 'self'; " +
-        "frame-src https://accounts.google.com https://oauth2.googleapis.com;"  // Removed 'self' if not needed for framing
-    }
-    ,
+        "frame-src 'self' https://accounts.google.com https://oauth2.googleapis.com;", // ✅ Allow OAuth login popups
+    },
+    
 
     cors: {
       origin: 'http://localhost:3000',
