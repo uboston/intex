@@ -1,0 +1,37 @@
+/* src/components/Footer.css */
+.footer {
+  width: 100%;
+  padding: 20px 0;
+  background-color: #111;
+  color: #fff;
+  text-align: center;
+  /* remove any positioning here */
+}
+
+.footer p {
+  margin: 0;
+}
+
+.privacy-link {
+  color: #d2b48c;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.privacy-link:hover {
+  color: #c1a178;
+}
+.footer {
+  position: relative;
+  width: 100vw; /* span the full viewport width */
+  left: 50%; /* position its left edge at the center of the parent */
+  transform: translateX(
+    -50%
+  ); /* pull it back so it truly spans left-to-right */
+  padding: 20px 0;
+  background-color: #111;
+  color: #fff;
+  text-align: center;
+  z-index: 10;
+}
