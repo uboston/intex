@@ -19,24 +19,48 @@ interface Movie {
 // Define the interface for related movies
 interface RelatedMovie extends Movie {}
 
-function MovieDetailPage() {
+function MovieDescription() {
   const { movieId } = useParams<{ movieId: string }>();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [relatedMovies, setRelatedMovies] = useState<RelatedMovie[]>([]);
 
   useEffect(() => {
+    // Helper function to safely parse JSON from a response
+    const parseJSONResponse = async (response: Response) => {
+      // Read the text from the response
+      const text = await response.text();
+      // If there's no content, return an empty object; otherwise, parse it
+      return text ? JSON.parse(text) : {};
+    };
+
     // Fetch movie details
     fetch(`https://localhost:5000/Movies/MovieDetails/${movieId}`)
-      .then(response => response.json())
+      .then(async response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        return parseJSONResponse(response);
+      })
       .then(data => {
         setMovie(data);
+      })
+      .catch(error => {
+        console.error('Failed to fetch movie details:', error);
       });
 
-    // Fetch related movies - adjust the URL similarly if needed
+    // Fetch related movies
     fetch(`https://localhost:5000/Movies/RelatedMovies/${movieId}`)
-      .then(response => response.json())
+      .then(async response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        return parseJSONResponse(response);
+      })
       .then(data => {
         setRelatedMovies(data);
+      })
+      .catch(error => {
+        console.error('Failed to fetch related movies:', error);
       });
   }, [movieId]);
 
@@ -70,4 +94,4 @@ function MovieDetailPage() {
   );
 }
 
-export default MovieDetailPage;
+export default MovieDescription;
