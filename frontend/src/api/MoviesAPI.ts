@@ -92,7 +92,10 @@ export const deleteMovie = async (showId: string): Promise<void> => {
 
 export const getGenres = async (): Promise<string[]> => {
   try {
-    const response = await fetch(`${API_URL}/Recommend/TopGenres/`);
+    const response = await fetch(`${API_URL}/Recommend/TopGenres/`, {
+      method: 'GET',
+      credentials: 'include', // send credentials to get cookies
+    });
 
     if (!response.ok) {
       throw new Error('Failed to fetch TopGenres');
