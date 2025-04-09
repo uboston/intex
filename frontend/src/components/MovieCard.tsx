@@ -13,8 +13,8 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const [imageUrl, setImageUrl] = useState<string>('');
-  const imageName = movie.title.replace(/[^a-zA-Z0-9]/g, '_'); // Sanitize title to create a valid URL or file path
-  const imagePath = `https://localhost:5000/posters/${imageName}.jpg`; // Path for movie images
+  // const imageName = movie.title.replace(/[^a-zA-Z0-9]/g, '_'); // Sanitize title to create a valid URL or file path
+  const imagePath = `https://showposters.blob.core.windows.net/poster/Movie%20Posters/posters/${movie.title}.jpg`; // Path for movie images
   const fallbackImage = 'https://localhost:5000/default.jpg'; // Path for default image
 
   useEffect(() => {
