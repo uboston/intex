@@ -32,12 +32,6 @@ public class RecommendController : ControllerBase
             .OrderByDescending(x => x.similarity)
             .Take(10)
             .ToList();
-        var similarShows = _MoviesDbContext
-            .recommender_content
-            .Where(x => x.show_id == showId)
-            .OrderByDescending(x => x.similarity)
-            .Take(10)
-            .ToList();
 
         return Ok(similarShows);
     }
