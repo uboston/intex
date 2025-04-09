@@ -27,27 +27,25 @@ namespace CineNiche.API.Controllers
             if (movie == null)
                 return BadRequest("Movie data is null.");
 
-            // Get the current max numeric part of showId
             var lastMovie = _MoviesDbContext.MoviesTitles
-                .OrderByDescending(m => EF.Functions.Like(m.ShowId, "s%") ? 
-                    Convert.ToInt32(m.ShowId.Substring(1)) : 0)
+                .Where(m => m.ShowId.StartsWith("s"))
+                .OrderByDescending(m => Convert.ToInt32(m.ShowId.Substring(1)))
                 .FirstOrDefault();
 
             int nextId = 1;
-            if (lastMovie != null && !string.IsNullOrEmpty(lastMovie.ShowId) && lastMovie.ShowId.StartsWith("s"))
+            if (lastMovie != null && int.TryParse(lastMovie.ShowId.Substring(1), out int lastId))
             {
-                if (int.TryParse(lastMovie.ShowId.Substring(1), out int lastId))
-                {
-                    nextId = lastId + 1;
-                }
+                nextId = lastId + 1;
             }
 
             movie.ShowId = $"s{nextId}";
 
             _MoviesDbContext.MoviesTitles.Add(movie);
             _MoviesDbContext.SaveChanges();
+
             return Ok(movie);
         }
+
 
         // PUT: Update an existing movie
         [HttpPut("UpdateMovie/{showId}")]

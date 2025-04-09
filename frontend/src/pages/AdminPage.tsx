@@ -30,7 +30,8 @@ import {
   Checkbox,
   ListItemText,
   OutlinedInput,
-  SelectChangeEvent
+  SelectChangeEvent,
+  FormControlLabel,
 } from '@mui/material';
 
 import Pagination from '../components/Pagination';
@@ -62,7 +63,11 @@ interface MovieFormData {
   description: string;
   categories: string[];
 }
-
+const formatCategoryLabel = (key: string) => {
+  return key
+    .replace(/([A-Z])/g, ' $1')               // e.g. "tvDramas" → "tv Dramas"
+    .replace(/^./, (str) => str.toUpperCase()); // e.g. "tv dramas" → "Tv dramas"
+};
 const MovieForm = ({
   open,
   onClose,
@@ -86,7 +91,41 @@ const MovieForm = ({
   onSubmit: (data: MovieFormData) => void;
   initialData?: MovieFormData;
 }) => {
-  const [formData, setFormData] = useState({
+  const allCategoryKeys = [
+    "action",
+    "adventure",
+    "animeSeriesInternationalTvShows",
+    "britishTvShowsDocuseriesInternationalTvShows",
+    "children",
+    "comedies",
+    "comediesDramasInternationalMovies",
+    "comediesInternationalMovies",
+    "comediesRomanticMovies",
+    "crimeTvShowsDocuseries",
+    "documentaries",
+    "documentariesInternationalMovies",
+    "docuseries",
+    "dramas",
+    "dramasInternationalMovies",
+    "dramasRomanticMovies",
+    "familyMovies",
+    "fantasy",
+    "horrorMovies",
+    "internationalMoviesThrillers",
+    "internationalTvShowsRomanticTvShowsTvDramas",
+    "kidsTv",
+    "languageTvShows",
+    "musicals",
+    "natureTv",
+    "realityTv",
+    "spirituality",
+    "tvAction",
+    "tvComedies",
+    "tvDramas",
+    "talkShowsTvComedies",
+    "thrillers",
+  ];
+  const [formData, setFormData] = useState<Record<string, any>>({
     showId: initialData.showId || '',
     type: initialData.type || '',
     title: initialData.title || '',
@@ -97,13 +136,16 @@ const MovieForm = ({
     rating: initialData.rating || '',
     duration: initialData.duration || '',
     description: initialData.description || '',
-    categories: initialData.categories || [],
+    ...Object.fromEntries(allCategoryKeys.map((key) => [key, (initialData as any)[key] || 0])),
   });
+  
 
   // ✅ Move useState for options HERE
   const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
   const [ratingOptions, setRatingOptions] = useState<string[]>([]);
   const typeOptions = ['Movie', 'TV Show'];
+  
+  
 
   useEffect(() => {
     const loadData = async () => {
@@ -112,11 +154,12 @@ const MovieForm = ({
           fetchCategories(),
           fetchRatingCategories(),
         ]);
-
+  
         setCategoryOptions(fetchedCategories);
         setRatingOptions(fetchedRatings);
-
-        setFormData({
+  
+        setFormData((prev) => ({
+          ...prev,
           showId: initialData.showId || '',
           type: initialData.type || '',
           title: initialData.title || '',
@@ -127,20 +170,23 @@ const MovieForm = ({
           rating: initialData.rating || '',
           duration: initialData.duration || '',
           description: initialData.description || '',
-          categories: initialData.categories || [],
-        });
+          ...Object.fromEntries(
+            fetchedCategories.map((key) => [key, (initialData as any)[key] || 0])
+          ),
+        }));
       } catch (error) {
         console.error('Failed to load form metadata:', error);
       }
     };
-
+  
     loadData();
   }, [initialData]);
-
+  
+  
   
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -150,7 +196,8 @@ const MovieForm = ({
   };
 
   const handleSubmit = () => {
-    onSubmit(formData);
+    onSubmit(formData as MovieFormData);
+    console.log("Final payload:", formData);
     onClose();
   };
 
@@ -169,20 +216,25 @@ const MovieForm = ({
           fullWidth
         />
         <FormControl fullWidth margin="dense">
-          <InputLabel>Type</InputLabel>
-          <Select
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-            label="Type"
-          >
-            {typeOptions.map((type) => (
-              <MenuItem key={type} value={type}>
-                {type}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <InputLabel>Type</InputLabel>
+        <Select
+          name="type"
+          value={formData.type || ''}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              type: e.target.value,
+            }))
+          }
+          label="Type"
+        >
+          {typeOptions.map((type) => (
+            <MenuItem key={type} value={type}>
+              {type}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
         <TextField
           margin="dense"
           label="Director"
@@ -250,28 +302,37 @@ const MovieForm = ({
           multiline
         />
         <FormControl fullWidth margin="dense">
-        <InputLabel>Categories</InputLabel>
-        <Select
-          multiple
-          name="categories"
-          value={formData.categories}
-          onChange={(e) =>
-            setFormData((prev) => ({
-              ...prev,
-              categories: e.target.value as string[],
-            }))
-          }
-          input={<OutlinedInput label="Categories" />}
-          renderValue={(selected) => (selected as string[]).join(', ')}
-        >
-          {categoryOptions.map((option) => (
-            <MenuItem key={option} value={option}>
-              <Checkbox checked={formData.categories.includes(option)} />
-              <ListItemText primary={option} />
-            </MenuItem>
-          ))}
-        </Select>
-        </FormControl>
+  <InputLabel>Categories</InputLabel>
+  <Select
+    multiple
+    name="categories"
+    value={categoryOptions.filter((key) => formData[key] === 1)}
+    onChange={(e) => {
+      const selected = e.target.value as string[];
+
+      const updated = Object.fromEntries(
+        categoryOptions.map((key) => [key, selected.includes(key) ? 1 : 0])
+      );
+
+      setFormData((prev) => ({
+        ...prev,
+        ...updated,
+      }));
+    }}
+    input={<OutlinedInput label="Categories" />}
+    renderValue={(selected) =>
+      (selected as string[]).map(formatCategoryLabel).join(', ')
+    }
+  >
+    {categoryOptions.map((option) => (
+      <MenuItem key={option} value={option}>
+        <Checkbox checked={formData[option] === 1} />
+        <ListItemText primary={formatCategoryLabel(option)} />
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
+
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
@@ -339,6 +400,9 @@ const AdminMovies = () => {
 
   const handleFormSubmit = async (movieData: MovieFormData) => {
     try {
+      const selectedCategories = Object.keys(movieData)
+      .filter(key => categoryOptions.includes(key) && movieData[key] === 1);
+
       let updatedMovies: movie[];
 
       // Convert string showId to number if needed for API
@@ -348,8 +412,8 @@ const AdminMovies = () => {
 
       if (numericShowId) {
         const updated = await updateMovie(numericShowId, {
-          showId: movieData.showId || '', // backend expects string
-          type: '', // or however you handle this
+          showId: movieData.showId || '', 
+          type: movieData.type, 
           title: movieData.title,
           director: movieData.director,
           cast: movieData.cast,
@@ -358,7 +422,7 @@ const AdminMovies = () => {
           rating: movieData.rating,
           duration: movieData.duration,
           description: movieData.description,
-          categories: [], // or pull this from form if editable
+          categories: selectedCategories,
         });
 
         updatedMovies = movies.map((m) =>
@@ -366,8 +430,8 @@ const AdminMovies = () => {
         );
       } else {
         const added = await addMovie({
-          showId: '', // backend should auto-generate this
-          type: '', // default value
+          showId: '',
+          type: movieData.type,
           title: movieData.title,
           director: movieData.director,
           cast: movieData.cast,
@@ -376,7 +440,7 @@ const AdminMovies = () => {
           rating: movieData.rating,
           duration: movieData.duration,
           description: movieData.description,
-          categories: [],
+          categories: selectedCategories,
         });
 
         updatedMovies = [...movies, added];
