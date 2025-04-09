@@ -122,7 +122,7 @@ function LoginPage() {
                 </div>
                 <div className="d-grid mb-2">
                   <button
-                    className="btn-login btn-primary text-uppercase fw-bold"
+                    className="btn-login text-uppercase fw-bold"
                     type="submit"
                   >
                     Sign in
@@ -130,7 +130,7 @@ function LoginPage() {
                 </div>
                 <div className="d-grid mb-2">
                   <button
-                    className="btn-login btn-primary text-uppercase fw-bold"
+                    className="btn-register text-uppercase fw-bold"
                     onClick={handleRegisterClick}
                     type="button"
                   >
