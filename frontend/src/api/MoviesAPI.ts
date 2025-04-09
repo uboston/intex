@@ -127,3 +127,20 @@ export const randomGenres = async (usedGenres: string[]): Promise<string[]> => {
     throw error;
   }
 };
+
+export const getMoviesFromGenre = async (genre: string): Promise<movie[]> => {
+  try {
+    const response = await fetch(
+      `${API_URL}/Movies/MoviesByGenre?genre=${encodeURIComponent(genre)}`
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch getMoviesFromGenre');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching movies from genres:', error);
+    throw error;
+  }
+};

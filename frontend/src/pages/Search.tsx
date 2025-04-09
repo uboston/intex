@@ -4,7 +4,7 @@ import AuthorizeView from '../components/AuthorizeView';
 import Header from '../components/Header';
 
 interface Movie {
-  id: string;
+  showId: string;
   title: string;
 }
 
@@ -62,7 +62,7 @@ const Search: React.FC = () => {
             />
             <div className="grid gap-4">
               {movies.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
+                <MovieCard key={movie.showId} movie={movie} />
               ))}
             </div>
           </div>

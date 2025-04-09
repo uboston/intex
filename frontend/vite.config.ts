@@ -14,7 +14,7 @@ export default defineConfig({
         "img-src 'self' data: https://showposters.blob.core.windows.net/poster/Movie%20Posters/ https://localhost:5000/; " +
         "frame-ancestors 'none'; " +
         "font-src 'self' fonts.gstatic.com data:; " +
-        "connect-src 'self' https://localhost:5000 https://accounts.google.com https://oauth2.googleapis.com; " + // ✅ Allow OAuth token exchange
+        "connect-src 'self' https://localhost:5000 https://accounts.google.com https://oauth2.googleapis.com https://showposters.blob.core.windows.net/poster/Movie%20Posters/; " + // ✅ Allow OAuth token exchange
         "object-src 'none'; " +
         "base-uri 'self'; " +
         "form-action 'self'; " +

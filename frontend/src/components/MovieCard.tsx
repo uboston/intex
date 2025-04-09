@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import './MovieCard.css';
 
 interface Movie {
-  id: string;
+  showId: string;
   title: string;
 }
 
@@ -13,8 +13,7 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const [imageUrl, setImageUrl] = useState<string>('');
-  // const imageName = movie.title.replace(/[^a-zA-Z0-9]/g, '_'); // Sanitize title to create a valid URL or file path
-  const imagePath = `https://showposters.blob.core.windows.net/poster/Movie%20Posters/posters/${movie.title}.jpg`; // Path for movie images
+  const imagePath = `https://showposters.blob.core.windows.net/poster/Movie%20Posters/${encodeURIComponent(movie.title)}.jpg`; // URL encode the title to avoid issues with special characters
   const fallbackImage = 'https://localhost:5000/default.jpg'; // Path for default image
 
   useEffect(() => {
@@ -22,12 +21,14 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       try {
         const response = await fetch(imagePath, { method: 'HEAD' });
         if (response.ok) {
-          setImageUrl(imagePath); // Image exists
+          setImageUrl(imagePath); // Image exists, use it
         } else {
-          setImageUrl(fallbackImage); // Fallback if the image doesn't exist
+          setImageUrl(fallbackImage); // If the image is not found, use fallback image
         }
-      } catch {
-        setImageUrl(fallbackImage); // In case of an error
+      } catch (error) {
+        // If there is any error (CORS, network issue, etc.), use the fallback image
+        console.error('Error fetching image:', error);
+        setImageUrl(fallbackImage);
       }
     };
 
@@ -36,7 +37,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
 
   return (
     <Link
-      to={`/moviedescription/${movie.id}`}
+      to={`/moviedescription/${movie.showId}`} // Fixed path here
       className="movie-card"
       style={{ textDecoration: 'none' }}
     >
