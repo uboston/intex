@@ -6,24 +6,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CineNiche.API.Controllers;
-[Route("[controller]")]
-[ApiController]
-//[Authorize]
-public class MoviesController : ControllerBase
+namespace CineNiche.API.Controllers
 {
-    private MoviesContext _MoviesDbContext;
-    public MoviesController(MoviesContext temp)
+    [Route("[controller]")]
+    [ApiController]
+    [Authorize]
+    public class MoviesController : ControllerBase
     {
-        _MoviesDbContext = temp;
-    }
-
-    [HttpGet("GetMovies")]
-    public IActionResult GetMovies(int pageSize = 10, int pageNum = 1, [FromQuery] List<string>? categories = null)
-    {
-        try
+        private MoviesContext _MoviesDbContext;
+        public MoviesController(MoviesContext temp)
         {
-            var query = _MoviesDbContext.MoviesTitles.AsQueryable();
+            _MoviesDbContext = temp;
+        }
+
+        [HttpGet("GetMovies")]
+        public IActionResult GetMovies(int pageSize = 50, int pageNum = 2, [FromQuery] List<string>? categories = null)
+        {
+            try
+            {
+                var query = _MoviesDbContext.MoviesTitles.AsQueryable();
 
             if (categories != null && categories.Any())
             {
@@ -133,14 +134,18 @@ public class MoviesController : ControllerBase
                 }
             }
 
-            // Adding a stable ordering clause before Skip/Take
-            query = query.OrderBy(m => m.ShowId);
+                // Adding a stable ordering clause before Skip/Take
 
-            var totalNumMovies = query.Count();
-            var movies = query
-                .Skip((pageNum - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+                var totalNumMovies = query.Count();
+                var movies = query.ToList()
+                    .OrderBy(m =>
+                    {
+                        var digitsOnly = new string(m.ShowId.SkipWhile(c => !char.IsDigit(c)).ToArray());
+                        return int.TryParse(digitsOnly, out var num) ? num : int.MaxValue;
+                    })
+                    .Skip((pageNum - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
 
             var returnMovies = new
             {
