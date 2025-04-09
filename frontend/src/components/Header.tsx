@@ -38,7 +38,7 @@ function Header() {
       {/* Left side: Logo and Site Title */}
       <div className="header-left">
         <img
-          src="/Logo.png"
+          src="/newlogo.png"
           alt="CineNiche Logo"
           className="header-logo"
           onClick={() => navigate('/movies')}

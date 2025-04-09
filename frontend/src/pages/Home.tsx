@@ -23,9 +23,9 @@ const Home: React.FC = () => {
         {/* Hero Section */}
         <div className="hero">
           <h1>
-            Welcome to{' '}
-            <img src="/wordlogo.svg" alt="CineNiche" className="center-logo" />
+            Welcome to<img src="/newlogo.png" alt="CineNiche" className="center-logo" />
           </h1>
+          <br></br>
           <p>Unlimited movies, TV shows, and more.</p>
           <div className="email-form">
             <p>Ready to watch? Please Sign in above!</p>
