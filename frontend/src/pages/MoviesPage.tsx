@@ -1,15 +1,68 @@
-import MovieCarousel from '../components/MovieCarousel'; // MovieCarousel now accepts a 'genre' prop for filtering/display purposes
+import MovieCarousel from '../components/MovieCarousel';
 import Header from '../components/Header';
-import { useState } from 'react';
-import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
-import Logout from '../components/Logout';
-import './MoviesPage.css';  // Import the CSS file from the same folder
-
-const genres = ["Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance"];
+import { useEffect, useState } from 'react';
+import AuthorizeView from '../components/AuthorizeView';
+import './MoviesPage.css';
+import { getGenres, randomGenres } from '../api/MoviesAPI';
 
 function MoviePage() {
-  // State for optional sidebar/filter functionality (if needed)
-  const [selectedContainers, setSelectedContainers] = useState<string[]>([]);
+  const [genres, setGenres] = useState<string[]>([]); // Displayed genres
+  const [allGenres, setAllGenres] = useState<string[]>([]); // All genres including previously loaded ones
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  const [hasMoreGenres, setHasMoreGenres] = useState<boolean>(true);
+
+  useEffect(() => {
+    const loadGenres = async () => {
+      try {
+        setLoading(true);
+        const data = await getGenres(); // Fetch top genres (only 5)
+        setGenres(data); // Set the first 5 genres
+        setAllGenres(data); // Add them to the allGenres list
+      } catch (error) {
+        setError((error as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadGenres();
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = async () => {
+      const bottom =
+        Math.ceil(window.innerHeight + document.documentElement.scrollTop) ===
+        document.documentElement.offsetHeight;
+      if (bottom && !loadingMore && hasMoreGenres) {
+        setLoadingMore(true);
+        try {
+          // Fetch more genres, passing the already loaded ones
+          const moreGenres = await randomGenres(allGenres);
+
+          // If we received new genres, update the lists
+          if (moreGenres.length > 0) {
+            setGenres((prev) => [...prev, ...moreGenres]); // Add new genres to the display list
+            setAllGenres((prev) => [...prev, ...moreGenres]); // Add them to the full list
+          } else {
+            setHasMoreGenres(false); // No more genres to load
+          }
+        } catch (error) {
+          console.error('Error loading more genres:', error);
+        } finally {
+          setLoadingMore(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll); // Clean up event listener on unmount
+  }, [loadingMore, hasMoreGenres, allGenres]);
+
+  if (loading) return <p>Loading movies...</p>;
+  if (error) return <p className="text-danger">Error: {error}</p>;
+
   return (
     <AuthorizeView>
       <div className="movies-page">
@@ -29,7 +82,7 @@ function MoviePage() {
                 <h3 className="mb-3">Recommended For You</h3>
                 <MovieCarousel genre="Recommended" />
               </div>
-              
+
               {/* Carousels for each genre */}
               {genres.map((genre) => (
                 <div key={genre} className="mb-5">
@@ -37,6 +90,9 @@ function MoviePage() {
                   <MovieCarousel genre={genre} />
                 </div>
               ))}
+
+              {/* Loading more genres indicator */}
+              {loadingMore && <p>Loading more genres...</p>}
             </div>
           </div>
         </div>
@@ -46,4 +102,3 @@ function MoviePage() {
 }
 
 export default MoviePage;
-;

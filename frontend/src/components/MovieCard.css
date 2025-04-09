@@ -8,6 +8,7 @@
   width: 100%;
   border-radius: 5px;
   object-fit: cover;
+  height: 265px;
 }
 
 .movie-title {

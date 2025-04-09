@@ -1,106 +1,86 @@
-// src/pages/Search.tsx
-import React, { useState } from 'react';
-import Slider from 'react-slick';
-import { fetchMovies } from '../api/MoviesAPI';
-import './Search.css';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import React, { useState, useEffect, useCallback } from 'react';
+import MovieCard from '../components/MovieCard';
+import AuthorizeView from '../components/AuthorizeView';
+import Header from '../components/Header';
 
-// Define an interface for your movie objects
 interface Movie {
-  ShowId: string;
-  Title: string;
-  Poster?: string;
-  // Add additional fields if necessary
+  showId: string;
+  title: string;
 }
 
 const Search: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [error, setError] = useState<string | null>(null);
 
-  // Handle search form submission
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    try {
-      // Fetch movies from page 1 with a large page size (e.g., 100)
-      const data = await fetchMovies(1, 100, []);
-      // The helper returns an object with a "movies" property (adjust if necessary)
-      const allMovies: Movie[] = data.movies;
-      // Filter movies by Title (case-insensitive)
-      const filteredMovies = allMovies.filter((movie) =>
-        movie.Title?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      // Limit to 10 results maximum
-      setMovies(filteredMovies.slice(0, 10));
-    } catch (err: any) {
-      console.error('Error searching for movies:', err);
-      setError(err.message);
-    }
-  };
+  // Debounced function
+  const fetchMovies = useCallback(
+    debounce(async (query: string) => {
+      if (!query) {
+        setMovies([]);
+        return;
+      }
 
-  // Settings for the react-slick carousel
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
+      try {
+        const res = await fetch(
+          `https://localhost:5000/Movies/SearchMovies?searchTerm=${encodeURIComponent(query)}`
+        );
+        const data = await res.json();
+        const mapped = data.map((item: any) => ({
+          id: item.showId,
+          title: item.title,
+        }));
+        setMovies(mapped);
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+      }
+    }, 400),
+    []
+  );
+
+  useEffect(() => {
+    fetchMovies(searchTerm);
+  }, [searchTerm, fetchMovies]);
 
   return (
-    <div className="search-page">
-      <header className="search-header">
-        <form onSubmit={handleSearch} className="search-form">
-          <input
-            type="text"
-            placeholder="Search movies by title..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="form-control"
-          />
-          <button type="submit" className="btn-search">
-            Search
-          </button>
-        </form>
-        {error && <p className="error-message">Error: {error}</p>}
-      </header>
-
-      {movies.length > 0 ? (
-        <section className="carousel-section">
-          <Slider {...sliderSettings}>
-            {movies.map((movie) => (
-              <div key={movie.ShowId} className="movie-slide">
-                {movie.Poster ? (
-                  <img
-                    src={movie.Poster}
-                    alt={movie.Title}
-                    className="movie-poster"
-                  />
-                ) : (
-                  <div className="no-poster">No Image</div>
-                )}
-                <h3>{movie.Title}</h3>
-              </div>
-            ))}
-          </Slider>
-        </section>
-      ) : (
-        // Optionally display a message if no movies are found
-        <p className="no-results">No movies found</p>
-      )}
-    </div>
+    <AuthorizeView>
+      <div className="movies-page">
+        <div className="container mt-4">
+          {/* Header and Logout Section */}
+          <div className="row mb-3">
+            <div className="col-12 d-flex justify-content-between align-items-center">
+              <Header />
+            </div>
+          </div>
+          <div className="p-4 max-w-3xl mx-auto">
+            <h1 className="text-2xl font-bold mb-4">Search Movies</h1>
+            <input
+              type="text"
+              placeholder="Search by title..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full border border-gray-300 rounded p-2 mb-6"
+            />
+            <div className="grid gap-4">
+              {movies.map((movie) => (
+                <MovieCard key={movie.showId} movie={movie} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </AuthorizeView>
   );
 };
+
+function debounce<Func extends (...args: any[]) => void>(
+  fn: Func,
+  delay: number
+): (...args: Parameters<Func>) => void {
+  let timer: ReturnType<typeof setTimeout>;
+  return (...args: Parameters<Func>) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
 
 export default Search;

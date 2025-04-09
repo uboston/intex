@@ -89,3 +89,58 @@ export const deleteMovie = async (showId: string): Promise<void> => {
     throw new Error('Failed to delete movie');
   }
 };
+
+export const getGenres = async (): Promise<string[]> => {
+  try {
+    const response = await fetch(`${API_URL}/Recommend/TopGenres/`);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch TopGenres');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching top genres:', error);
+    throw error;
+  }
+};
+
+export const randomGenres = async (usedGenres: string[]): Promise<string[]> => {
+  try {
+    const genreParameters = usedGenres
+      .map((g) => `usedGenres=${encodeURIComponent(g)}`)
+      .join('&');
+
+    const response = await fetch(
+      `${API_URL}/Recommend/RandomGenres?${
+        usedGenres.length ? `&${genreParameters}` : ''
+      }`
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch RandomGenres');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching random genres:', error);
+    throw error;
+  }
+};
+
+export const getMoviesFromGenre = async (genre: string): Promise<movie[]> => {
+  try {
+    const response = await fetch(
+      `${API_URL}/Movies/MoviesByGenre?genre=${encodeURIComponent(genre)}`
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch getMoviesFromGenre');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching movies from genres:', error);
+    throw error;
+  }
+};
