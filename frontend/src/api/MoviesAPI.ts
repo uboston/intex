@@ -162,6 +162,7 @@ export const fetchCategories = async (): Promise<string[]> => {
     throw error;
   }
 }
+}
 
 export const fetchRatingCategories = async (): Promise<string[]> => {
   try {
