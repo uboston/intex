@@ -178,6 +178,8 @@ export const fetchRatingCategories = async (): Promise<string[]> => {
   }
 }
 
+
+
 export const getRecommendedMovies = async (): Promise<{
   recommendType: string;
   moviesList: movie[];
