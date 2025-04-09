@@ -1,6 +1,7 @@
 using CineNiche.API.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +14,14 @@ namespace CineNiche.API.Controllers
     public class MoviesController : ControllerBase
     {
         private MoviesContext _MoviesDbContext;
+
         public MoviesController(MoviesContext temp)
         {
             _MoviesDbContext = temp;
         }
 
         [HttpGet("GetMovies")]
-        public IActionResult GetMovies(int pageSize = 10, int pageNum = 1, [FromQuery] List<string>? categories = null)
+        public IActionResult GetMovies(int pageSize = 50, int pageNum = 2, [FromQuery] List<string>? categories = null)
         {
             try
             {
@@ -39,10 +41,14 @@ namespace CineNiche.API.Controllers
                 }
 
                 // Adding a stable ordering clause before Skip/Take
-                query = query.OrderBy(m => m.ShowId);
 
                 var totalNumMovies = query.Count();
-                var movies = query
+                var movies = query.ToList()
+                    .OrderBy(m =>
+                    {
+                        var digitsOnly = new string(m.ShowId.SkipWhile(c => !char.IsDigit(c)).ToArray());
+                        return int.TryParse(digitsOnly, out var num) ? num : int.MaxValue;
+                    })
                     .Skip((pageNum - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();
@@ -62,6 +68,18 @@ namespace CineNiche.API.Controllers
             }
         }
 
+        [HttpGet("GetRatingCategories")]
+        public IActionResult GetRatingCategories()
+        {
+            var ratings = _MoviesDbContext.MoviesTitles
+                .Select(m => m.Rating)
+                .Where(r => !string.IsNullOrEmpty(r))
+                .Distinct()
+                .OrderBy(r => r)
+                .ToList();
+
+            return Ok(ratings);
+        }
         [HttpGet("GetCategories")]
         public IActionResult GetCategories()
         {
@@ -86,54 +104,6 @@ namespace CineNiche.API.Controllers
             return Ok(categoryNames);
         }
 
-        // POST: Create a new movie
-        [HttpPost("CreateMovie")]
-        public IActionResult CreateMovie([FromBody] MoviesTitle movie)
-        {
-            if (movie == null)
-                return BadRequest("Movie data is null.");
-
-            _MoviesDbContext.MoviesTitles.Add(movie);
-            _MoviesDbContext.SaveChanges();
-            return Ok(movie);
-        }
-
-        // PUT: Update an existing movie
-        [HttpPut("UpdateMovie/{showId}")]
-        public IActionResult UpdateMovie(string showId, [FromBody] MoviesTitle updatedMovie)
-        {
-            var movie = _MoviesDbContext.MoviesTitles.FirstOrDefault(m => m.ShowId == showId);
-            if (movie == null)
-                return NotFound($"Movie with ShowId '{showId}' not found.");
-
-            // Update the movie's properties—adjust as needed based on your model.
-            movie.Title = updatedMovie.Title;
-            movie.Director = updatedMovie.Director;
-            movie.Cast = updatedMovie.Cast;
-            movie.Country = updatedMovie.Country;
-            movie.ReleaseYear = updatedMovie.ReleaseYear;
-            movie.Rating = updatedMovie.Rating;
-            movie.Duration = updatedMovie.Duration;
-            movie.Description = updatedMovie.Description;
-            // Update category flags or other properties if applicable.
-            _MoviesDbContext.MoviesTitles.Update(movie);
-            _MoviesDbContext.SaveChanges();
-            return Ok(movie);
-        }
-
-        // DELETE: Delete an existing movie
-        [HttpDelete("DeleteMovie/{showId}")]
-        public IActionResult DeleteMovie(string showId)
-        {
-            var movie = _MoviesDbContext.MoviesTitles.FirstOrDefault(m => m.ShowId == showId);
-            if (movie == null)
-                return NotFound($"Movie with ShowId '{showId}' not found.");
-
-            _MoviesDbContext.MoviesTitles.Remove(movie);
-            _MoviesDbContext.SaveChanges();
-            return Ok();
-        }
-
         [HttpGet("SearchMovies")]
         public IActionResult SearchMovies([FromQuery] string searchTerm)
         {
@@ -141,7 +111,8 @@ namespace CineNiche.API.Controllers
                 .Where(m => m.Title != null && m.Title.Contains(searchTerm))
                 .OrderBy(m => m.Title)
                 .Take(10)
-                .Select(m => new {
+                .Select(m => new
+                {
                     m.ShowId,
                     m.Title
                 })
@@ -149,29 +120,119 @@ namespace CineNiche.API.Controllers
             return Ok(queriedMovies);
         }
 
-        // NEW ENDPOINT: Get details for a single movie
-        [HttpGet("MovieDetails/{movieId}")]
-        public IActionResult GetMovieDetails(string movieId)
+        [HttpGet("MovieDetails/{showId}")]
+        public IActionResult MovieDetails(string showId)
         {
-            var movie = _MoviesDbContext.MoviesTitles.FirstOrDefault(m => m.ShowId == movieId);
+            var movie = _MoviesDbContext.MoviesTitles
+                .Where(m => m.ShowId == showId)
+                .Select(m => new
+                {
+                    m.ShowId,
+                    m.Title,
+                    m.Director,
+                    m.Cast,
+                    m.Country,
+                    m.ReleaseYear,
+                    m.Rating,
+                    m.Duration,
+                    m.Description
+                })
+                .FirstOrDefault();
+
             if (movie == null)
-                return NotFound($"Movie with ShowId '{movieId}' not found.");
+            {
+                return NotFound($"No movie found with ShowId: {showId}");
+            }
 
             return Ok(movie);
         }
 
-        // NEW ENDPOINT: Get related movies for a specific movie
-        [HttpGet("RelatedMovies/{movieId}")]
-        public IActionResult GetRelatedMovies(string movieId)
+        [HttpPost("MoviesRating")]
+        public IActionResult SubmitRating([FromBody] MoviesRating rating)
         {
-            // For simplicity, return 10 movies that do not have the given movieId.
-            // You can enhance this logic to use categories or other criteria.
-            var relatedMovies = _MoviesDbContext.MoviesTitles
-                .Where(m => m.ShowId != movieId)
-                .Take(10)
+            if (rating.Rating is < 1 or > 5)
+            {
+                return BadRequest("Rating must be between 1 and 5.");
+            }
+
+            if (string.IsNullOrWhiteSpace(rating.ShowId) || rating.UserId == null)
+            {
+                return BadRequest("ShowId and UserId are required.");
+            }
+
+            _MoviesDbContext.MoviesRatings.Add(rating);
+            _MoviesDbContext.SaveChanges();
+
+            return Ok(new { message = "Rating submitted successfully." });
+        }
+
+        [HttpGet("MoviesByGenre")]
+        public IActionResult GetMoviesByGenre([FromQuery] string genre)
+        {
+            // Mapping genre names to their corresponding property names
+            var genreToPropertyMap = new Dictionary<string, string>
+            {
+                { "Action", "Action" },
+                { "Adventure", "Adventure" },
+                { "Anime Series / International TV Shows", "AnimeSeriesInternationalTvShows" },
+                {
+                    "British TV Shows / Docuseries / International TV Shows",
+                    "BritishTvShowsDocuseriesInternationalTvShows"
+                },
+                { "Children", "Children" },
+                { "Comedies", "Comedies" },
+                { "Comedies / Dramas / International Movies", "ComediesDramasInternationalMovies" },
+                { "Comedies / International Movies", "ComediesInternationalMovies" },
+                { "Comedies / Romantic Movies", "ComediesRomanticMovies" },
+                { "Crime TV Shows / Docuseries", "CrimeTvShowsDocuseries" },
+                { "Documentaries", "Documentaries" },
+                { "Documentaries / International Movies", "DocumentariesInternationalMovies" },
+                { "Docuseries", "Docuseries" },
+                { "Dramas", "Dramas" },
+                { "Dramas / International Movies", "DramasInternationalMovies" },
+                { "Dramas / Romantic Movies", "DramasRomanticMovies" },
+                { "Family Movies", "FamilyMovies" },
+                { "Fantasy", "Fantasy" },
+                { "Horror Movies", "HorrorMovies" },
+                { "International Movies / Thrillers", "InternationalMoviesThrillers" },
+                {
+                    "International TV Shows / Romantic TV Shows / TV Dramas",
+                    "InternationalTvShowsRomanticTvShowsTvDramas"
+                },
+                { "Kids' TV", "KidsTv" },
+                { "Language TV Shows", "LanguageTvShows" },
+                { "Musicals", "Musicals" },
+                { "Nature TV", "NatureTv" },
+                { "Reality TV", "RealityTv" },
+                { "Spirituality", "Spirituality" },
+                { "TV Action", "TvAction" },
+                { "TV Comedies", "TvComedies" },
+                { "TV Dramas", "TvDramas" },
+                { "Talk Shows / TV Comedies", "TalkShowsTvComedies" },
+                { "Thrillers", "Thrillers" }
+            };
+
+            if (!genreToPropertyMap.ContainsKey(genre))
+            {
+                return BadRequest("Invalid genre.");
+            }
+
+            // Get the corresponding property name for the genre
+            var propertyName = genreToPropertyMap[genre];
+
+            // Query your database to get the movies where the corresponding genre property is set to 1
+            var movies = _MoviesDbContext.MoviesTitles
+                .Where(m => EF.Property<int>(m, propertyName) == 1) // Dynamically access the genre property
+                .OrderBy(r => Guid.NewGuid()) // Shuffle the movies to get random ones
+                .Take(10) // Limit to 10 movies
                 .ToList();
 
-            return Ok(relatedMovies);
+            if (!movies.Any())
+            {
+                return NotFound($"No movies found for genre: {genre}");
+            }
+
+            return Ok(movies);
         }
     }
 }

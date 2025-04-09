@@ -22,6 +22,7 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
+
 import Pagination from '../components/Pagination';
 
 interface movie {
@@ -40,6 +41,7 @@ interface movie {
 
 interface MovieFormData {
   showId?: string;
+  type: string;
   title: string;
   director: string;
   cast: string;
@@ -48,14 +50,17 @@ interface MovieFormData {
   rating: string;
   duration: string;
   description: string;
+  categories: string[];
 }
-
+const typeOptions = ['Movie', 'TV Show'];
+const ratingOptions = ['G', 'PG', 'PG-13', 'R', 'NC-17', ];
 const MovieForm = ({
   open,
   onClose,
   onSubmit,
   initialData = {
     showId: '',
+    type: '',
     title: '',
     director: '',
     cast: '',
@@ -64,6 +69,7 @@ const MovieForm = ({
     rating: '',
     duration: '',
     description: '',
+    categories: [],
   },
 }: {
   open: boolean;
@@ -73,6 +79,7 @@ const MovieForm = ({
 }) => {
   const [formData, setFormData] = useState({
     showId: initialData.showId || '',
+    type: initialData.type || '',
     title: initialData.title || '',
     director: initialData.director || '',
     cast: initialData.cast || '',
@@ -81,11 +88,13 @@ const MovieForm = ({
     rating: initialData.rating || '',
     duration: initialData.duration || '',
     description: initialData.description || '',
+    categories: initialData.categories || [],
   });
 
   useEffect(() => {
     setFormData({
       showId: initialData.showId || '',
+      type: initialData.type || '',
       title: initialData.title || '',
       director: initialData.director || '',
       cast: initialData.cast || '',
@@ -94,6 +103,7 @@ const MovieForm = ({
       rating: initialData.rating || '',
       duration: initialData.duration || '',
       description: initialData.description || '',
+      categories: initialData.categories || [],
     });
   }, [initialData]);
 
@@ -122,6 +132,14 @@ const MovieForm = ({
           margin="dense"
           label="Title"
           name="title"
+          value={formData.title}
+          onChange={handleChange}
+          fullWidth
+        />
+        <TextField
+          margin="dense"
+          label="type"
+          name="type"
           value={formData.title}
           onChange={handleChange}
           fullWidth
@@ -163,7 +181,6 @@ const MovieForm = ({
           margin="dense"
           label="Rating"
           name="rating"
-          type="number"
           value={formData.rating}
           onChange={handleChange}
           fullWidth
@@ -185,6 +202,21 @@ const MovieForm = ({
           fullWidth
           multiline
         />
+        <TextField
+          margin="dense"
+          label="Categories"
+          name="categories"
+          value={formData.categories.join(', ')}
+          onChange={(e) =>
+            handleChange({
+              target: {
+                name: 'categories',
+                value: e.target.value.split(',').map((cat) => cat.trim()),
+              },
+            })
+          }
+          fullWidth
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
@@ -202,7 +234,7 @@ const AdminMovies = () => {
   const [openForm, setOpenForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(50);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [editingMovie, setEditingMovie] = useState<movie | null>(null);
@@ -213,12 +245,14 @@ const AdminMovies = () => {
         const data = await fetchMovies(pageSize, pageNumber, []);
         setMovies(data.movies);
         setTotalPages(Math.ceil(data.totalMovies / pageSize));
+        console.log("Page", pageNumber, "Movies:", data.movies.map((m: any) => m.showId));
       } catch (error) {
         setError((error as Error).message);
       } finally {
         setLoading(false);
       }
     };
+    console.log("Loading movies for page", pageNumber);
     loadMovies();
   }, [pageSize, pageNumber]);
 
