@@ -136,7 +136,7 @@ const MovieForm = ({
     rating: initialData.rating || '',
     duration: initialData.duration || '',
     description: initialData.description || '',
-    ...Object.fromEntries(allCategoryKeys.map((key) => [key, (initialData as any)[key] || 0])),
+    categories: initialData.categories || [],
   });
   
 
@@ -196,8 +196,19 @@ const MovieForm = ({
   };
 
   const handleSubmit = () => {
-    onSubmit(formData as MovieFormData);
-    console.log("Final payload:", formData);
+    const selectedCategories = categoryOptions.filter((key) => formData[key] === 1);
+  
+    const finalPayload: Record<string, any> = {
+      ...formData,
+      categories: selectedCategories,
+    };
+  
+    categoryOptions.forEach((key) => {
+      delete finalPayload[key];
+    });
+  
+    onSubmit(finalPayload as MovieFormData);
+    console.log("Final payload:", finalPayload);
     onClose();
   };
 
@@ -302,37 +313,36 @@ const MovieForm = ({
           multiline
         />
         <FormControl fullWidth margin="dense">
-  <InputLabel>Categories</InputLabel>
-  <Select
-    multiple
-    name="categories"
-    value={categoryOptions.filter((key) => formData[key] === 1)}
-    onChange={(e) => {
-      const selected = e.target.value as string[];
+        <InputLabel>Categories</InputLabel>
+        <Select
+          multiple
+          name="categories"
+          value={categoryOptions.filter((key) => formData[key] === 1)}
+          onChange={(e) => {
+            const selected = e.target.value as string[];
 
-      const updated = Object.fromEntries(
-        categoryOptions.map((key) => [key, selected.includes(key) ? 1 : 0])
-      );
+            const updatedBooleans = Object.fromEntries(
+              categoryOptions.map((key) => [key, selected.includes(key) ? 1 : 0])
+            );
 
-      setFormData((prev) => ({
-        ...prev,
-        ...updated,
-      }));
-    }}
-    input={<OutlinedInput label="Categories" />}
-    renderValue={(selected) =>
-      (selected as string[]).map(formatCategoryLabel).join(', ')
-    }
-  >
-    {categoryOptions.map((option) => (
-      <MenuItem key={option} value={option}>
-        <Checkbox checked={formData[option] === 1} />
-        <ListItemText primary={formatCategoryLabel(option)} />
-      </MenuItem>
-    ))}
-  </Select>
-</FormControl>
-
+            setFormData((prev) => ({
+              ...prev,
+              ...updatedBooleans,
+            }));
+          }}
+          input={<OutlinedInput label="Categories" />}
+          renderValue={(selected) =>
+            (selected as string[]).map(formatCategoryLabel).join(', ')
+          }
+        >
+          {categoryOptions.map((key) => (
+            <MenuItem key={key} value={key}>
+              <Checkbox checked={formData[key] === 1} />
+              <ListItemText primary={formatCategoryLabel(key)} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
@@ -361,14 +371,12 @@ const AdminMovies = () => {
         const data = await fetchMovies(pageSize, pageNumber, []);
         setMovies(data.movies);
         setTotalPages(Math.ceil(data.totalMovies / pageSize));
-        console.log("Page", pageNumber, "Movies:", data.movies.map((m: any) => m.showId));
       } catch (error) {
         setError((error as Error).message);
       } finally {
         setLoading(false);
       }
     };
-    console.log("Loading movies for page", pageNumber);
     loadMovies();
   }, [pageSize, pageNumber]);
 
@@ -400,9 +408,6 @@ const AdminMovies = () => {
 
   const handleFormSubmit = async (movieData: MovieFormData) => {
     try {
-      const selectedCategories = Object.keys(movieData)
-      .filter(key => categoryOptions.includes(key) && movieData[key] === 1);
-
       let updatedMovies: movie[];
 
       // Convert string showId to number if needed for API
@@ -422,7 +427,7 @@ const AdminMovies = () => {
           rating: movieData.rating,
           duration: movieData.duration,
           description: movieData.description,
-          categories: selectedCategories,
+          categories: [],
         });
 
         updatedMovies = movies.map((m) =>
@@ -440,7 +445,7 @@ const AdminMovies = () => {
           rating: movieData.rating,
           duration: movieData.duration,
           description: movieData.description,
-          categories: selectedCategories,
+          categories: [],
         });
 
         updatedMovies = [...movies, added];
