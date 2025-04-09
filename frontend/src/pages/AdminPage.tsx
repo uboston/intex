@@ -22,6 +22,7 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
+
 import Pagination from '../components/Pagination';
 
 interface movie {
@@ -202,7 +203,7 @@ const AdminMovies = () => {
   const [openForm, setOpenForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(50);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [editingMovie, setEditingMovie] = useState<movie | null>(null);
@@ -213,12 +214,14 @@ const AdminMovies = () => {
         const data = await fetchMovies(pageSize, pageNumber, []);
         setMovies(data.movies);
         setTotalPages(Math.ceil(data.totalMovies / pageSize));
+        console.log("Page", pageNumber, "Movies:", data.movies.map((m: any) => m.showId));
       } catch (error) {
         setError((error as Error).message);
       } finally {
         setLoading(false);
       }
     };
+    console.log("Loading movies for page", pageNumber);
     loadMovies();
   }, [pageSize, pageNumber]);
 
