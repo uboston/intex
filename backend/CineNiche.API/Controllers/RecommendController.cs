@@ -316,6 +316,7 @@ public class RecommendController : ControllerBase
                 AverageRating = group.Average(r => r.Rating!.Value)
             })
             .OrderByDescending(r => r.AverageRating)
+            .Skip(30)
             .Take(10)
             .ToList();
 
