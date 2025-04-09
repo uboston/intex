@@ -1,7 +1,11 @@
 import { useRef, useState, useEffect } from 'react';
 import MovieCard from './MovieCard';
 import './MovieCarousel.css';
-import { getMoviesFromGenre, getRecommendedMovies } from '../api/MoviesAPI';
+import {
+  getContentRecommended,
+  getMoviesFromGenre,
+  getRecommendedMovies,
+} from '../api/MoviesAPI';
 
 interface Movie {
   showId: string;
@@ -10,10 +14,10 @@ interface Movie {
 
 interface MovieCarouselProps {
   genre: string;
-  movies?: Movie[]; // Optional movies array to be used instead of generated ones
+  showId?: string; // Optional movies array to be used instead of generated ones
 }
 
-const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, movies }) => {
+const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, showId }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [movieList, setMovieList] = useState<Movie[]>([]);
   const [carouselHeader, setCarouselHeader] = useState<string>(genre);
@@ -27,6 +31,15 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, movies }) => {
         setCarouselHeader(data.recommendType);
       };
       loadRecommendedMovies();
+    }, []);
+  } else if (genre === '') {
+    useEffect(() => {
+      const loadContentMovies = async (id: string) => {
+        const data = await getContentRecommended(id);
+        console.log(data);
+        setMovieList(data);
+      };
+      loadContentMovies(showId || 's1');
     }, []);
   } else {
     useEffect(() => {

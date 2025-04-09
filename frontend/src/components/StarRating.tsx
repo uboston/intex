@@ -1,43 +1,61 @@
-import { useState, CSSProperties } from "react";
-import { FaStar } from "react-icons/fa";
-import { updateStarRating } from "../api/MoviesAPI"; // Assuming the function is in this file
+import { useState, useEffect, CSSProperties } from 'react';
+import { FaStar } from 'react-icons/fa';
+import { updateStarRating, readStarRating } from '../api/MoviesAPI';
 
 type StarRatingProps = {
-  showId: string; // Pass in showId to identify the item being rated
+  showId: string;
   totalStars?: number;
-  initialRating?: number; // Optionally pass an initial rating
+  initialRating?: number;
 };
 
-const StarRating: React.FC<StarRatingProps> = ({ showId,
+const StarRating: React.FC<StarRatingProps> = ({
+  showId,
   totalStars = 5,
   initialRating = 0,
 }) => {
   const [rating, setRating] = useState<number>(initialRating);
   const [hovered, setHovered] = useState<number>(0);
 
+  // Load existing rating on page load
+  useEffect(() => {
+    const fetchRating = async () => {
+      try {
+        const fetchedRating = await readStarRating(showId);
+        if (
+          fetchedRating !== null &&
+          fetchedRating >= 1 &&
+          fetchedRating <= 5
+        ) {
+          setRating(fetchedRating);
+        }
+      } catch (error) {
+        console.error('Failed to fetch initial rating:', error);
+      }
+    };
+
+    fetchRating();
+  }, [showId]);
+
   const handleClick = async (index: number) => {
     setRating(index);
     try {
-      // Call the function to send the updated rating to the backend
       await updateStarRating(showId, index);
     } catch (error) {
-      console.error("Error updating rating:", error);
+      console.error('Error updating rating:', error);
     }
   };
 
-  // Remove button styles so only the star icon is visible
   const starButtonStyle: CSSProperties = {
-    background: "transparent",
-    border: "none",
+    background: 'transparent',
+    border: 'none',
     padding: 0,
     margin: 0,
-    cursor: "pointer",
+    cursor: 'pointer',
   };
 
-  // Container for star spacing
   const containerStyle: CSSProperties = {
-    display: "flex",
-    gap: "8px",
+    display: 'flex',
+    gap: '8px',
   };
 
   return (
@@ -56,13 +74,12 @@ const StarRating: React.FC<StarRatingProps> = ({ showId,
             style={starButtonStyle}
           >
             <FaStar
-              size={40} // Slightly larger for visibility; adjust as needed
+              size={40}
               style={{
-                // If active, fill and outline gold; otherwise, clear fill & white outline
-                fill: isActive ? "#ffc107" : "none",
-                stroke: isActive ? "#ffc107" : "#ffffff",
-                strokeWidth: 12, // Thicker outline
-                transition: "fill 0.2s, stroke 0.2s",
+                fill: isActive ? '#ffc107' : 'none',
+                stroke: isActive ? '#ffc107' : '#ffffff',
+                strokeWidth: 12,
+                transition: 'fill 0.2s, stroke 0.2s',
               }}
             />
           </button>

@@ -161,7 +161,7 @@ export const fetchCategories = async (): Promise<string[]> => {
     console.error('Error fetching categories:', error);
     throw error;
   }
-}
+};
 
 export const fetchRatingCategories = async (): Promise<string[]> => {
   try {
@@ -176,9 +176,7 @@ export const fetchRatingCategories = async (): Promise<string[]> => {
     console.error('Error fetching rating categories:', error);
     throw error;
   }
-}
-
-
+};
 
 export const getRecommendedMovies = async (): Promise<{
   recommendType: string;
@@ -201,9 +199,31 @@ export const getRecommendedMovies = async (): Promise<{
   }
 };
 
+export const readStarRating = async (showId: string): Promise<number> => {
+  try {
+    const response = await fetch(
+      `${API_URL}/Movies/ReadRating?showId=${showId}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch readStarRating');
+    }
+
+    const data = await response.json();
+    return await data.rating;
+  } catch (error) {
+    console.error('Error reading the star rating:', error);
+    throw error;
+  }
+};
+
 export const updateStarRating = async (showId: string, rating: number) => {
   try {
-    const response = await fetch(`${API_URL}/Recommend/TrendingOrForYou`, {
+    const response = await fetch(`${API_URL}/Movies/MoviesRating`, {
       method: 'POST',
       credentials: 'include', // send credentials to get cookies
       headers: {
@@ -221,6 +241,25 @@ export const updateStarRating = async (showId: string, rating: number) => {
     }
   } catch (error) {
     console.error('Error updating star rating:', error);
+    throw error;
+  }
+};
+
+export const getContentRecommended = async (
+  showId: string
+): Promise<movie[]> => {
+  try {
+    const response = await fetch(
+      `${API_URL}/Recommend/RecommenderContent?showId=${showId}`
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch getRecommendedMovies');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching movies from trending or for you:', error);
     throw error;
   }
 };
