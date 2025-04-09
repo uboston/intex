@@ -243,5 +243,52 @@ namespace CineNiche.API.Controllers
                 .ToList();
             return Ok(queriedMovies);
         }
+
+        [HttpGet("MovieDetails/{showId}")]
+        public IActionResult MovieDetails(string showId)
+        {
+            var movie = _MoviesDbContext.MoviesTitles
+                .Where(m => m.ShowId == showId)
+                .Select(m => new
+                {
+                    m.ShowId,
+                    m.Title,
+                    m.Director,
+                    m.Cast,
+                    m.Country,
+                    m.ReleaseYear,
+                    m.Rating,
+                    m.Duration,
+                    m.Description
+                })
+                .FirstOrDefault();
+
+            if (movie == null)
+            {
+                return NotFound($"No movie found with ShowId: {showId}");
+            }
+
+            return Ok(movie);
+        }
+
+        [HttpPost("MoviesRating")]
+        public IActionResult SubmitRating([FromBody] MoviesRating rating)
+        {
+            if (rating.Rating is < 1 or > 5)
+            {
+                return BadRequest("Rating must be between 1 and 5.");
+            }
+
+            if (string.IsNullOrWhiteSpace(rating.ShowId) || rating.UserId == null)
+            {
+                return BadRequest("ShowId and UserId are required.");
+            }
+
+            _MoviesDbContext.MoviesRatings.Add(rating);
+            _MoviesDbContext.SaveChanges();
+
+            return Ok(new { message = "Rating submitted successfully." });
+        }
+
     }
 }

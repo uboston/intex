@@ -66,3 +66,32 @@
   object-fit: cover;
   cursor: pointer;
 }
+.header-profile {
+  position: relative;
+  cursor: pointer;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.profile-dropdown button {
+  display: block;
+  background: none;
+  border: none;
+  width: 100%;
+  padding: 8px 16px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.profile-dropdown button:hover {
+  background-color: #f1f1f1;
+}

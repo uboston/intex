@@ -4,6 +4,20 @@ interface FetchMoviesResponse {
   totalPages: number;
 }
 
+interface movie {
+  showId: string;
+  type: string;
+  title: string;
+  director: string;
+  cast: string;
+  country: string;
+  releaseYear: string;
+  rating: string;
+  duration: string;
+  description: string;
+  categories: string[];
+}
+
 const API_URL = 'https://localhost:5000';
 
 export const fetchMovies = async (
@@ -15,7 +29,7 @@ export const fetchMovies = async (
     .map((category) => `&categories=${encodeURIComponent(category)}`)
     .join('&');
   const response = await fetch(
-    `${API_URL}/Movies/?pageSize=${pageSize}&pageNumber=${pageNumber}&${categoryParams}`,
+    `${API_URL}/Movies/GetMovies?pageSize=${pageSize}&pageNumber=${pageNumber}&${categoryParams}`,
     {
       method: 'GET',
       credentials: 'include', // Include cookies in the request

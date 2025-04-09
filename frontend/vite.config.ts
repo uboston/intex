@@ -11,7 +11,7 @@ export default defineConfig({
         "default-src 'self'; " +
         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com; " +
         "style-src 'self' 'unsafe-inline' fonts.googleapis.com https://accounts.google.com; " +
-        "img-src 'self' data:; " +
+        "img-src 'self' data: https://showposters.blob.core.windows.net/poster/Movie%20Posters/ https://localhost:5000/; " +
         "frame-ancestors 'none'; " +
         "font-src 'self' fonts.gstatic.com data:; " +
         "connect-src 'self' https://localhost:5000 https://accounts.google.com https://oauth2.googleapis.com; " + // ✅ Allow OAuth token exchange
