@@ -4,10 +4,17 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  /* Black to dark grey gradient background */
-  background: linear-gradient(135deg, #000000, #424242);
+  background: linear-gradient(135deg, #000000, #424242); /* Black to dark grey gradient */
   color: #f0f0f0; /* Light text color */
   min-height: 100vh;
+  box-sizing: border-box;
+
+  /* Force full-width edge-to-edge like your MoviesPage */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
 .movie-info {
