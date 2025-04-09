@@ -26,14 +26,16 @@ public class RecommendController : ControllerBase
     [HttpGet("RecommenderContent")]
     public IActionResult RecommenderContent(string showId = "s1")
     {
-        var similarShows = _MoviesDbContext
-            .recommender_content
-            .Where(x => x.show_id == showId)
-            .OrderByDescending(x => x.similarity)
-            .Take(10)
-            .ToList();
+        var recommendedMovies = (from rec in _MoviesDbContext.recommender_content
+                                join movie in _MoviesDbContext.MoviesTitles
+                                on rec.other_show_id equals movie.ShowId
+                                where rec.show_id == showId
+                                orderby rec.similarity descending
+                                select movie)
+                                .Take(10)
+                                .ToList();
 
-        return Ok(similarShows);
+        return Ok(recommendedMovies);
     }
     
     [HttpGet("RecommenderCollabItem")]
@@ -316,7 +318,7 @@ public class RecommendController : ControllerBase
                 AverageRating = group.Average(r => r.Rating!.Value)
             })
             .OrderByDescending(r => r.AverageRating)
-            .Skip(30)
+            .Skip(35)
             .Take(10)
             .ToList();
 
