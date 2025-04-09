@@ -260,69 +260,78 @@ public class RecommendController : ControllerBase
         var hasUserRated = _MoviesDbContext.MoviesRatings
             .Any(x => x.UserId == Int32.Parse(userId));
 
+        // Case 1: User has rated movies, check if they are in the recommender table
         if (hasUserRated)
         {
-            // Fetch user recommendations (ForYou)
+            // Fetch user recommendations from the recommender table
             var recommendations = _MoviesDbContext.recommender_collab_user
                 .Where(x => x.user_id == userId)
-                .Single();
+                .SingleOrDefault(); // Use SingleOrDefault to handle case where the user isn't found
 
-            // Get movie titles and all columns for the recommended show IDs
-            var movieRecommendations = _MoviesDbContext.MoviesTitles
-                .Where(m => new[] { recommendations.rec_1, recommendations.rec_2, recommendations.rec_3, recommendations.rec_4, recommendations.rec_5, recommendations.rec_6, recommendations.rec_7, recommendations.rec_8, recommendations.rec_9, recommendations.rec_10 }
-                            .Contains(m.ShowId))
-                .ToList();
-
-            // Combine recommendations with movie titles
-            var recommendedMovies = new List<object>();
-            foreach (var recId in new[] { recommendations.rec_1, recommendations.rec_2, recommendations.rec_3, recommendations.rec_4, recommendations.rec_5, recommendations.rec_6, recommendations.rec_7, recommendations.rec_8, recommendations.rec_9, recommendations.rec_10 })
+            // If the user exists in the recommender table, fetch their movie recommendations
+            if (recommendations != null)
             {
-                var movie = movieRecommendations.FirstOrDefault(m => m.ShowId == recId);
-                if (movie != null)
+                // Get movie titles and all columns for the recommended show IDs
+                var movieRecommendations = _MoviesDbContext.MoviesTitles
+                    .Where(m => new[] { recommendations.rec_1, recommendations.rec_2, recommendations.rec_3, recommendations.rec_4, recommendations.rec_5, recommendations.rec_6, recommendations.rec_7, recommendations.rec_8, recommendations.rec_9, recommendations.rec_10 }
+                                .Contains(m.ShowId))
+                    .ToList();
+
+                // Combine recommendations with movie titles
+                var recommendedMovies = new List<object>();
+                foreach (var recId in new[] { recommendations.rec_1, recommendations.rec_2, recommendations.rec_3, recommendations.rec_4, recommendations.rec_5, recommendations.rec_6, recommendations.rec_7, recommendations.rec_8, recommendations.rec_9, recommendations.rec_10 })
                 {
-                    recommendedMovies.Add(movie); // Add the entire movie record
+                    var movie = movieRecommendations.FirstOrDefault(m => m.ShowId == recId);
+                    if (movie != null)
+                    {
+                        recommendedMovies.Add(movie); // Add the entire movie record
+                    }
                 }
-            }
 
-            var result = new
-            {
-                recommendType = "Recommended For You", // Indicating the path taken
-                moviesList = recommendedMovies // List of recommended movies
-            };
-
-            return Ok(result);
-        }
-        else
-        {
-            // Fetch TopTrending movies for users who haven't rated any movies
-            var topRated = _MoviesDbContext.MoviesRatings
-                .Where(r => r.Rating != null && r.ShowId != null)
-                .GroupBy(r => r.ShowId)
-                .Select(group => new
+                var result = new
                 {
-                    ShowId = group.Key!,
-                    AverageRating = group.Average(r => r.Rating!.Value)
-                })
-                .OrderByDescending(r => r.AverageRating)
-                .Take(10)
-                .ToList();
+                    recommendType = "Recommended For You", // Indicating the path taken
+                    moviesList = recommendedMovies // List of recommended movies
+                };
 
-            // Join with MoviesTitles to get the entire movie record
-            var topTrendingMovies = topRated
-                .Join(_MoviesDbContext.MoviesTitles,
-                    rating => rating.ShowId,
-                    movie => movie.ShowId,
-                    (rating, movie) => movie) // Return the entire movie record
-                .ToList();
-
-            var result = new
-            {
-                recommendType = "Top Trending", // Indicating the path taken
-                moviesList = topTrendingMovies // List of top trending movies
-            };
-
-            return Ok(result);
+                return Ok(result);
+            }
         }
+
+        // Case 2: If the user has not rated any movies or they are not in the recommender table, fall back to Top Trending
+        return GetTopTrendingMovies();
+    }
+
+    private IActionResult GetTopTrendingMovies()
+    {
+        // Fetch TopTrending movies
+        var topRated = _MoviesDbContext.MoviesRatings
+            .Where(r => r.Rating != null && r.ShowId != null)
+            .GroupBy(r => r.ShowId)
+            .Select(group => new
+            {
+                ShowId = group.Key!,
+                AverageRating = group.Average(r => r.Rating!.Value)
+            })
+            .OrderByDescending(r => r.AverageRating)
+            .Take(10)
+            .ToList();
+
+        // Join with MoviesTitles to get the entire movie record
+        var topTrendingMovies = topRated
+            .Join(_MoviesDbContext.MoviesTitles,
+                rating => rating.ShowId,
+                movie => movie.ShowId,
+                (rating, movie) => movie) // Return the entire movie record
+            .ToList();
+
+        var result = new
+        {
+            recommendType = "Top Trending", // Indicating the path taken
+            moviesList = topTrendingMovies // List of top trending movies
+        };
+
+        return Ok(result);
     }
 
 }
