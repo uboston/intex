@@ -94,6 +94,7 @@ public class RecommendController : ControllerBase
         4. Using those genres, get a list of 5 of them
         5. Return list to user
         */
+
         // Check if user has rated any movies
         var hasUserRated = _MoviesDbContext.MoviesRatings
             .Any(x => x.UserId == Int32.Parse(userId));
@@ -178,6 +179,10 @@ public class RecommendController : ControllerBase
                 break;
         }
         var result = genres.Take(5).ToList();
+        var test = User?.Identity?.Name;
+        Console.WriteLine("*****************************************");
+        // Console.WriteLine(User?.Identity?.AspNetCore);
+        Console.WriteLine("*****************************************");
 
         return Ok(result);
     }

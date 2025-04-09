@@ -92,7 +92,7 @@ function MoviePage() {
               ))}
 
               {/* Loading more genres indicator */}
-              {loadingMore && <p>Loading more genres...</p>}
+              <p>Loading more...</p>
             </div>
           </div>
         </div>
