@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
+import Footer from '../components/Footer'; // <-- Import Footer
+
 const Home: React.FC = () => {
   return (
     <div className="home-container">
-      + {/* Background blur layer */}
-      + <div className="bg-blur" />
+      {/* Background blur layer */}
+      <div className="bg-blur" />
       <header className="home-header">
         {/* Navigation Bar */}
         <nav className="nav-bar">
@@ -22,6 +24,7 @@ const Home: React.FC = () => {
             </Link>
           </div>
         </nav>
+
         {/* Hero Section */}
         <div className="hero">
           <h1>
@@ -44,7 +47,10 @@ const Home: React.FC = () => {
           </div>
         </div>
       </header>
+
+      <Footer />
     </div>
   );
 };
+
 export default Home;

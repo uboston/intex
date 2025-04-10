@@ -106,11 +106,13 @@ function MovieDescription() {
             <strong>Cast:</strong> {movie.cast || 'NA'}
           </p>
           <div className="d-flex gap-2">
-            <div className="btn btn-light">Watch</div>
-            <Link to="/movies" className="btn btn-secondary">
-              Back
-            </Link>
-          </div>
+  <div className="btn btn-light">
+    Watch <i className="fas fa-play" style={{ marginLeft: '8px' }}></i>
+  </div>
+  <Link to="/movies" className="btn btn-secondary">
+    Back
+  </Link>
+</div>
           <p>
             <strong>Your Rating:</strong>
           </p>
