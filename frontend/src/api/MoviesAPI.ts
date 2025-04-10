@@ -44,7 +44,7 @@ export const fetchMovies = async (
 
 export const addMovie = async (newMovie: movie): Promise<movie> => {
   try {
-    const response = await fetch(`${API_URL}/Admin/CreateMovie?`, {
+    const response = await fetch(`${API_URL}/Admin/CreateMovie`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const addMovie = async (newMovie: movie): Promise<movie> => {
 };
 
 export const updateMovie = async (
-  showId: number,
+  showId: string,
   updatedMovie: movie
 ): Promise<movie> => {
   const response = await fetch(`${API_URL}/Admin/UpdateMovie/${showId}`, {
@@ -163,7 +163,6 @@ export const fetchCategories = async (): Promise<string[]> => {
   }
 }
 
-
 export const fetchRatingCategories = async (): Promise<string[]> => {
   try {
     const response = await fetch(`${API_URL}/Movies/GetRatingCategories`);
@@ -178,7 +177,6 @@ export const fetchRatingCategories = async (): Promise<string[]> => {
     throw error;
   }
 }
-
 
 
 export const getRecommendedMovies = async (): Promise<{
@@ -225,3 +223,18 @@ export const updateStarRating = async (showId: string, rating: number) => {
     throw error;
   }
 };
+
+export const getNextShowId = async (): Promise<string> => {
+  const res = await fetch(`${API_URL}/Admin/GetNextShowId`);
+  if (!res.ok) throw new Error('Failed to get next showId');
+  return res.text(); // returns a string like "s12"
+};
+
+export const searchMovies = async (query: string): Promise<movie[]> => {
+  const response = await fetch(`${API_URL}/Admin/SearchMovies?query=${encodeURIComponent(query)}`);
+  if (!response.ok) {
+    throw new Error("Failed to search movies");
+  }
+  return await response.json();
+};
+
