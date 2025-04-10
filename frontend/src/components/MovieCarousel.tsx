@@ -69,7 +69,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, showId }) => {
       <h3 className="mb-3">{carouselHeader}</h3>
       <div className="carousel-container">
         <button onClick={scrollLeft} className="carousel-arrow left">
-          {'<'}
+          <i className="fa-solid fa-angle-left"></i>
         </button>
         <div className="carousel" ref={carouselRef}>
           {movieList.map((movie) => (
@@ -77,7 +77,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, showId }) => {
           ))}
         </div>
         <button onClick={scrollRight} className="carousel-arrow right">
-          {'>'}
+          <i className="fa-solid fa-angle-right"></i>
         </button>
       </div>
     </>

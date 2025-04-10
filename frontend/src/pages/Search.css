@@ -121,6 +121,12 @@
   line-height: 1.2;
 }
 
+.card-container {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
 /* Responsive tweaks */
 @media (max-width: 768px) {
   .search-form {

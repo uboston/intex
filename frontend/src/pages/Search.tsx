@@ -26,10 +26,11 @@ const Search: React.FC = () => {
         );
         const data = await res.json();
         const mapped = data.map((item: any) => ({
-          id: item.showId,
+          showId: item.showId,
           title: item.title,
         }));
         setMovies(mapped);
+        console.log(movies);
       } catch (error) {
         console.error('Error fetching movies:', error);
       }
@@ -60,7 +61,7 @@ const Search: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full border border-gray-300 rounded p-2 mb-6"
             />
-            <div className="grid gap-4">
+            <div className="grid gap-4 d-flex justify-content-center flex-wrap mt-3">
               {movies.map((movie) => (
                 <MovieCard key={movie.showId} movie={movie} />
               ))}

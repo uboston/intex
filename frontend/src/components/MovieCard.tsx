@@ -36,16 +36,17 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   }, [imagePath]);
 
   return (
-    <Link to={`/detail/${movie.showId}`} className="movie-card"
-
+    <Link
+      to={`/detail/${movie.showId}`}
+      className="movie-card"
       style={{ textDecoration: 'none' }}
     >
-      <img
-        src={imageUrl || fallbackImage}
-        alt={movie.title}
-        className="movie-image"
-      />
-      <h3 className="movie-title">{movie.title}</h3>
+      {imageUrl && (
+        <div className="movie-card">
+          <img src={imageUrl} alt={movie.title} className="movie-image" />
+          <h3 className="movie-title">{movie.title}</h3>
+        </div>
+      )}
     </Link>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import './MovieDescription.css';
 import MovieCarousel from '../components/MovieCarousel';
 import Header from '../components/Header'; // Import Header component
@@ -81,20 +81,26 @@ function MovieDescription() {
             {/* Star rating appears just underneath the title */}
             <p>{movie.description}</p>
             <p>
-              <strong>Rating:</strong> {movie.rating}
+              <strong>Rating:</strong> {movie.rating || 'NA'}
             </p>
             <p>
-              <strong>Director:</strong> {movie.director}
+              <strong>Director:</strong> {movie.director || 'NA'}
             </p>
             <p>
-              <strong>Release Year:</strong> {movie.releaseYear}
+              <strong>Release Year:</strong> {movie.releaseYear || 'NA'}
             </p>
             <p>
-              <strong>Duration:</strong> {movie.duration}
+              <strong>Duration:</strong> {movie.duration || 'NA'}
             </p>
             <p>
-              <strong>Cast:</strong> {movie.cast}
+              <strong>Cast:</strong> {movie.cast || 'NA'}
             </p>
+            <div className="d-flex gap-2">
+              <div className="btn btn-light">Watch</div>
+              <Link to="/movies" className="btn btn-secondary">
+                Back
+              </Link>
+            </div>
             <p>
               <strong>Your Rating:</strong>
             </p>
