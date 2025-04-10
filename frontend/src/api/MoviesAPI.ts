@@ -18,7 +18,8 @@ interface movie {
   categories: string[];
 }
 
-const API_URL = 'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net';
+const API_URL =
+  'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net';
 
 export const fetchMovies = async (
   pageSize: number,
@@ -305,5 +306,18 @@ export const getContentRecommended = async (
   } catch (error) {
     console.error('Error fetching movies from trending or for you:', error);
     throw error;
+  }
+};
+
+export const getAllGenres = async () => {
+  try {
+    const response = await fetch(`${API_URL}/Movies/GetCategories`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching genres', error);
   }
 };

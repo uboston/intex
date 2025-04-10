@@ -61,19 +61,75 @@ namespace CineNiche.API.Controllers
         }
         
         [HttpGet("SearchMovies")]
-        public IActionResult SearchMovies([FromQuery] string searchTerm)
+        public IActionResult SearchMovies([FromQuery] string searchTerm, [FromQuery] List<string>? genres = null)
         {
-            var queriedMovies = _MoviesDbContext.MoviesTitles
-                .Where(m => m.Title != null && m.Title.Contains(searchTerm))
+            var query = _MoviesDbContext.MoviesTitles.AsQueryable();
+
+            // Filter by title
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(m => m.Title != null && m.Title.Contains(searchTerm));
+            }
+
+            // Genre mapping
+            var genreToPropertyMap = new Dictionary<string, string>
+            {
+                { "Action", "Action" },
+                { "Adventure", "Adventure" },
+                { "Anime Series / International TV Shows", "AnimeSeriesInternationalTvShows" },
+                { "British TV Shows / Docuseries / International TV Shows", "BritishTvShowsDocuseriesInternationalTvShows" },
+                { "Children", "Children" },
+                { "Comedies", "Comedies" },
+                { "Comedies / Dramas / International Movies", "ComediesDramasInternationalMovies" },
+                { "Comedies / International Movies", "ComediesInternationalMovies" },
+                { "Comedies / Romantic Movies", "ComediesRomanticMovies" },
+                { "Crime TV Shows / Docuseries", "CrimeTvShowsDocuseries" },
+                { "Documentaries", "Documentaries" },
+                { "Documentaries / International Movies", "DocumentariesInternationalMovies" },
+                { "Docuseries", "Docuseries" },
+                { "Dramas", "Dramas" },
+                { "Dramas / International Movies", "DramasInternationalMovies" },
+                { "Dramas / Romantic Movies", "DramasRomanticMovies" },
+                { "Family Movies", "FamilyMovies" },
+                { "Fantasy", "Fantasy" },
+                { "Horror Movies", "HorrorMovies" },
+                { "International Movies / Thrillers", "InternationalMoviesThrillers" },
+                { "International TV Shows / Romantic TV Shows / TV Dramas", "InternationalTvShowsRomanticTvShowsTvDramas" },
+                { "Kids' TV", "KidsTv" },
+                { "Language TV Shows", "LanguageTvShows" },
+                { "Musicals", "Musicals" },
+                { "Nature TV", "NatureTv" },
+                { "Reality TV", "RealityTv" },
+                { "Spirituality", "Spirituality" },
+                { "TV Action", "TvAction" },
+                { "TV Comedies", "TvComedies" },
+                { "TV Dramas", "TvDramas" },
+                { "Talk Shows / TV Comedies", "TalkShowsTvComedies" },
+                { "Thrillers", "Thrillers" }
+            };
+
+            if (genres != null && genres.Count != 0)
+            {
+                foreach (var genre in genres)
+                {
+                    if (genreToPropertyMap.TryGetValue(genre, out var propertyName))
+                    {
+                        query = query.Where(m => EF.Property<int>(m, propertyName) == 1);
+                    }
+                }
+            }
+
+            var result = query
                 .OrderBy(m => m.Title)
-                .Take(10)
+                .Take(20)
                 .Select(m => new
                 {
                     m.ShowId,
                     m.Title
                 })
                 .ToList();
-            return Ok(queriedMovies);
+
+            return Ok(result);
         }
 
         [HttpGet("MovieDetails/{showId}")]
