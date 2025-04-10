@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Footer from '../components/Footer'; // Import the Footer component
 import './Home.css'; // Assuming you have a CSS module for styles
+
 const Home: React.FC = () => {
   return (
     <div className="home-container background-img">
@@ -9,7 +11,7 @@ const Home: React.FC = () => {
         <nav className="nav-bar">
           <div className="nav-left">
             <img
-              src="/Logo.svg"
+              src="/smalllogo.png"
               alt="CineNiche Logo"
               className="primary-logo"
             />
@@ -24,21 +26,29 @@ const Home: React.FC = () => {
         <div className="hero">
           <h1>
             Welcome to{' '}
-            <img src="/wordlogo.svg" alt="CineNiche" className="center-logo" />
+            <img src="/newlogo.png" alt="CineNiche" className="center-logo" />
           </h1>
+          
+          <br></br>
           <p>Unlimited movies, TV shows, and more.</p>
           <div className="email-form">
-            <p>Ready to watch? Please Sign in above!</p>
-            <div className="get-started">
-              <input type="text" placeholder="Email address" />
-              <a href="#" className="btn-lg">
-                Get started <i className="fas fa-chevron-right"></i>
-              </a>
-            </div>
+  <div className="email-form">
+  <p>Ready to watch? Get started below!</p>
+  <div className="get-started">
+    <input type="text" placeholder="Email address" />
+    <Link to="/register" className="btn-lg">
+      Register Now <i className="fas fa-chevron-right"></i>
+    </Link>
+  </div>
+</div>
+
           </div>
         </div>
       </header>
+      {/* Add Footer here */}
+      <Footer />
     </div>
   );
 };
+
 export default Home;

@@ -18,7 +18,7 @@ function Header() {
   const handleLogout = async () => {
     try {
       // Post request to logout
-      const response = await fetch('/logout', {
+      const response = await fetch('https://localhost:5000/logout', {
         method: 'POST',
         credentials: 'include'  // Ensures cookies are sent with the request
       });
@@ -38,7 +38,7 @@ function Header() {
       {/* Left side: Logo and Site Title */}
       <div className="header-left">
         <img
-          src="/Logo.png"
+          src="/newlogo.png"
           alt="CineNiche Logo"
           className="header-logo"
           onClick={() => navigate('/movies')}
@@ -60,7 +60,7 @@ function Header() {
             <div className="profile-dropdown">
               <button onClick={() => navigate('/movies')}>Home</button>
               <button onClick={() => navigate('/admin')}>Admin</button>
-              <button onClick={() => navigate('/')}>Logout</button>
+              <button onClick={handleLogout}>Logout</button>
             </div>
           )}
         </div>
