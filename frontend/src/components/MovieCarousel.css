@@ -27,6 +27,11 @@
   z-index: 1;
 }
 
+.carousel-arrow:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #000;
+}
+
 .carousel-arrow.left {
   left: 0;
 }
