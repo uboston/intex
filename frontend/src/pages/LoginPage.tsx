@@ -11,11 +11,13 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const handleGoogleLogin = () => {
-    window.location.href = 'https://localhost:5000/external-login/google';
+    window.location.href =
+      'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/external-login/google';
   };
 
   const handleFacebookLogin = () => {
-    window.location.href = 'https://localhost:5000/external-login/facebook';
+    window.location.href =
+      'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/external-login/facebook';
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,8 +45,8 @@ function LoginPage() {
     }
 
     const loginUrl = rememberme
-      ? 'https://localhost:5000/login?useCookies=true&useSessionCookies=false'
-      : 'https://localhost:5000/login?useSessionCookies=true&useCookies=false';
+      ? 'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/login?useCookies=true&useSessionCookies=false'
+      : 'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/login?useSessionCookies=true&useCookies=false';
 
     try {
       const response = await fetch(loginUrl, {

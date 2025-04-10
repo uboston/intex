@@ -1,18 +1,20 @@
 import { useState, useEffect, CSSProperties } from 'react';
 import { FaStar } from 'react-icons/fa';
-import { updateStarRating, readStarRating } from '../api/MoviesAPI';
+import { readStarRating } from '../api/MoviesAPI';
 import { getCookieConsentValue } from 'react-cookie-consent';
 
 type StarRatingProps = {
   showId: string;
   totalStars?: number;
   initialRating?: number;
+  onRatingChange?: (rating: number) => void;
 };
 
 const StarRating: React.FC<StarRatingProps> = ({
   showId,
   totalStars = 5,
   initialRating = 0,
+  onRatingChange,
 }) => {
   const [rating, setRating] = useState<number>(initialRating);
   const [hovered, setHovered] = useState<number>(0);
@@ -28,6 +30,9 @@ const StarRating: React.FC<StarRatingProps> = ({
           fetchedRating <= 5
         ) {
           setRating(fetchedRating);
+          if (onRatingChange) {
+            onRatingChange(fetchedRating);
+          }
         }
       } catch (error) {
         console.error('Failed to fetch initial rating:', error);
@@ -42,14 +47,12 @@ const StarRating: React.FC<StarRatingProps> = ({
     setHovered(0); // Reset hover
   }, [showId, initialRating]);
 
-  const handleClick = async (index: number) => {
+  const handleClick = (index: number) => {
     const consent = getCookieConsentValue('siteConsent');
     if (consent === 'true') {
       setRating(index);
-      try {
-        await updateStarRating(showId, index);
-      } catch (error) {
-        console.error('Error updating rating:', error);
+      if (onRatingChange) {
+        onRatingChange(index);
       }
     } else {
       alert('You must have cookies enabled to rate movies.');

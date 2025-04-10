@@ -31,10 +31,13 @@ function MovieDescription() {
       return text ? JSON.parse(text) : {};
     };
 
-    fetch(`https://localhost:5000/Movies/MovieDetails/${movieId}`, {
-      method: 'get',
-      credentials: 'include',
-    })
+    fetch(
+      `https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/Movies/MovieDetails/${movieId}`,
+      {
+        method: 'get',
+        credentials: 'include',
+      }
+    )
       .then(async (response) => {
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
@@ -48,10 +51,13 @@ function MovieDescription() {
         console.error('Failed to fetch movie details:', error);
       });
 
-    fetch(`https://localhost:5000/Movies/RelatedMovies/${movieId}`, {
-      method: 'get',
-      credentials: 'include',
-    })
+    fetch(
+      `https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/Movies/RelatedMovies/${movieId}`,
+      {
+        method: 'get',
+        credentials: 'include',
+      }
+    )
       .then(async (response) => {
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
@@ -73,12 +79,12 @@ function MovieDescription() {
   return (
     <div className="movie-detail-page">
       <div className="container mt-4">
-  <div className="row mb-3">
-    <div className="col-12 d-flex justify-content-between align-items-center">
-      <Header />
-    </div>
-  </div>
-</div>
+        <div className="row mb-3">
+          <div className="col-12 d-flex justify-content-between align-items-center">
+            <Header />
+          </div>
+        </div>
+      </div>
 
       <div className="movie-info">
         <div className="movie-text">
@@ -114,14 +120,13 @@ function MovieDescription() {
           <img
             src={
               getCookieConsentValue('kidsView') === 'true'
-                ? 'https://localhost:5000/default.jpg'
+                ? 'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/default.jpg'
                 : posterUrl
             }
             alt={`Poster for ${movie.title}`}
-            onError={(
-              e: React.SyntheticEvent<HTMLImageElement, Event>
-            ) => {
-              e.currentTarget.src = 'https://localhost:5000/default.jpg';
+            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+              e.currentTarget.src =
+                'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/default.jpg';
             }}
           />
         </div>
