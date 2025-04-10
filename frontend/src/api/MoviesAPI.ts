@@ -29,14 +29,14 @@ export const fetchMovies = async (
     .map((category) => `&categories=${encodeURIComponent(category)}`)
     .join('&');
   const response = await fetch(
-    `${API_URL}/Movies/GetMovies?pageSize=${pageSize}&pageNum=${pageNumber}&${categoryParams}`,
+    `${API_URL}/Admin/GetMovies?pageSize=${pageSize}&pageNum=${pageNumber}&${categoryParams}`,
     {
       method: 'GET',
       credentials: 'include', // Include cookies in the request
     }
   );
   if (!response.ok) {
-    throw new Error('Failed to fetch movies');
+    throw new Error('Not authorized. Return to Home');
   }
   const data = await response.json();
   return data;
@@ -193,7 +193,6 @@ export const fetchRatingCategories = async (): Promise<string[]> => {
     console.error('Error fetching rating categories:', error);
     throw error;
   }
-};
 };
 
 export const getRecommendedMovies = async (): Promise<{
