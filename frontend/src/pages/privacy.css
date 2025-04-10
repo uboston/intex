@@ -1,0 +1,70 @@
+/* Basic page styles */
+body {
+    background-color: #fff;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Page wrapper */
+  .privacy-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+  
+  /* Headings */
+  .privacy-container h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #000;
+  }
+  
+  .privacy-container h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #000;
+  }
+  
+  .privacy-container h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #000;
+  }
+  
+  /* Paragraphs */
+  .privacy-container p {
+    margin-bottom: 1rem;
+  }
+  
+  /* Lists */
+  .privacy-container ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .privacy-container li {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Links */
+  .privacy-container a {
+    color: #0056b3;
+    text-decoration: none;
+  }
+  
+  .privacy-container a:hover {
+    text-decoration: underline;
+  }
+  /* Force left alignment inside the container */
+.privacy-container {
+    text-align: left;
+  }
+  
