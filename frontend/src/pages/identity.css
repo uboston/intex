@@ -3,17 +3,31 @@
 /* Reset & full‑height html/body */
 html,
 body {
+/* src/pages/Login.css */
+
+/* Reset & full‑height html/body */
+html,
+body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
+  width: 100%;
+  height: 100%;
   overflow-x: hidden;
+  background: transparent; /* ensure no white bg */
   background: transparent; /* ensure no white bg */
 }
 
 /* Full‑page background wrapper */
+/* Full‑page background wrapper */
 .login-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   position: fixed;
   top: 0;
   left: 0;

@@ -23,6 +23,7 @@ namespace CineNiche.API.Controllers
             _MoviesDbContext = temp;
         }
 
+        
         [HttpGet("GetMovies")]
         public IActionResult GetMovies(int pageSize = 50, int pageNum = 2, [FromQuery] List<string>? categories = null)
         {
@@ -106,7 +107,7 @@ namespace CineNiche.API.Controllers
 
             return Ok(categoryNames);
         }
-
+        
         [HttpGet("SearchMovies")]
         public IActionResult SearchMovies([FromQuery] string searchTerm)
         {
