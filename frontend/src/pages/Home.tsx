@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Footer from '../components/Footer'; // Import the Footer component
 import './Home.css'; // Assuming you have a CSS module for styles
-
 const Home: React.FC = () => {
   return (
     <div className="home-container background-img">
@@ -25,7 +23,8 @@ const Home: React.FC = () => {
         {/* Hero Section */}
         <div className="hero">
           <h1>
-            Welcome to<img src="/newlogo.png" alt="CineNiche" className="center-logo" />
+            Welcome to{' '}
+            <img src="/newlogo.png" alt="CineNiche" className="center-logo" />
           </h1>
           <br></br>
           <p>Unlimited movies, TV shows, and more.</p>
@@ -43,10 +42,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </header>
-      {/* Add Footer here */}
-      <Footer />
     </div>
   );
 };
-
 export default Home;
