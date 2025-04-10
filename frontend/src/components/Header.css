@@ -43,18 +43,18 @@
   flex-shrink: 0; /* Prevents this section from shrinking */
 }
 
-/* Search Button */
 .header-search-btn {
   background: none;
   border: none;
   color: #fff;
   cursor: pointer;
-  font-size: 1.2rem; /* Larger font size for the icon */
+  font-size: 1.8rem;
   margin-right: 1rem;
   display: flex;
   align-items: center;
   padding: 0.25rem;
 }
+
 
 .header-search-btn:hover {
   color: #e50914; /* Netflix-like red on hover */
