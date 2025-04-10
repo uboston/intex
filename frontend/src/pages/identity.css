@@ -1,17 +1,27 @@
-/* Full-page background wrapper */
 .login-background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: url('/movieimage.jpg') no-repeat center center fixed;
-  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden; /* contain the blur layer */
 }
-
+/* Blurred background layer */
+.login-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/movieimage.jpg') no-repeat center center fixed;
+  background-size: cover;
+  filter: blur(2px);
+  z-index: -1; /* behind the login card */
+}
 /* Page container */
 .login-page {
   display: flex;
@@ -19,7 +29,6 @@
   align-items: center;
   width: 100%;
 }
-
 /* Card styling */
 .card {
   max-width: 400px;
@@ -30,7 +39,6 @@
   padding: 2rem;
   color: white;
 }
-
 /* Title */
 .card-title,
 .login-page h5 {
@@ -40,20 +48,17 @@
   font-weight: 600;
   margin-bottom: 2rem;
 }
-
 /* Inputs */
 input.form-control {
   background-color: #222;
   color: #fff;
   border: 1px solid #444;
 }
-
 input.form-control:focus {
   background-color: #111;
-  border-color: #001f3f;
+  border-color: #001F3F;
   box-shadow: none;
 }
-
 /* Buttons */
 .btn-login,
 .btn-register,
@@ -68,42 +73,34 @@ input.form-control:focus {
   margin-bottom: 0.5rem;
   border: none !important;
 }
-
 .btn-login {
-  background-color: #001f3f !important;
+  background-color: #001F3F !important;
   color: white !important;
 }
-
 .btn-login:hover {
   background-color: #003366 !important;
 }
-
 .btn-register {
-  background-color: #4a6572 !important;
+  background-color: #4A6572 !important;
   color: white !important;
 }
-
 .btn-register:hover {
-  background-color: #3b4f5a !important;
+  background-color: #3B4F5A !important;
 }
-
 .btn-google {
   background-color: #888 !important;
   color: white !important;
 }
-
 .btn-google:hover {
   background-color: #aaa !important;
 }
-
 /* Error message */
 .error {
-  color: #e50914;
+  color: #E50914;
   font-weight: bold;
   text-align: center;
   margin-top: 10px;
 }
-
 /* Checkbox label */
 label,
 .form-check-label {
@@ -119,5 +116,14 @@ label,
 .login-logo {
   height: 85px;
   vertical-align: middle;
-  margin-left: -1.0rem;
+  margin-left: -1rem;
+}
+.auth-card {
+  max-width: 400px;
+  width: 100%;
+  background: rgba(56, 56, 56, 0.85); /* opaque black */
+  border-radius: 10px;
+  padding: 2rem;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }

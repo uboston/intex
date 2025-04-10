@@ -27,10 +27,25 @@
   z-index: 1;
 }
 
+.carousel-arrow:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #000;
+}
+
 .carousel-arrow.left {
   left: 0;
 }
 
 .carousel-arrow.right {
   right: 0;
+}
+.carousel-animated-container {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.6s ease-in-out;
+}
+
+.carousel-animated-container.animate-in {
+  opacity: 1;
+  transform: scale(1);
 }

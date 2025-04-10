@@ -16,6 +16,7 @@ import Search from './pages/Search';
 import MovieDescription from './pages/MovieDescription';
 import MovieDetailPage from './pages/MovieDescription';
 import UserRoleManager from './pages/UserRoleManager';
+import 'bootstrap/dist/css/bootstrap.css';
 
 function App() {
   return (
