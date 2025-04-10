@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import MovieCard from '../components/MovieCard';
 import AuthorizeView from '../components/AuthorizeView';
 import Header from '../components/Header';
+import { Link } from 'react-router-dom';
 
 interface Movie {
   showId: string;
@@ -22,7 +23,11 @@ const Search: React.FC = () => {
 
       try {
         const res = await fetch(
-          `https://localhost:5000/Movies/SearchMovies?searchTerm=${encodeURIComponent(query)}`
+          `https://localhost:5000/Movies/SearchMovies?searchTerm=${encodeURIComponent(query)}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
         );
         const data = await res.json();
         const mapped = data.map((item: any) => ({
@@ -54,13 +59,18 @@ const Search: React.FC = () => {
           </div>
           <div className="p-4 max-w-3xl mx-auto">
             <h1 className="text-2xl font-bold mb-4">Search Movies</h1>
-            <input
-              type="text"
-              placeholder="Search by title..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full border border-gray-300 rounded p-2 mb-6"
-            />
+            <div className="d-flex justify-content-center gap-2">
+              <input
+                type="text"
+                placeholder="Search by title..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full border border-gray-300 rounded p-2 mb-6"
+              />
+              <Link to="/movies" className="btn btn-secondary">
+                Back
+              </Link>
+            </div>
             <div className="grid gap-4 d-flex justify-content-center flex-wrap mt-3">
               {movies.map((movie) => (
                 <MovieCard key={movie.showId} movie={movie} />

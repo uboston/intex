@@ -36,7 +36,10 @@ function MovieDescription() {
     };
 
     // Fetch movie details
-    fetch(`https://localhost:5000/Movies/MovieDetails/${movieId}`)
+    fetch(`https://localhost:5000/Movies/MovieDetails/${movieId}`, {
+      method: 'get',
+      credentials: 'include',
+    })
       .then(async (response) => {
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
@@ -51,7 +54,10 @@ function MovieDescription() {
       });
 
     // Fetch related movies
-    fetch(`https://localhost:5000/Movies/RelatedMovies/${movieId}`)
+    fetch(`https://localhost:5000/Movies/RelatedMovies/${movieId}`, {
+      method: 'get',
+      credentials: 'include',
+    })
       .then(async (response) => {
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
