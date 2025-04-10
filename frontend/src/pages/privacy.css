@@ -1,18 +1,13 @@
-/* Basic page styles */
-body {
+/* Scoped container to prevent global layout issues */
+.privacy-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    text-align: left; /* Force left alignment */
     background-color: #fff;
     color: #333;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* Page wrapper */
-  .privacy-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
   }
   
   /* Headings */
@@ -46,8 +41,10 @@ body {
   
   /* Lists */
   .privacy-container ul {
+    list-style-type: disc;
     padding-left: 1.5rem;
     margin-bottom: 1rem;
+    text-align: left;
   }
   
   .privacy-container li {
@@ -62,9 +59,5 @@ body {
   
   .privacy-container a:hover {
     text-decoration: underline;
-  }
-  /* Force left alignment inside the container */
-.privacy-container {
-    text-align: left;
   }
   
