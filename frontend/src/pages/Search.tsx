@@ -71,6 +71,7 @@ const Search: React.FC = () => {
                 Back
               </Link>
             </div>
+
             <div className="grid gap-4 d-flex justify-content-center flex-wrap mt-3">
               {movies.map((movie) => (
                 <MovieCard key={movie.showId} movie={movie} />

@@ -1,24 +1,29 @@
-/* Movie Description Page Styles */
+/* === Movie Description Page Styles === */
 .movie-detail-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  background: linear-gradient(
-    135deg,
-    #000000,
-    #424242
-  ); /* Black to dark grey gradient */
-  color: #f0f0f0; /* Light text color */
+  background: linear-gradient(135deg, #000000, #424242);
+  color: #f0f0f0;
   min-height: 100vh;
-  box-sizing: border-box;
-
-  /* Force full-width edge-to-edge like your MoviesPage */
   width: 100vw;
+
+  /* Full edge-to-edge setup */
   position: relative;
   left: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
+
+  /* Pull content up under nav */
+  margin-top: -80px;
+  padding-top: 80px;
+
+  /* Detailed padding */
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
 }
 
 .movie-info {
@@ -32,7 +37,7 @@
 .movie-text {
   flex: 1;
   padding-right: 20px;
-  text-align: left; /* Left-align text */
+  text-align: left;
 }
 
 .movie-text h1 {
@@ -68,7 +73,17 @@
   color: #e0e0e0;
 }
 
-/* Responsive adjustments for smaller screens */
+.related-movies a {
+  color: white;
+  text-decoration: none;
+}
+
+.related-movies a:hover {
+  color: #ccc;
+  text-decoration: underline;
+}
+
+/* === Responsive adjustments for smaller screens === */
 @media (max-width: 768px) {
   .movie-info {
     flex-direction: column;
@@ -77,10 +92,37 @@
 
   .movie-text {
     padding-right: 0;
-    text-align: left; /* maintain left alignment on mobile */
+    text-align: left;
   }
 
   .movie-poster {
     margin-top: 20px;
   }
+}
+
+/* === Star Rating Hover Effect (with sharp stars) === */
+.star-rating i {
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}
+
+.star-rating i:hover {
+  transform: scale(1.3);
+}
+
+/* === Watch & Back Button Hover Effects === */
+.movie-text .btn {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 10px 18px;
+  border-radius: 5px;
+}
+
+.movie-text .btn:hover {
+  transform: scale(1.08);
+  background-color: #e50914 !important;
+  color: white !important;
 }

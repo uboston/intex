@@ -14,29 +14,29 @@ interface Movie {
 
 interface MovieCarouselProps {
   genre: string;
-  showId?: string; // Optional movies array to be used instead of generated ones
+  showId?: string;
 }
 
 const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, showId }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [movieList, setMovieList] = useState<Movie[]>([]);
   const [carouselHeader, setCarouselHeader] = useState<string>(genre);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [scale, setScale] = useState<number>(1);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         if (genre === 'Recommended') {
           const data = await getRecommendedMovies();
-          console.log(data);
           setMovieList(data.moviesList);
           setCarouselHeader(data.recommendType);
         } else if (genre === '') {
           const data = await getContentRecommended(showId || 's1');
-          console.log(data);
           setMovieList(data);
         } else {
           const data = await getMoviesFromGenre(genre);
-          console.log(data);
           setMovieList(data);
         }
       } catch (error) {
@@ -45,7 +45,47 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, showId }) => {
     };
 
     fetchMovies();
-  }, [genre, showId]); // Only re-run when genre or showId changes
+  }, [genre, showId]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      const centerY = rect.top + rect.height / 2;
+      const distanceFromCenter = Math.abs(centerY - viewportHeight / 2);
+
+      const maxDistance = viewportHeight / 2;
+      const clamped = Math.min(distanceFromCenter / maxDistance, 1);
+
+      const scaleValue = 0.92 + (1 - clamped) * 0.08; // scales from 0.92 → 1
+      setScale(scaleValue);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Run on mount
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollLeft = () => {
     if (carouselRef.current) {
@@ -60,7 +100,11 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, showId }) => {
   };
 
   return (
-    <>
+    <div
+      ref={containerRef}
+      className={`carousel-animated-container ${isVisible ? 'animate-in' : ''}`}
+      style={{ transform: `scale(${scale})`, transition: 'transform 0.2s ease-out' }}
+    >
       <h3 className="mb-3">{carouselHeader}</h3>
       <div className="carousel-container">
         <button onClick={scrollLeft} className="carousel-arrow left">
@@ -75,7 +119,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, showId }) => {
           <i className="fa-solid fa-angle-right"></i>
         </button>
       </div>
-    </>
+    </div>
   );
 };
 
