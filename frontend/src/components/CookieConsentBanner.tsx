@@ -1,6 +1,6 @@
 // src/components/CookieConsentBanner.tsx
-import React from "react";
-import CookieConsent, { getCookieConsentValue } from "react-cookie-consent";
+import React from 'react';
+import CookieConsent, { getCookieConsentValue } from 'react-cookie-consent';
 
 const CookieConsentBanner: React.FC = () => {
   return (
@@ -10,12 +10,12 @@ const CookieConsentBanner: React.FC = () => {
       declineButtonText="Decline"
       enableDeclineButton
       cookieName="siteConsent"
-      style={{ background: "#2B373B" }}
-      buttonStyle={{ color: "#4e503b", fontSize: "13px" }}
-      declineButtonStyle={{ fontSize: "13px" }}
+      style={{ background: '#2B373B' }}
+      buttonStyle={{ color: '#4e503b', fontSize: '13px' }}
+      declineButtonStyle={{ fontSize: '13px' }}
       expires={150}
     >
-      We use cookies to personalize content and analyze traffic. You can accept or decline.
+      We use cookies to recommend movies you like. You can accept or decline.
     </CookieConsent>
   );
 };

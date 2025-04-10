@@ -1,6 +1,7 @@
 import { useState, useEffect, CSSProperties } from 'react';
 import { FaStar } from 'react-icons/fa';
 import { updateStarRating, readStarRating } from '../api/MoviesAPI';
+import { getCookieConsentValue } from 'react-cookie-consent';
 
 type StarRatingProps = {
   showId: string;
@@ -37,11 +38,16 @@ const StarRating: React.FC<StarRatingProps> = ({
   }, [showId]);
 
   const handleClick = async (index: number) => {
-    setRating(index);
-    try {
-      await updateStarRating(showId, index);
-    } catch (error) {
-      console.error('Error updating rating:', error);
+    const consent = getCookieConsentValue('siteConsent');
+    if (consent === 'true') {
+      setRating(index);
+      try {
+        await updateStarRating(showId, index);
+      } catch (error) {
+        console.error('Error updating rating:', error);
+      }
+    } else {
+      alert('You must have cookies enabled to rate movies.');
     }
   };
 
