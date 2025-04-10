@@ -1,9 +1,11 @@
 import React from 'react';
+import './privacy.css';
 
 const Privacy: React.FC = () => {
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Privacy Policy</h1>
+    <div className="privacy-container">
+
+      <h1>CineNiche Privacy Policy</h1>
       <p>
         <strong>Effective Date:</strong> 04/07/2025
       </p>
