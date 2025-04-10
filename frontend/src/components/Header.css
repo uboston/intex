@@ -26,6 +26,10 @@
   height: auto;
   margin-right: 1rem;
   cursor: pointer;
+  transition: transform 0.25s ease;
+}
+.header-logo:hover {
+  transform: scale(1.1);
 }
 
 .header-title {
@@ -52,10 +56,12 @@
   display: flex;
   align-items: center;
   padding: 0.25rem;
+  transition: transform 0.25s ease;
 }
 
 .header-search-btn:hover {
   color: #e50914;
+  transform: scale(1.15);
 }
 
 /* Circular Profile */
@@ -70,6 +76,11 @@
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.header-profile-img:hover {
+  transform: scale(1.15);
 }
 
 /* Sleek Dropdown */
@@ -109,7 +120,7 @@
 }
 
 .profile-dropdown button:hover {
-  background-color: #001F3F(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.08);
   padding-left: 1.25rem;
   color: grey;
 }
