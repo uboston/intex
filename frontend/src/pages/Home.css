@@ -1,55 +1,68 @@
-/* OHH YEah Base body background + dark overlay */
-body:has(.background-img) {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url('/movieimage.jpg') no-repeat center center/cover;
-}
-
-/* The overall container takes up full width and height */
+/* Container holds everything */
 .home-container {
+  position: relative;
   width: 100%;
   min-height: 100vh;
-  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: Arial, sans-serif;
-  overflow: hidden;
 }
-
-/* Header fills the viewport, with padding to clear the fixed nav */
+/* -------------- */
+/* The blur layer */
+/* -------------- */
+.bg-blur {
+  position: fixed; /* covers the viewport */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('/movieimage.jpg') no-repeat center center fixed;
+  background-size: cover;
+  filter: blur(2px);
+  z-index: 0; /* behind all content */
+}
+/* optional dark overlay on top of blur */
+.bg-blur::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+/* -------------- */
+/* Your existing styles, bumped above the blur */
+/* -------------- */
 .home-header {
-  min-height: 100vh;
-  padding-top: 80px; /* adjust if you change nav height */
   position: relative;
+  z-index: 1; /* above the blur layer */
+  padding: 150px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 2; /* above overlay */
 }
-
-/* === NAV BAR BACK IN PLACE === */
-/* Navigation bar fixed to the very top edges */
 .nav-bar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 2; /* above header content */
   display: flex;
-  justify-content: space-between; /* corners */
+  justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
 }
-
-/* === Nav “Sign In” outlined button override === */
-.nav-bar .nav-right .sign-in-btn {
+.primary-logo {
+  height: 50px;
+}
+.sign-in-btn {
   display: inline-block;
   text-decoration: none;
   padding: 10px 20px;
   background-color: transparent;
-  border: 2px solid #d2b48c;
+  border: 2px solid white;
   border-radius: 5px;
   color: #fff;
   font-size: 1rem;
@@ -57,56 +70,44 @@ body:has(.background-img) {
     background-color 0.3s ease,
     color 0.3s ease;
 }
-
-.nav-bar .nav-right .sign-in-btn:hover {
-  background-color: #d2b48c;
-  color: #000;
+.sign-in-btn:hover {
+  background-color: #001F3F;
+  color: white;
 }
-
-/* Logo sizing */
-.primary-logo {
-  height: 50px;
-}
-
-/* Hero section: centered content */
 .hero {
+  position: relative;
+  z-index: 1;
   text-align: center;
   color: #fff;
   padding: 20px;
 }
-
 .hero h1 {
   font-size: 3rem;
   margin-bottom: 20px;
 }
-
 .center-logo {
   height: 150px;
   vertical-align: middle;
 }
-
 .hero p {
   font-size: 1.5rem;
   margin-bottom: 30px;
 }
-
-/* Email form styles */
 .email-form {
+  position: relative;
+  z-index: 1;
   margin-top: 20px;
 }
-
 .email-form p {
   font-size: 1.2rem;
+  margin-bottom: 10px;
 }
-
 .get-started {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
 }
-
-.get-started input[type='text'] {
+.email-input {
   padding: 10px;
   font-size: 1rem;
   border: none;
@@ -114,21 +115,20 @@ body:has(.background-img) {
   max-width: 80%;
   border-radius: 2px 0 0 2px;
 }
-
 .btn-lg {
+  display: inline-block;
   text-decoration: none;
   color: #fff;
-  background: #d2b48c;
+  background: #001F3F;
   padding: 10px 15px;
   border-radius: 0 2px 2px 0;
+  font-size: 1.1rem;
   transition: background 0.3s ease;
 }
-
 .btn-lg:hover {
-  background: #c1a178;
+  background: #504f4d;
 }
-
-/* Responsive tweaks (optional) */
+/* Responsive */
 @media (max-width: 600px) {
   .hero h1 {
     font-size: 2.5rem;
@@ -136,7 +136,7 @@ body:has(.background-img) {
   .hero p {
     font-size: 1.2rem;
   }
-  .get-started input[type='text'] {
+  .email-input {
     width: 200px;
   }
 }
