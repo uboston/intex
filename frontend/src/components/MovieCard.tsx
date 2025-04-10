@@ -16,6 +16,21 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const imagePath = `https://showposters.blob.core.windows.net/poster/Movie%20Posters/${encodeURIComponent(movie.title)}.jpg`; // URL encode the title to avoid issues with special characters
   const fallbackImage = 'https://localhost:5000/default.jpg'; // Path for default image
 
+  // Read the cookie value for kidsView
+  const getCookie = (name: string): string | null => {
+    const nameEQ = `${name}=`;
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  };
+
+  // Check if the 'kidsView' cookie is set to 'true'
+  const isKidsView = getCookie('kidsView') === 'true';
+
   useEffect(() => {
     const checkImageExistence = async () => {
       try {
@@ -35,17 +50,24 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
     checkImageExistence();
   }, [imagePath]);
 
-  return (
-    <Link to={`/detail/${movie.showId}`} className="movie-card"
+  // Use fallback image if 'kidsView' is true
+  const displayImage = isKidsView ? fallbackImage : imageUrl;
 
+  return (
+    <Link
+      to={`/detail/${movie.showId}`}
+      className="movie-card"
       style={{ textDecoration: 'none' }}
     >
-      <img
-        src={imageUrl || fallbackImage}
-        alt={movie.title}
-        className="movie-image"
-      />
-      <h3 className="movie-title">{movie.title}</h3>
+      {displayImage && (
+        <div className="movie-card">
+          <img src={displayImage} alt={movie.title} className="movie-image" />
+          {displayImage === fallbackImage && (
+            <p className="movie-card-text">{movie.title}</p>
+          )}
+          <h3 className="movie-title">{movie.title}</h3>
+        </div>
+      )}
     </Link>
   );
 };

@@ -6,12 +6,14 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CineNiche.API.Helpers;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace CineNiche.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class MoviesController : ControllerBase
     {
         private MoviesContext _MoviesDbContext;
@@ -154,7 +156,7 @@ namespace CineNiche.API.Controllers
             var userCookieId = User?.Identity?.Name;
             if (!string.IsNullOrEmpty(userCookieId))
             {
-                userId = Math.Abs(userCookieId.GetHashCode()).ToString();
+                userId = EmailHasher.GetStableHash(userCookieId);
                 Console.WriteLine("*****************************************************");
                 Console.WriteLine("Cookie Result: " + userCookieId);
                 Console.WriteLine("Hashed ID: " + userId);
@@ -216,8 +218,7 @@ namespace CineNiche.API.Controllers
             var userCookieId = User?.Identity?.Name;
             if (!string.IsNullOrEmpty(userCookieId))
             {
-                userId = Math.Abs(userCookieId.GetHashCode()).ToString();
-                // Debug lines to make sure the id is constant for a user
+                userId = EmailHasher.GetStableHash(userCookieId);
                 Console.WriteLine("*****************************************************");
                 Console.WriteLine("Cookie Result: " + userCookieId);
                 Console.WriteLine("Hashed ID: " + userId);

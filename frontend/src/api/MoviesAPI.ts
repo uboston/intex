@@ -46,6 +46,7 @@ export const addMovie = async (newMovie: movie): Promise<movie> => {
   try {
     const response = await fetch(`${API_URL}/Admin/CreateMovie?`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -70,6 +71,7 @@ export const updateMovie = async (
 ): Promise<movie> => {
   const response = await fetch(`${API_URL}/Admin/UpdateMovie/${showId}`, {
     method: 'PUT',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -84,6 +86,7 @@ export const updateMovie = async (
 export const deleteMovie = async (showId: string): Promise<void> => {
   const response = await fetch(`${API_URL}/Admin/DeleteMovie/${showId}`, {
     method: 'DELETE',
+    credentials: 'include',
   });
   if (!response.ok) {
     throw new Error('Failed to delete movie');
@@ -117,7 +120,11 @@ export const randomGenres = async (usedGenres: string[]): Promise<string[]> => {
     const response = await fetch(
       `${API_URL}/Recommend/RandomGenres?${
         usedGenres.length ? `&${genreParameters}` : ''
-      }`
+      }`,
+      {
+        method: 'GET',
+        credentials: 'include',
+      }
     );
 
     if (!response.ok) {
@@ -134,7 +141,11 @@ export const randomGenres = async (usedGenres: string[]): Promise<string[]> => {
 export const getMoviesFromGenre = async (genre: string): Promise<movie[]> => {
   try {
     const response = await fetch(
-      `${API_URL}/Movies/MoviesByGenre?genre=${encodeURIComponent(genre)}`
+      `${API_URL}/Movies/MoviesByGenre?genre=${encodeURIComponent(genre)}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+      }
     );
 
     if (!response.ok) {
@@ -150,7 +161,10 @@ export const getMoviesFromGenre = async (genre: string): Promise<movie[]> => {
 
 export const fetchCategories = async (): Promise<string[]> => {
   try {
-    const response = await fetch(`${API_URL}/Movies/GetCategories`);
+    const response = await fetch(`${API_URL}/Movies/GetCategories`, {
+      method: 'GET',
+      credentials: 'include',
+    });
 
     if (!response.ok) {
       throw new Error('Failed to fetch categories');
@@ -165,7 +179,10 @@ export const fetchCategories = async (): Promise<string[]> => {
 
 export const fetchRatingCategories = async (): Promise<string[]> => {
   try {
-    const response = await fetch(`${API_URL}/Movies/GetRatingCategories`);
+    const response = await fetch(`${API_URL}/Movies/GetRatingCategories`, {
+      method: 'GET',
+      credentials: 'include',
+    });
 
     if (!response.ok) {
       throw new Error('Failed to fetch rating categories');
@@ -250,7 +267,11 @@ export const getContentRecommended = async (
 ): Promise<movie[]> => {
   try {
     const response = await fetch(
-      `${API_URL}/Recommend/RecommenderContent?showId=${showId}`
+      `${API_URL}/Recommend/RecommenderContent?showId=${showId}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+      }
     );
 
     if (!response.ok) {

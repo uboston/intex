@@ -1,7 +1,8 @@
 .movie-card {
-  min-width: 200px;
+  width: 200px;
   margin-right: 10px;
   text-align: center;
+  position: relative;
 }
 
 .movie-image {
@@ -14,4 +15,12 @@
 .movie-title {
   font-size: 1rem;
   margin-top: 0.5rem;
+}
+
+.movie-card-text {
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
 }
