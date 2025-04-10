@@ -74,7 +74,8 @@ function MovieDescription() {
 
   if (!movie) return <div>Loading...</div>;
 
-  const posterUrl = `https://showposters.blob.core.windows.net/poster/Movie%20Posters/${encodeURIComponent(movie.title)}.jpg`;
+  const sanitizedTitle = movie.title.replace(/[^A-Za-z0-9 ]/g, '');
+  const posterUrl = `https://showposters.blob.core.windows.net/poster/Movie%20Posters/${encodeURIComponent(sanitizedTitle)}.jpg`;
 
   return (
     <div className="movie-detail-page">
@@ -106,13 +107,14 @@ function MovieDescription() {
             <strong>Cast:</strong> {movie.cast || 'NA'}
           </p>
           <div className="d-flex gap-2">
-  <div className="btn btn-light">
-    Watch <i className="fas fa-play" style={{ marginLeft: '8px' }}></i>
-  </div>
-  <Link to="/movies" className="btn btn-secondary">
-    Back
-  </Link>
-</div>
+            <div className="btn btn-light">
+              Watch{' '}
+              <i className="fas fa-play" style={{ marginLeft: '8px' }}></i>
+            </div>
+            <Link to="/movies" className="btn btn-secondary">
+              Back
+            </Link>
+          </div>
           <p>
             <strong>Your Rating:</strong>
           </p>
@@ -127,8 +129,7 @@ function MovieDescription() {
             }
             alt={`Poster for ${movie.title}`}
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-              e.currentTarget.src =
-                'https://localhost:5000/default.jpg';
+              e.currentTarget.src = 'https://localhost:5000/default.jpg';
             }}
           />
         </div>
