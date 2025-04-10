@@ -15,6 +15,7 @@ import Home from './pages/Home';
 import Search from './pages/Search';
 import MovieDescription from './pages/MovieDescription';
 import MovieDetailPage from './pages/MovieDescription';
+import 'bootstrap/dist/css/bootstrap.css';
 
 function App() {
   return (

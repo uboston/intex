@@ -3,6 +3,7 @@ import MovieCard from '../components/MovieCard';
 import AuthorizeView from '../components/AuthorizeView';
 import Header from '../components/Header';
 import { Link } from 'react-router-dom';
+import GenreFilter from '../components/GenreFilter';
 
 interface Movie {
   showId: string;
@@ -12,23 +13,29 @@ interface Movie {
 const Search: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
   // Debounced function
   const fetchMovies = useCallback(
-    debounce(async (query: string) => {
+    debounce(async (query: string, selectedGenres: string[]) => {
       if (!query) {
         setMovies([]);
         return;
       }
 
       try {
+        const genreParams = selectedGenres
+          .map((genre) => `genres=${encodeURIComponent(genre)}`)
+          .join('&');
+
         const res = await fetch(
-          `https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/Movies/SearchMovies?searchTerm=${encodeURIComponent(query)}`,
+          `https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/Movies/SearchMovies?searchTerm=${encodeURIComponent(query)}&${genreParams}`,
           {
             method: 'GET',
             credentials: 'include',
           }
         );
+
         const data = await res.json();
         const mapped = data.map((item: any) => ({
           showId: item.showId,
@@ -44,8 +51,8 @@ const Search: React.FC = () => {
   );
 
   useEffect(() => {
-    fetchMovies(searchTerm);
-  }, [searchTerm, fetchMovies]);
+    fetchMovies(searchTerm, selectedGenres);
+  }, [searchTerm, fetchMovies, selectedGenres]);
 
   return (
     <AuthorizeView>
@@ -71,6 +78,10 @@ const Search: React.FC = () => {
                 Back
               </Link>
             </div>
+            <GenreFilter
+              selectedGenres={selectedGenres}
+              setSelectedGenres={setSelectedGenres}
+            />
             <div className="grid gap-4 d-flex justify-content-center flex-wrap mt-3">
               {movies.map((movie) => (
                 <MovieCard key={movie.showId} movie={movie} />
