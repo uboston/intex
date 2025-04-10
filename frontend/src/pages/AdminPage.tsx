@@ -1,5 +1,5 @@
 // components/AdminMovies.js
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, useMemo } from 'react';
 import {
   fetchMovies,
   addMovie,
@@ -286,6 +286,17 @@ const MovieForm = ({
   );
 };
 
+function debounce<Func extends (...args: any[]) => void>(
+  fn: Func,
+  delay: number
+): (...args: Parameters<Func>) => void {
+  let timer: ReturnType<typeof setTimeout>;
+  return (...args: Parameters<Func>) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
+
 const AdminMovies = () => {
   const [movies, setMovies] = useState<movie[]>([]);
   const [selectedMovie, setSelectedMovie] = useState<movie | null>(null);
@@ -300,20 +311,30 @@ const AdminMovies = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
-
+  const debouncedSearch = useMemo(() => {
+    return debounce((value: string) => {
+      setDebouncedQuery(value); // This triggers your useEffect
+    }, 2000);
+  }, []);
+  
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);       // immediate update for UI
+    debouncedSearch(value);      // delayed update for API
+  };
   useEffect(() => {
     const loadMovies = async () => {
       try {
         setLoading(true);
         setError(null);
   
-        if (searchQuery.trim()) {
-          // ✅ Search mode: fetch all matches
-          const searchResults = await searchMovies(searchQuery);
+        if (debouncedQuery.trim()) {
+          // 🔍 Search mode
+          const searchResults = await searchMovies(debouncedQuery);
           setMovies(searchResults);
           setIsSearching(true);
         } else {
-          // ✅ Normal paginated fetch
+          // 📄 Normal paginated fetch
           const data = await fetchMovies(pageSize, pageNumber, []);
           setMovies(data.movies);
           setTotalPages(Math.ceil(data.totalMovies / pageSize));
@@ -327,7 +348,8 @@ const AdminMovies = () => {
     };
   
     loadMovies();
-  }, [pageSize, pageNumber, searchQuery]); // ← ✅ include searchQuery as a dependency
+  }, [debouncedQuery, pageSize, pageNumber]); // ✅ use debouncedQuery instead of searchQuery
+   // ← ✅ include searchQuery as a dependency
   
 
   const handleAdd = async () => {
@@ -435,7 +457,7 @@ const AdminMovies = () => {
           <TextField
             label="Search by title, director, cast..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchChange}
             fullWidth
             margin="normal"
           />

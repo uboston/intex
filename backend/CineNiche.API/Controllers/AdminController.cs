@@ -10,8 +10,8 @@ using CineNiche.API.Data;
 namespace CineNiche.API.Controllers
 {
     [Route("[controller]")]
-    [ApiController]
-    [Authorize(Roles = "Admin")]
+    [ApiController] 
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class AdminController : ControllerBase
     {
         private MoviesContext _MoviesDbContext;
@@ -140,7 +140,6 @@ namespace CineNiche.API.Controllers
                     m.Title.Contains(query) ||
                     m.Director.Contains(query) ||
                     m.Cast.Contains(query) ||
-                    m.Country.Contains(query) ||
                     m.Description.Contains(query))
                 .ToListAsync();
 

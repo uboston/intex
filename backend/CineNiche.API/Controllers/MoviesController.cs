@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using CineNiche.API.Helpers;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
@@ -306,6 +307,19 @@ namespace CineNiche.API.Controllers
             }
 
             return Ok(movies);
+        }
+        
+        [Authorize]
+        [HttpGet("whoami")]
+        public IActionResult WhoAmI()
+        {
+            var name = User.Identity?.Name;
+            var roles = User.Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value)
+                .ToList();
+
+            return Ok(new { name, roles });
         }
     }
 }

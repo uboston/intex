@@ -15,6 +15,7 @@ import Home from './pages/Home';
 import Search from './pages/Search';
 import MovieDescription from './pages/MovieDescription';
 import MovieDetailPage from './pages/MovieDescription';
+import UserRoleManager from './pages/UserRoleManager';
 import 'bootstrap/dist/css/bootstrap.css';
 
 function App() {
@@ -32,23 +33,8 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
           <Route path="/signin-google" element={<Navigate to="/" />} />
-          {/* <Route
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/movies" element={<MoviesPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/moviedescription/:movieId" element={<MovieDescription />} />
-        {/* For any undefined route, redirect to the login page */}
+          <Route path="/super" element={<UserRoleManager />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
-          <Route path="/signin-google" element={<Navigate to="/" />} />
-          {/* <Route
-              path="/product/:rootbeerName/:rootbeerId/:currentRetailPrice"
-              element={<ProductPage />}
-            /> */}
         </Routes>
         <CookieConsentBanner />
       </Router>

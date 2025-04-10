@@ -41,12 +41,12 @@ public class RoleController : Controller
         return StatusCode(500, "An error occurred while creating the role.");
     }
 
-    [HttpPost("AssignRoleToUser")]
-    public async Task<IActionResult> AssignRoleToUser(string userEmail, string roleName)
+    [HttpPut("AssignRoleToUser")]
+    public async Task<IActionResult> AssignRoleToUser([FromQuery] string userEmail, [FromQuery] string roleName)
     {
-        if (string.IsNullOrWhiteSpace(userEmail) || string.IsNullOrWhiteSpace(roleName))
+        if (string.IsNullOrWhiteSpace(userEmail))
         {
-            return BadRequest("User email and role name are required.");
+            return BadRequest("User email is required.");
         }
 
         var user = await _userManager.FindByEmailAsync(userEmail);
@@ -55,20 +55,40 @@ public class RoleController : Controller
             return NotFound("User not found.");
         }
 
+        var currentRoles = await _userManager.GetRolesAsync(user);
+        var removalResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+        if (!removalResult.Succeeded)
+        {
+            return StatusCode(500, "Failed to remove existing roles.");
+        }
+
+        // If "None" is selected, just return after removing roles
+        if (string.Equals(roleName, "None", StringComparison.OrdinalIgnoreCase))
+        {
+            return Ok($"Removed all roles from '{userEmail}'.");
+        }
+
+        // Only allow Admin or SuperAdmin
+        if (roleName != "Admin" && roleName != "SuperAdmin")
+        {
+            return BadRequest("Invalid role.");
+        }
+
         var roleExists = await _roleManager.RoleExistsAsync(roleName);
         if (!roleExists)
         {
             return NotFound("Role does not exist.");
         }
 
-        var result = await _userManager.AddToRoleAsync(user, roleName);
-        if (result.Succeeded)
+        var addResult = await _userManager.AddToRoleAsync(user, roleName);
+        if (addResult.Succeeded)
         {
-            return Ok($"Role '{roleName}' assigned to user '{userEmail}'.");
+            return Ok($"Assigned role '{roleName}' to user '{userEmail}'.");
         }
 
         return StatusCode(500, "An error occurred while assigning the role.");
     }
+
 
     [HttpPut("UpdateRole")]
     public async Task<IActionResult> UpdateRole(string oldRoleName, string newRoleName)
@@ -144,5 +164,53 @@ public class RoleController : Controller
         }
 
         return StatusCode(500, "An error occurred while removing the role.");
+    }
+
+    [HttpGet("GetUsersWithRoles")]
+    public async Task<IActionResult> GetUsersWithRoles()
+    {
+        var users = _userManager.Users.ToList();
+        var userRoles = new List<object>();
+
+        foreach (var user in users)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+            userRoles.Add(new
+            {
+                user.Id,
+                user.Email,
+                Role = roles.FirstOrDefault() ?? "None"
+            });
+        }
+        return Ok(userRoles);
+    }
+    
+    [HttpPut("UpdateUserRole")]
+    public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleRequest request)
+    {
+        var user = await _userManager.FindByIdAsync(request.UserId);
+        if (user == null) return NotFound("User not found");
+
+        var currentRoles = await _userManager.GetRolesAsync(user);
+        await _userManager.RemoveFromRolesAsync(user, currentRoles);
+        await _userManager.AddToRoleAsync(user, request.NewRole);
+
+        return Ok("Role updated");
+    }
+    
+    public class UpdateUserRoleRequest
+    {
+        public string UserId { get; set; } = "";
+        public string NewRole { get; set; } = "";
+    }
+
+    [HttpGet("UserRoles")]
+    public async Task<IActionResult> GetUserRoles()
+    {
+        var roles = _roleManager.Roles
+            .Select(r => new { r.Id, r.Name })
+            .ToList();
+
+        return Ok(roles);
     }
 }

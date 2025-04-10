@@ -37,7 +37,7 @@ export const fetchMovies = async (
     }
   );
   if (!response.ok) {
-    throw new Error('Not authorized. Return to Home');
+    throw new Error('Failed to load movies');
   }
   const data = await response.json();
   return data;
