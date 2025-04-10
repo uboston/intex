@@ -1,4 +1,5 @@
 using CineNiche.API.Data;
+using CineNiche.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace CineNiche.API.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-//[Authorize]
+[Authorize]
 public class RecommendController : ControllerBase
 {
     private readonly MoviesContext _MoviesDbContext;
@@ -26,14 +27,16 @@ public class RecommendController : ControllerBase
     [HttpGet("RecommenderContent")]
     public IActionResult RecommenderContent(string showId = "s1")
     {
-        var similarShows = _MoviesDbContext
-            .recommender_content
-            .Where(x => x.show_id == showId)
-            .OrderByDescending(x => x.similarity)
-            .Take(10)
-            .ToList();
+        var recommendedMovies = (from rec in _MoviesDbContext.recommender_content
+                                join movie in _MoviesDbContext.MoviesTitles
+                                on rec.other_show_id equals movie.ShowId
+                                where rec.show_id == showId
+                                orderby rec.similarity descending
+                                select movie)
+                                .Take(10)
+                                .ToList();
 
-        return Ok(similarShows);
+        return Ok(recommendedMovies);
     }
     
     [HttpGet("RecommenderCollabItem")]
@@ -99,12 +102,10 @@ public class RecommendController : ControllerBase
         4. Using those genres, get a list of 5 of them
         5. Return list to user
         */
-        // var userCookieId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         var userCookieId = User?.Identity?.Name;
         if (!string.IsNullOrEmpty(userCookieId))
         {
-            userId = Math.Abs(userCookieId.GetHashCode()).ToString();
-            // Debug lines to make sure the id is constant for a user
+            userId = EmailHasher.GetStableHash(userCookieId);
             Console.WriteLine("*****************************************************");
             Console.WriteLine("Cookie Result: " + userCookieId);
             Console.WriteLine("Hashed ID: " + userId);
@@ -251,8 +252,7 @@ public class RecommendController : ControllerBase
         var userCookieId = User?.Identity?.Name;
         if (!string.IsNullOrEmpty(userCookieId))
         {
-            userId = Math.Abs(userCookieId.GetHashCode()).ToString();
-            // Debug lines to make sure the id is constant for a user
+            userId = EmailHasher.GetStableHash(userCookieId);
             Console.WriteLine("*****************************************************");
             Console.WriteLine("Cookie Result: " + userCookieId);
             Console.WriteLine("Hashed ID: " + userId);
@@ -276,7 +276,7 @@ public class RecommendController : ControllerBase
                 // Get movie titles and all columns for the recommended show IDs
                 var movieRecommendations = _MoviesDbContext.MoviesTitles
                     .Where(m => new[] { recommendations.rec_1, recommendations.rec_2, recommendations.rec_3, recommendations.rec_4, recommendations.rec_5, recommendations.rec_6, recommendations.rec_7, recommendations.rec_8, recommendations.rec_9, recommendations.rec_10 }
-                                .Contains(m.ShowId))
+                    .Contains(m.ShowId))
                     .ToList();
 
                 // Combine recommendations with movie titles
@@ -316,7 +316,7 @@ public class RecommendController : ControllerBase
                 AverageRating = group.Average(r => r.Rating!.Value)
             })
             .OrderByDescending(r => r.AverageRating)
-            .Skip(30)
+            .Skip(35)
             .Take(10)
             .ToList();
 

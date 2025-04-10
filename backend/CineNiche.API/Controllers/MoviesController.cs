@@ -2,15 +2,18 @@ using CineNiche.API.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CineNiche.API.Helpers;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace CineNiche.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class MoviesController : ControllerBase
     {
         private MoviesContext _MoviesDbContext;
@@ -154,12 +157,12 @@ namespace CineNiche.API.Controllers
             var userCookieId = User?.Identity?.Name;
             if (!string.IsNullOrEmpty(userCookieId))
             {
-                userId = Math.Abs(userCookieId.GetHashCode()).ToString();
-                // Debug lines to make sure the id is constant for a user
+                userId = EmailHasher.GetStableHash(userCookieId);
                 Console.WriteLine("*****************************************************");
                 Console.WriteLine("Cookie Result: " + userCookieId);
                 Console.WriteLine("Hashed ID: " + userId);
             }
+
             if (dto.Rating is < 1 or > 5)
             {
                 return BadRequest("Rating must be between 1 and 5.");
@@ -170,22 +173,62 @@ namespace CineNiche.API.Controllers
                 return BadRequest("ShowId is required.");
             }
 
-            var rating = new MoviesRating
-            {
-                ShowId = dto.ShowId,
-                Rating = dto.Rating,
-                UserId = Int32.Parse(userId)
-            };
+            int parsedUserId = Int32.Parse(userId);
 
-            _MoviesDbContext.MoviesRatings.Add(rating);
+            // Check for existing rating
+            var existingRating = _MoviesDbContext.MoviesRatings
+                .FirstOrDefault(r => r.ShowId == dto.ShowId && r.UserId == parsedUserId);
+
+            if (existingRating != null)
+            {
+                // Update the existing rating
+                existingRating.Rating = dto.Rating;
+                _MoviesDbContext.MoviesRatings.Update(existingRating);
+            }
+            else
+            {
+                // Create new rating
+                var rating = new MoviesRating
+                {
+                    ShowId = dto.ShowId,
+                    Rating = dto.Rating,
+                    UserId = parsedUserId
+                };
+                _MoviesDbContext.MoviesRatings.Add(rating);
+            }
+
             _MoviesDbContext.SaveChanges();
 
             return Ok(new { message = "Rating submitted successfully." });
         }
+
         public class SubmitRatingDto
         {
             public string ShowId { get; set; }
             public int Rating { get; set; }
+        }
+
+        [HttpGet("ReadRating")]
+        public IActionResult ReadRating(string showId, string userId = "1")
+        {
+            if (string.IsNullOrWhiteSpace(showId))
+            {
+                return BadRequest("ShowId is required.");
+            }
+
+            var userCookieId = User?.Identity?.Name;
+            if (!string.IsNullOrEmpty(userCookieId))
+            {
+                userId = EmailHasher.GetStableHash(userCookieId);
+                Console.WriteLine("*****************************************************");
+                Console.WriteLine("Cookie Result: " + userCookieId);
+                Console.WriteLine("Hashed ID: " + userId);
+            }
+
+            var rating = _MoviesDbContext.MoviesRatings
+                .FirstOrDefault(r => r.UserId == Int32.Parse(userId) && r.ShowId == showId);
+
+            return Ok(new { rating = rating?.Rating });
         }
 
         [HttpGet("MoviesByGenre")]

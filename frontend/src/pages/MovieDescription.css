@@ -4,7 +4,11 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(135deg, #000000, #424242); /* Black to dark grey gradient */
+  background: linear-gradient(
+    135deg,
+    #000000,
+    #424242
+  ); /* Black to dark grey gradient */
   color: #f0f0f0; /* Light text color */
   min-height: 100vh;
   box-sizing: border-box;
@@ -75,7 +79,7 @@
     padding-right: 0;
     text-align: left; /* maintain left alignment on mobile */
   }
-  
+
   .movie-poster {
     margin-top: 20px;
   }

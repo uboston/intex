@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import "./MovieDescription.css";
+import { Link, useParams } from 'react-router-dom';
+import './MovieDescription.css';
 import MovieCarousel from '../components/MovieCarousel';
-import Header from '../components/Header';            // Import Header component
-import StarRating from '../components/StarRating';      // Import StarRating component
+import Header from '../components/Header'; // Import Header component
+import StarRating from '../components/StarRating'; // Import StarRating component
+import { getCookieConsentValue } from 'react-cookie-consent';
 
 // Define the interface for a movie
 interface Movie {
-  id: string;
+  showId: string;
   title: string;
   director: string;
   description: string;
@@ -36,32 +37,38 @@ function MovieDescription() {
     };
 
     // Fetch movie details
-    fetch(`https://localhost:5000/Movies/MovieDetails/${movieId}`)
-      .then(async response => {
+    fetch(`https://localhost:5000/Movies/MovieDetails/${movieId}`, {
+      method: 'get',
+      credentials: 'include',
+    })
+      .then(async (response) => {
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
         }
         return parseJSONResponse(response);
       })
-      .then(data => {
+      .then((data) => {
         setMovie(data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Failed to fetch movie details:', error);
       });
 
     // Fetch related movies
-    fetch(`https://localhost:5000/Movies/RelatedMovies/${movieId}`)
-      .then(async response => {
+    fetch(`https://localhost:5000/Movies/RelatedMovies/${movieId}`, {
+      method: 'get',
+      credentials: 'include',
+    })
+      .then(async (response) => {
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
         }
         return parseJSONResponse(response);
       })
-      .then(data => {
+      .then((data) => {
         setRelatedMovies(data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Failed to fetch related movies:', error);
       });
   }, [movieId]);
@@ -78,23 +85,57 @@ function MovieDescription() {
         <div className="movie-info">
           <div className="movie-text">
             <h1>{movie.title}</h1>
-            {/* Star rating appears just underneath the title */} 
+            {/* Star rating appears just underneath the title */}
             <p>{movie.description}</p>
-            <p><strong>Rating:</strong> {movie.rating}</p>
-            <p><strong>Director:</strong> {movie.director}</p>
-            <p><strong>Release Year:</strong> {movie.releaseYear}</p>
-            <p><strong>Duration:</strong> {movie.duration}</p>
-            <p><strong>Cast:</strong> {movie.cast}</p>
-            <p><strong>Your Rating:</strong></p>
-            <StarRating rating={movie.rating} />
+            <p>
+              <strong>Rating:</strong> {movie.rating || 'NA'}
+            </p>
+            <p>
+              <strong>Director:</strong> {movie.director || 'NA'}
+            </p>
+            <p>
+              <strong>Release Year:</strong> {movie.releaseYear || 'NA'}
+            </p>
+            <p>
+              <strong>Duration:</strong> {movie.duration || 'NA'}
+            </p>
+            <p>
+              <strong>Cast:</strong> {movie.cast || 'NA'}
+            </p>
+            <div className="d-flex gap-2">
+              <div className="btn btn-light">Watch</div>
+              <Link to="/movies" className="btn btn-secondary">
+                Back
+              </Link>
+            </div>
+            <p>
+              <strong>Your Rating:</strong>
+            </p>
+            <StarRating showId={movieId || ''} />
           </div>
           <div className="movie-poster">
-            <img src={posterUrl} alt={`Poster for ${movie.title}`} />
+            <div className="movie-poster">
+              <div className="movie-poster">
+                <img
+                  src={
+                    getCookieConsentValue('kidsView') === 'true'
+                      ? 'https://localhost:5000/default.jpg'
+                      : posterUrl
+                  }
+                  alt={`Poster for ${movie.title}`}
+                  onError={(
+                    e: React.SyntheticEvent<HTMLImageElement, Event>
+                  ) => {
+                    e.currentTarget.src = 'https://localhost:5000/default.jpg';
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div className="related-movies">
           <h2>Similar Movies</h2>
-          <MovieCarousel movies={relatedMovies} genre={''} />
+          <MovieCarousel genre={''} showId={movie.showId} />
         </div>
       </div>
     </div>

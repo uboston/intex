@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between; /* Space out left and right sections */
   background-color: transparent; /* Transparent background */
-  padding: 0.75rem 1rem;  /* You could also use percentages if you prefer */
+  padding: 0.75rem 1rem; /* You could also use percentages if you prefer */
   color: #fff;
   box-sizing: border-box;
 
@@ -24,9 +24,10 @@
 }
 
 .header-logo {
-  width: 250px; /* Slightly larger logo */
+  width: 225px; /* Slightly larger logo */
   height: auto;
   margin-right: 1rem;
+  cursor: pointer;
 }
 
 .header-title {
