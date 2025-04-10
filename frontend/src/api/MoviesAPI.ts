@@ -18,7 +18,7 @@ interface movie {
   categories: string[];
 }
 
-const API_URL = 'https://localhost:5000';
+const API_URL = 'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net';
 
 export const fetchMovies = async (
   pageSize: number,
@@ -29,14 +29,14 @@ export const fetchMovies = async (
     .map((category) => `&categories=${encodeURIComponent(category)}`)
     .join('&');
   const response = await fetch(
-    `${API_URL}/Movies/GetMovies?pageSize=${pageSize}&pageNum=${pageNumber}&${categoryParams}`,
+    `${API_URL}/Admin/GetMovies?pageSize=${pageSize}&pageNum=${pageNumber}&${categoryParams}`,
     {
       method: 'GET',
       credentials: 'include', // Include cookies in the request
     }
   );
   if (!response.ok) {
-    throw new Error('Failed to fetch movies');
+    throw new Error('Not authorized. Return to Home');
   }
   const data = await response.json();
   return data;
@@ -263,19 +263,27 @@ export const updateStarRating = async (showId: string, rating: number) => {
 };
 
 export const getNextShowId = async (): Promise<string> => {
-  const res = await fetch(`${API_URL}/Admin/GetNextShowId`);
+  const res = await fetch(`${API_URL}/Admin/GetNextShowId`, {
+    method: 'GET',
+    credentials: 'include', // send credentials to get cookies
+  });
   if (!res.ok) throw new Error('Failed to get next showId');
   return res.text(); // returns a string like "s12"
 };
 
 export const searchMovies = async (query: string): Promise<movie[]> => {
-  const response = await fetch(`${API_URL}/Admin/SearchMovies?query=${encodeURIComponent(query)}`);
+  const response = await fetch(
+    `${API_URL}/Admin/SearchMovies?query=${encodeURIComponent(query)}`,
+    {
+      method: 'GET',
+      credentials: 'include', // send credentials to get cookies
+    }
+  );
   if (!response.ok) {
-    throw new Error("Failed to search movies");
+    throw new Error('Failed to search movies');
   }
   return await response.json();
 };
-
 
 export const getContentRecommended = async (
   showId: string

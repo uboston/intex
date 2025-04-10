@@ -22,55 +22,7 @@ namespace CineNiche.API.Controllers
         {
             _MoviesDbContext = temp;
         }
-
         
-        [HttpGet("GetMovies")]
-        public IActionResult GetMovies(int pageSize = 50, int pageNum = 2, [FromQuery] List<string>? categories = null)
-        {
-            try
-            {
-                var query = _MoviesDbContext.MoviesTitles.AsQueryable();
-
-                if (categories != null && categories.Any())
-                {
-                    foreach (var category in categories)
-                    {
-                        switch (category.Trim().ToLower())
-                        {
-                            // ... your switch cases for filtering by category ...
-                            default:
-                                break;
-                        }
-                    }
-                }
-
-                // Adding a stable ordering clause before Skip/Take
-
-                var totalNumMovies = query.Count();
-                var movies = query.ToList()
-                    .OrderBy(m =>
-                    {
-                        var digitsOnly = new string(m.ShowId.SkipWhile(c => !char.IsDigit(c)).ToArray());
-                        return int.TryParse(digitsOnly, out var num) ? num : int.MaxValue;
-                    })
-                    .Skip((pageNum - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList();
-
-                var returnMovies = new
-                {
-                    Movies = movies,
-                    TotalMovies = totalNumMovies
-                };
-
-                return Ok(returnMovies);
-            }
-            catch (Exception ex)
-            {
-                // Log the error and return the exception message for debugging (remove ex.Message in production)
-                return StatusCode(500, ex.Message);
-            }
-        }
 
         [HttpGet("GetRatingCategories")]
         public IActionResult GetRatingCategories()

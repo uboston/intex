@@ -14,7 +14,8 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const [imageUrl, setImageUrl] = useState<string>('');
   const imagePath = `https://showposters.blob.core.windows.net/poster/Movie%20Posters/${encodeURIComponent(movie.title)}.jpg`; // URL encode the title to avoid issues with special characters
-  const fallbackImage = 'https://localhost:5000/default.jpg'; // Path for default image
+  const fallbackImage =
+    'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/default.jpg'; // Path for default image
 
   // Read the cookie value for kidsView
   const getCookie = (name: string): string | null => {

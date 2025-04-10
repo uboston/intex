@@ -23,7 +23,7 @@ const Search: React.FC = () => {
 
       try {
         const res = await fetch(
-          `https://localhost:5000/Movies/SearchMovies?searchTerm=${encodeURIComponent(query)}`,
+          `https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/Movies/SearchMovies?searchTerm=${encodeURIComponent(query)}`,
           {
             method: 'GET',
             credentials: 'include',
