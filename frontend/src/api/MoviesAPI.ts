@@ -161,8 +161,7 @@ export const fetchCategories = async (): Promise<string[]> => {
     console.error('Error fetching categories:', error);
     throw error;
   }
-}
-}
+};
 
 export const fetchRatingCategories = async (): Promise<string[]> => {
   try {
@@ -177,9 +176,7 @@ export const fetchRatingCategories = async (): Promise<string[]> => {
     console.error('Error fetching rating categories:', error);
     throw error;
   }
-}
-
-
+};
 
 export const getRecommendedMovies = async (): Promise<{
   recommendType: string;

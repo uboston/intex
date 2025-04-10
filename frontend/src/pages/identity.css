@@ -1,46 +1,54 @@
-/* Reset default margin/padding for body/html to remove any potential white space */
-html, body {
+/* src/pages/Login.css */
+
+/* Reset & full‑height html/body */
+html,
+body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
-  /* Hide any accidental horizontal overflow */
+  width: 100%;
+  height: 100%;
   overflow-x: hidden;
+  background: transparent; /* ensure no white bg */
 }
 
-/* Full-page background wrapper */
+/* Full‑page background wrapper */
 .login-background {
-  /* Image fills entire screen; remove width:100vw to prevent horizontal scrolling */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   background: url('/movieimage.jpg') no-repeat center center fixed;
   background-size: cover;
-  
-  /* Fill available screen height */
-  min-height: 100vh;
 
-  /* Center login card */
   display: flex;
   align-items: center;
   justify-content: center;
+
+  margin: 0;
+  padding: 0;
+  /* remove z-index entirely */
 }
 
-/* Override Bootstrap container constraints if needed */
+/* Ensure your page container is transparent */
+.login-page,
 .login-page.container {
-  max-width: 100% !important; /* No fixed max-width */
-  margin: 0 auto !important;
-  padding: 0 1rem; /* Some horizontal padding if you like */
+  background: transparent !important;
 }
 
 /* Center row contents horizontally */
 .login-page .row {
-  margin: 0; /* Remove default negative margins */
+  margin: 0;
   justify-content: center;
 }
 
 /* Card styling */
 .login-page .card {
-  max-width: 400px; /* Restrict the card’s width */
-  background: rgba(51, 51, 51, 0.85); 
-  border: none; 
+  max-width: 400px;
+  width: 100%;
+  background: rgba(51, 51, 51, 0.85);
+  border: none;
   border-radius: 5px;
 }
 
@@ -48,29 +56,64 @@ html, body {
   padding: 1rem;
 }
 
-/* Buttons */
+/* Button colors: navy & grey */
 .btn-login {
   font-size: 0.9rem;
   letter-spacing: 0.05rem;
   padding: 0.75rem 1rem;
-  background-color: #e50914;
-  color: #fff;
-  border: none;
+  background-color: #001f3f !important; /* Navy blue */
+  color: #fff !important;
+  border: none !important;
   border-radius: 5px;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 .btn-login:hover {
-  background-color: #fd1c27;
+  background-color: #003366 !important; /* Darker navy blue */
+}
+
+/* Styling for the Register button */
+.btn-register {
+  font-size: 0.9rem;
+  letter-spacing: 0.05rem;
+  padding: 0.75rem 1rem;
+  background-color: #4a6572 !important; /* Greyish blue */
+  color: #fff !important;
+  border: none !important;
+  border-radius: 5px;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.btn-register:hover {
+  background-color: #3b4f5a !important; /* Darker greyish blue */
 }
 
 .btn-google {
+  background-color: #888 !important;
   color: #fff !important;
-  background-color: #ea4335 !important;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.btn-google:hover {
+  background-color: #aaa !important;
 }
 
 .btn-facebook {
+  background-color: #555 !important;
   color: #fff !important;
-  background-color: #3b5998 !important;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.btn-facebook:hover {
+  background-color: #777 !important;
 }
 
 /* Error message styling */
@@ -100,37 +143,6 @@ input.form-control {
 input.form-control:focus {
   background-color: #111;
   color: #fff;
-  border-color: #e50914;
+  border-color: #001f3f;
   box-shadow: none;
-}
-
-/* ===== Example of your MoviesPage override, left intact but separate ===== */
-.movies-page {
-  background: linear-gradient(to bottom, #000000, #333333);
-  min-height: 100vh;
-  padding: 1rem;
-}
-
-.movies-page .card-body {
-  background-color: rgba(20, 20, 20, 0.9);
-  border: 1px solid #555;
-}
-
-.movies-page .btn-login {
-  background-color: #444;
-  color: #fff;
-}
-
-.movies-page .btn-login:hover {
-  background-color: #666;
-}
-
-.movies-page input.form-control {
-  background-color: #111;
-  color: #eee;
-  border: 1px solid #666;
-}
-
-.movies-page input.form-control:focus {
-  border-color: #888;
 }
