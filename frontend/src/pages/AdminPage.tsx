@@ -36,6 +36,7 @@ import {
 } from '@mui/material';
 
 import Pagination from '../components/Pagination';
+import BackArrow from '../components/BackArrow';
 
 interface movie {
   showId: string;
@@ -328,6 +329,7 @@ const AdminMovies = () => {
     loadMovies();
   }, [pageSize, pageNumber, searchQuery]); // ← ✅ include searchQuery as a dependency
   
+
   const handleAdd = async () => {
     try {
       const nextId = await getNextShowId();
@@ -365,6 +367,7 @@ const AdminMovies = () => {
       await deleteMovie(showId);
       setMovies(movies.filter((movie) => movie.showId !== showId));
     } catch (error) {
+      console.log('log error:', error);
       setError((error as Error).message);
     }
   };
@@ -412,93 +415,104 @@ const AdminMovies = () => {
   
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Movies Admin</h1>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleAdd}
-        style={{ marginBottom: '20px' }}
-      >
-        Add New Movie
-      </Button>
-      <TextField
-        label="Search by title, director, cast..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-
-      {isSearching && (
-        <Button
-          onClick={() => setSearchQuery('')}
-          variant="outlined"
-          size="small"
-          style={{ marginTop: '8px', marginBottom: '16px' }}
-        >
-          Clear Search
-        </Button>
+      <BackArrow />
+  
+      {error ? (
+        <div>
+          <p className="text-red-600 mt-4">{error}</p>
+        </div>
+      ) : (
+        <>
+          <h1>Movies Admin</h1>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAdd}
+            style={{ marginBottom: '20px' }}
+          >
+            Add New Movie
+          </Button>
+          <TextField
+            label="Search by title, director, cast..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+  
+          {isSearching && (
+            <Button
+              onClick={() => setSearchQuery('')}
+              variant="outlined"
+              size="small"
+              style={{ marginTop: '8px', marginBottom: '16px' }}
+            >
+              Clear Search
+            </Button>
+          )}
+  
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Director</TableCell>
+                  <TableCell>Release Year</TableCell>
+                  <TableCell>Rating</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {movies.map((movie: movie) => (
+                  <TableRow key={movie.showId}>
+                    <TableCell>{movie.title}</TableCell>
+                    <TableCell>{movie.director}</TableCell>
+                    <TableCell>{movie.releaseYear}</TableCell>
+                    <TableCell>{movie.rating}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleEdit(movie)}
+                        style={{ marginRight: '10px' }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => handleDelete(movie.showId)}
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {!isSearching && (
+            <Pagination
+              currentPage={pageNumber}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              onPageChange={setPageNumber}
+              onPageSizeChange={(newSize) => {
+                setPageSize(newSize);
+                setPageNumber(1);
+              }}
+            />
+          )}
+          <MovieForm
+            open={openForm}
+            onClose={() => setOpenForm(false)}
+            onSubmit={handleFormSubmit}
+            initialData={selectedMovie || undefined}
+          />
+        </>
       )}
-
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell>Director</TableCell>
-              <TableCell>Release Year</TableCell>
-              <TableCell>Rating</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {movies.map((movie: movie) => (
-              <TableRow key={movie.showId}>
-                <TableCell>{movie.title}</TableCell>
-                <TableCell>{movie.director}</TableCell>
-                <TableCell>{movie.releaseYear}</TableCell>
-                <TableCell>{movie.rating}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="outlined"
-                    onClick={() => handleEdit(movie)}
-                    style={{ marginRight: '10px' }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => handleDelete(movie.showId)}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {!isSearching && (
-        <Pagination
-          currentPage={pageNumber}
-          totalPages={totalPages}
-          pageSize={pageSize}
-          onPageChange={setPageNumber}
-          onPageSizeChange={(newSize) => {
-            setPageSize(newSize);
-            setPageNumber(1);
-          }}
-        />
-      )}
-      <MovieForm
-        open={openForm}
-        onClose={() => setOpenForm(false)}
-        onSubmit={handleFormSubmit}
-        initialData={selectedMovie || undefined}
-      />
     </div>
   );
+  
 };
 
 export default AdminMovies;
