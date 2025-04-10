@@ -194,7 +194,6 @@ export const fetchRatingCategories = async (): Promise<string[]> => {
     throw error;
   }
 };
-};
 
 export const getRecommendedMovies = async (): Promise<{
   recommendType: string;
@@ -264,19 +263,27 @@ export const updateStarRating = async (showId: string, rating: number) => {
 };
 
 export const getNextShowId = async (): Promise<string> => {
-  const res = await fetch(`${API_URL}/Admin/GetNextShowId`);
+  const res = await fetch(`${API_URL}/Admin/GetNextShowId`, {
+    method: 'GET',
+    credentials: 'include', // send credentials to get cookies
+  });
   if (!res.ok) throw new Error('Failed to get next showId');
   return res.text(); // returns a string like "s12"
 };
 
 export const searchMovies = async (query: string): Promise<movie[]> => {
-  const response = await fetch(`${API_URL}/Admin/SearchMovies?query=${encodeURIComponent(query)}`);
+  const response = await fetch(
+    `${API_URL}/Admin/SearchMovies?query=${encodeURIComponent(query)}`,
+    {
+      method: 'GET',
+      credentials: 'include', // send credentials to get cookies
+    }
+  );
   if (!response.ok) {
-    throw new Error("Failed to search movies");
+    throw new Error('Failed to search movies');
   }
   return await response.json();
 };
-
 
 export const getContentRecommended = async (
   showId: string
