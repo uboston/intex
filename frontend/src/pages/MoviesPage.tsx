@@ -1,5 +1,6 @@
 import MovieCarousel from '../components/MovieCarousel';
 import Header from '../components/Header';
+import Footer from '../components/Footer'; // Import the Footer component
 import { useEffect, useState } from 'react';
 import AuthorizeView from '../components/AuthorizeView';
 import './MoviesPage.css';
@@ -94,6 +95,8 @@ function MoviePage() {
             </div>
           </div>
         </div>
+        {/* Add Footer here */}
+        <Footer />
       </div>
     </AuthorizeView>
   );
