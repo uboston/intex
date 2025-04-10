@@ -38,16 +38,19 @@ function Register() {
       // clear error message
       setError('');
       // post data to the /register api
-      fetch('https://localhost:5000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      }).then(async (response) => {
+      fetch(
+        'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/register',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        }
+      ).then(async (response) => {
         let data = null;
         try {
           // Only try to parse JSON if there's content

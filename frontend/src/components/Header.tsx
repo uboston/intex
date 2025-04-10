@@ -23,7 +23,7 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('https://localhost:5000/logout', {
+      const response = await fetch('https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/logout', {
         method: 'POST',
         credentials: 'include',
       });
