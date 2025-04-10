@@ -80,7 +80,7 @@ function LoginPage() {
       <div className="container login-page">
         <div className="row justify-content-center">
           <div className="card border-0 shadow rounded-3">
-            <div className="card-body p-4 p-sm-5">
+            <div className="container">
               <h5 className="form-check-label text-center mb-5 fw-light fs-5">
                 Sign In to CineNiche
               </h5>
@@ -122,7 +122,7 @@ function LoginPage() {
                 </div>
                 <div className="d-grid mb-2">
                   <button
-                    className="btn-login btn-primary text-uppercase fw-bold"
+                    className="btn-login text-uppercase fw-bold"
                     type="submit"
                   >
                     Sign in
@@ -130,7 +130,7 @@ function LoginPage() {
                 </div>
                 <div className="d-grid mb-2">
                   <button
-                    className="btn-login btn-primary text-uppercase fw-bold"
+                    className="btn-register text-uppercase fw-bold"
                     onClick={handleRegisterClick}
                     type="button"
                   >
@@ -145,16 +145,6 @@ function LoginPage() {
                     type="button"
                   >
                     Sign in with Google
-                  </button>
-                </div>
-                <div className="d-grid mb-2">
-                  <button
-                    className="btn btn-facebook btn-login text-uppercase fw-bold"
-                    onClick={handleFacebookLogin}
-                    type="button"
-                  >
-                    <i className="fa-brands fa-facebook-f me-2"></i>
-                    Sign in with Facebook
                   </button>
                 </div>
               </form>
