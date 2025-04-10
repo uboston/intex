@@ -7,7 +7,7 @@ import StarRating from '../components/StarRating'; // Import StarRating componen
 
 // Define the interface for a movie
 interface Movie {
-  id: string;
+  showId: string;
   title: string;
   director: string;
   description: string;
@@ -112,7 +112,7 @@ function MovieDescription() {
         </div>
         <div className="related-movies">
           <h2>Similar Movies</h2>
-          <MovieCarousel genre={''} showId={movie.id} />
+          <MovieCarousel genre={''} showId={movie.showId} />
         </div>
       </div>
     </div>
