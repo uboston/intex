@@ -84,3 +84,12 @@
     margin-top: 20px;
   }
 }
+.related-movies a {
+  color: white;
+  text-decoration: none;
+}
+
+.related-movies a:hover {
+  color: #ccc;
+  text-decoration: underline;
+}

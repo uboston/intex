@@ -81,7 +81,8 @@ function LoginPage() {
       */}
       <div className="container login-page">
         <div className="row justify-content-center">
-          <div className="card border-0 shadow rounded-3">
+        <div className="auth-card">
+
             <div className="container">
             <div className="text-center mb-5">
   <h5 className="form-check-label fw-light fs-5">

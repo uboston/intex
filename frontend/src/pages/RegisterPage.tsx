@@ -68,7 +68,7 @@ function Register() {
   return (
     <div className="login-background">
   <div className="container login-page">
-    <div className="card border-0 shadow rounded-3">
+  <div className="auth-card">
       <div>
         <h2 className="card-title">Register For <img src="/newlogo.png" alt="CineNiche Logo" className="login-logo" /></h2>
         <form onSubmit={handleSubmit}>
