@@ -4,6 +4,7 @@ import './MovieDescription.css';
 import MovieCarousel from '../components/MovieCarousel';
 import Header from '../components/Header'; // Import Header component
 import StarRating from '../components/StarRating'; // Import StarRating component
+import { getCookieConsentValue } from 'react-cookie-consent';
 
 // Define the interface for a movie
 interface Movie {
@@ -113,7 +114,23 @@ function MovieDescription() {
             <StarRating showId={movieId || ''} />
           </div>
           <div className="movie-poster">
-            <img src={posterUrl} alt={`Poster for ${movie.title}`} />
+            <div className="movie-poster">
+              <div className="movie-poster">
+                <img
+                  src={
+                    getCookieConsentValue('kidsView') === 'true'
+                      ? 'https://localhost:5000/default.jpg'
+                      : posterUrl
+                  }
+                  alt={`Poster for ${movie.title}`}
+                  onError={(
+                    e: React.SyntheticEvent<HTMLImageElement, Event>
+                  ) => {
+                    e.currentTarget.src = 'https://localhost:5000/default.jpg';
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div className="related-movies">

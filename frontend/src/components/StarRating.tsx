@@ -37,6 +37,11 @@ const StarRating: React.FC<StarRatingProps> = ({
     fetchRating();
   }, [showId]);
 
+  useEffect(() => {
+    setRating(initialRating); // Reset local state
+    setHovered(0); // Reset hover
+  }, [showId, initialRating]);
+
   const handleClick = async (index: number) => {
     const consent = getCookieConsentValue('siteConsent');
     if (consent === 'true') {

@@ -276,7 +276,7 @@ public class RecommendController : ControllerBase
                 // Get movie titles and all columns for the recommended show IDs
                 var movieRecommendations = _MoviesDbContext.MoviesTitles
                     .Where(m => new[] { recommendations.rec_1, recommendations.rec_2, recommendations.rec_3, recommendations.rec_4, recommendations.rec_5, recommendations.rec_6, recommendations.rec_7, recommendations.rec_8, recommendations.rec_9, recommendations.rec_10 }
-                                .Contains(m.ShowId))
+                    .Contains(m.ShowId))
                     .ToList();
 
                 // Combine recommendations with movie titles
