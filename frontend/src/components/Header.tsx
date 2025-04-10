@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
 import { FaSearch } from 'react-icons/fa';
@@ -6,6 +6,12 @@ import { FaSearch } from 'react-icons/fa';
 function Header() {
   const navigate = useNavigate();
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [kidsViewText, setKidsViewText] = useState("Kid's View");
+
+  useEffect(() => {
+    const currentCookieValue = getCookie('kidsView');
+    setKidsViewText(currentCookieValue === 'true' ? 'Parent View' : "Kid's View");
+  }, []);
 
   const goToSearch = () => {
     navigate('/search');
@@ -17,10 +23,9 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-      // Post request to logout
       const response = await fetch('https://localhost:5000/logout', {
         method: 'POST',
-        credentials: 'include', // Ensures cookies are sent with the request
+        credentials: 'include',
       });
       if (response.ok) {
         console.log('Logout successful');
@@ -33,31 +38,28 @@ function Header() {
     }
   };
 
-  // Set the 'kidsView' cookie
   const setKidsViewCookie = (value: string) => {
     const expires = new Date();
     expires.setTime(expires.getTime() + 60 * 60 * 24 * 365 * 1000); // 1 year from now
-    document.cookie = `kidsView=${value}; path=/; expires=${expires.toUTCString()}; SameSite=Lax; Secure`; // SameSite attribute and Secure for HTTPS
-    console.log('Cookie set:', document.cookie); // Log the cookies to see if it's being set
+    document.cookie = `kidsView=${value}; path=/; expires=${expires.toUTCString()}; SameSite=Lax; Secure`;
+    console.log('Cookie set:', document.cookie);
   };
 
-  // Handle toggle of Kids' View setting
   const handleKidsViewClick = () => {
     const currentCookieValue = getCookie('kidsView');
     const newValue = currentCookieValue === 'true' ? 'false' : 'true';
     setKidsViewCookie(newValue);
-    // Reload the page to apply the changes
-    window.location.reload(); // This will refresh the page
+    setKidsViewText(newValue === 'true' ? 'Parent View' : "Kids' View");
+    window.location.reload(); // Optional: remove this if you want a smoother UX without reload
   };
 
-  // Get the value of a cookie by name
   const getCookie = (name: string): string | null => {
     const nameEQ = `${name}=`;
     const ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
-      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+      while (c.charAt(0) === ' ') c = c.substring(1);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length);
     }
     return null;
   };
@@ -89,7 +91,7 @@ function Header() {
             <div className="profile-dropdown">
               <button onClick={() => navigate('/movies')}>Home</button>
               <button onClick={() => navigate('/admin')}>Admin</button>
-              <button onClick={handleKidsViewClick}>Kids' View</button>
+              <button onClick={handleKidsViewClick}>{kidsViewText}</button>
               <button onClick={handleLogout}>Logout</button>
             </div>
           )}
