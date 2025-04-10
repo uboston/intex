@@ -44,6 +44,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       {imageUrl && (
         <div className="movie-card">
           <img src={imageUrl} alt={movie.title} className="movie-image" />
+          {imageUrl === fallbackImage && (
+            <p className="movie-card-text">{movie.title}</p>
+          )}
           <h3 className="movie-title">{movie.title}</h3>
         </div>
       )}
