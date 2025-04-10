@@ -1,39 +1,84 @@
-/* Buttons */
-.btn-login {
+.movies-page {
+  /* Background gradient */
+  background: linear-gradient(135deg, #000000, #918787);
+  transition: background 0.3s ease-in-out;
+
+  /* Full viewport layout */
+  min-height: 100vh;
+  width: 100vw;
+
+  /* Force full-width, ignoring container constraints */
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+
+  /* Optional layout enhancements from friend */
+  margin-top: -80px;         /* pull the content under nav */
+  padding-top: 80px;         /* keep spacing below nav */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+
+  /* Maintain sane box sizing */
+  box-sizing: border-box;
+}
+
+/* Heading colors */
+.movies-page h1,
+.movies-page h2,
+.movies-page h3,
+.movies-page .card-title {
+  color: #fff;
+}
+
+/* Headings aligned left */
+.movies-page h3 {
+  text-align: left;
+}
+
+/* Card styles */
+.movies-page .card-body {
+  background-color: rgba(20, 20, 20, 0.9);
+  border: 1px solid #555;
+  padding: 1rem;
+  border-radius: 5px;
+  min-width: 400px;
+}
+
+/* Input styling */
+.movies-page input.form-control {
+  background-color: #111;
+  color: #eee;
+  border: 1px solid #666;
+  padding: 0.5rem;
+  border-radius: 3px;
+}
+
+.movies-page input.form-control:focus {
+  background-color: #111;
+  color: #fff;
+  border-color: #888;
+  box-shadow: none;
+}
+
+/* Button styling */
+.movies-page .btn-login {
   font-size: 0.9rem;
   letter-spacing: 0.05rem;
   padding: 0.75rem 1rem;
-  background-color: #e50914;
+  background-color: #444;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.btn-login:hover {
-  background-color: #fd1c27;
+.movies-page .btn-login:hover {
+  background-color: #666;
 }
 
-.btn-google {
-  color: #fff !important;
-  background-color: #ea4335 !important;
-  cursor: pointer;
-}
-
-.btn-facebook {
-  color: #fff !important;
-  background-color: #3b5998 !important;
-  cursor: pointer;
-}
-
-/* Card and Form Styling */
-.card-body {
-  min-width: 400px;
-  background: rgba(51, 51, 51, 0.85); /* semi-transparent */
-  padding: 1rem;
-  border-radius: 5px;
-}
-
+/* Error styling */
 .error {
   color: #e50914;
   font-weight: bold;
@@ -44,79 +89,4 @@
 label,
 .form-check-label {
   color: #fff;
-}
-
-.card-title {
-  color: #fff;
-}
-
-input.form-control {
-  background-color: #222;
-  color: #fff;
-  border: 1px solid #444;
-  padding: 0.5rem;
-  border-radius: 3px;
-}
-
-input.form-control:focus {
-  background-color: #111;
-  color: #fff;
-  border-color: #e50914;
-  box-shadow: none;
-}
-
-/* ===== MoviesPage Specific Styles ===== */
-.movies-page {
-  background: linear-gradient(135deg, #000000, #918787); /* Black-to-grey gradient */
-  min-height: 100vh;
-  box-sizing: border-box;
-  
-  /* Force full-width, ignoring parent container constraints */
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  
-  /* You can adjust horizontal padding as needed */
-  padding: 1rem;
-}
-
-/* Make all heading titles white */
-.movies-page h1, 
-.movies-page h2, 
-.movies-page h3, 
-.movies-page .card-title {
-  color: #fff;
-}
-
-/* Ensure all headings in movies-page are left aligned */
-.movies-page h3 {
-  text-align: left;
-}
-
-/* Card adjustments within movies-page */
-.movies-page .card-body {
-  background-color: rgba(20, 20, 20, 0.9);
-  border: 1px solid #555;
-}
-
-/* Button adjustments within movies-page */
-.movies-page .btn-login {
-  background-color: #444;
-  color: #fff;
-}
-
-.movies-page .btn-login:hover {
-  background-color: #666;
-}
-
-.movies-page input.form-control {
-  background-color: #111;
-  color: #eee;
-  border: 1px solid #666;
-}
-
-.movies-page input.form-control:focus {
-  border-color: #888;
 }

@@ -3,8 +3,14 @@
   margin-right: 10px;
   text-align: center;
   position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
+.movie-card:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
 .movie-image {
   width: 100%;
   border-radius: 5px;
@@ -15,8 +21,13 @@
 .movie-title {
   font-size: 1rem;
   margin-top: 0.5rem;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
+.movie-card:hover .movie-title {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
 .movie-card-text {
   color: white;
   position: absolute;

@@ -67,9 +67,9 @@ function MoviePage() {
   return (
     <AuthorizeView>
       <div className="movies-page">
-        <div className="container mt-4">
+        <div >
           {/* Header and Logout Section */}
-          <div className="row mb-3">
+          <div >
             <div className="col-12 d-flex justify-content-between align-items-center">
               <Header />
             </div>
@@ -91,7 +91,10 @@ function MoviePage() {
               ))}
 
               {/* Loading more genres indicator */}
-              <p>Loading more...</p>
+              
+              <div className="spinner-border" role="status">
+  <span className="visually-hidden">Loading...</span>
+</div>
             </div>
           </div>
         </div>
