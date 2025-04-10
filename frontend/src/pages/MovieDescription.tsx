@@ -120,13 +120,13 @@ function MovieDescription() {
           <img
             src={
               getCookieConsentValue('kidsView') === 'true'
-                ? 'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/default.jpg'
+                ? 'https://localhost:5000/default.jpg'
                 : posterUrl
             }
             alt={`Poster for ${movie.title}`}
             onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
               e.currentTarget.src =
-                'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/default.jpg';
+                'https://localhost:5000/default.jpg';
             }}
           />
         </div>
