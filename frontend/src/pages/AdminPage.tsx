@@ -7,6 +7,8 @@ import {
   deleteMovie,
   fetchCategories,
   fetchRatingCategories,
+  getNextShowId,
+  searchMovies
 } from '../api/MoviesAPI';
 
 import {
@@ -30,8 +32,7 @@ import {
   Checkbox,
   ListItemText,
   OutlinedInput,
-  SelectChangeEvent,
-  FormControlLabel,
+  SelectChangeEvent
 } from '@mui/material';
 
 import Pagination from '../components/Pagination';
@@ -63,11 +64,7 @@ interface MovieFormData {
   description: string;
   categories: string[];
 }
-const formatCategoryLabel = (key: string) => {
-  return key
-    .replace(/([A-Z])/g, ' $1')               // e.g. "tvDramas" → "tv Dramas"
-    .replace(/^./, (str) => str.toUpperCase()); // e.g. "tv dramas" → "Tv dramas"
-};
+
 const MovieForm = ({
   open,
   onClose,
@@ -91,41 +88,7 @@ const MovieForm = ({
   onSubmit: (data: MovieFormData) => void;
   initialData?: MovieFormData;
 }) => {
-  const allCategoryKeys = [
-    "action",
-    "adventure",
-    "animeSeriesInternationalTvShows",
-    "britishTvShowsDocuseriesInternationalTvShows",
-    "children",
-    "comedies",
-    "comediesDramasInternationalMovies",
-    "comediesInternationalMovies",
-    "comediesRomanticMovies",
-    "crimeTvShowsDocuseries",
-    "documentaries",
-    "documentariesInternationalMovies",
-    "docuseries",
-    "dramas",
-    "dramasInternationalMovies",
-    "dramasRomanticMovies",
-    "familyMovies",
-    "fantasy",
-    "horrorMovies",
-    "internationalMoviesThrillers",
-    "internationalTvShowsRomanticTvShowsTvDramas",
-    "kidsTv",
-    "languageTvShows",
-    "musicals",
-    "natureTv",
-    "realityTv",
-    "spirituality",
-    "tvAction",
-    "tvComedies",
-    "tvDramas",
-    "talkShowsTvComedies",
-    "thrillers",
-  ];
-  const [formData, setFormData] = useState<Record<string, any>>({
+  const [formData, setFormData] = useState({
     showId: initialData.showId || '',
     type: initialData.type || '',
     title: initialData.title || '',
@@ -138,14 +101,11 @@ const MovieForm = ({
     description: initialData.description || '',
     categories: initialData.categories || [],
   });
-  
 
   // ✅ Move useState for options HERE
   const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
   const [ratingOptions, setRatingOptions] = useState<string[]>([]);
   const typeOptions = ['Movie', 'TV Show'];
-  
-  
 
   useEffect(() => {
     const loadData = async () => {
@@ -154,39 +114,35 @@ const MovieForm = ({
           fetchCategories(),
           fetchRatingCategories(),
         ]);
-  
+
         setCategoryOptions(fetchedCategories);
         setRatingOptions(fetchedRatings);
-  
-        setFormData((prev) => ({
-          ...prev,
-          showId: initialData.showId || '',
-          type: initialData.type || '',
-          title: initialData.title || '',
-          director: initialData.director || '',
-          cast: initialData.cast || '',
-          country: initialData.country || '',
-          releaseYear: initialData.releaseYear || '',
-          rating: initialData.rating || '',
-          duration: initialData.duration || '',
-          description: initialData.description || '',
-          ...Object.fromEntries(
-            fetchedCategories.map((key) => [key, (initialData as any)[key] || 0])
-          ),
-        }));
       } catch (error) {
         console.error('Failed to load form metadata:', error);
       }
     };
-  
+
     loadData();
-  }, [initialData]);
-  
-  
-  
+  }, []);
+
+  useEffect(() => {
+    setFormData({
+      showId: initialData.showId || '',
+      type: initialData.type || '',
+      title: initialData.title || '',
+      director: initialData.director || '',
+      cast: initialData.cast || '',
+      country: initialData.country || '',
+      releaseYear: initialData.releaseYear || '',
+      rating: initialData.rating || '',
+      duration: initialData.duration || '',
+      description: initialData.description || '',
+      categories: initialData.categories || [],
+    });
+  }, [JSON.stringify(initialData)]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -196,19 +152,7 @@ const MovieForm = ({
   };
 
   const handleSubmit = () => {
-    const selectedCategories = categoryOptions.filter((key) => formData[key] === 1);
-  
-    const finalPayload: Record<string, any> = {
-      ...formData,
-      categories: selectedCategories,
-    };
-  
-    categoryOptions.forEach((key) => {
-      delete finalPayload[key];
-    });
-  
-    onSubmit(finalPayload as MovieFormData);
-    console.log("Final payload:", finalPayload);
+    onSubmit(formData);
     onClose();
   };
 
@@ -227,25 +171,20 @@ const MovieForm = ({
           fullWidth
         />
         <FormControl fullWidth margin="dense">
-        <InputLabel>Type</InputLabel>
-        <Select
-          name="type"
-          value={formData.type || ''}
-          onChange={(e) =>
-            setFormData((prev) => ({
-              ...prev,
-              type: e.target.value,
-            }))
-          }
-          label="Type"
-        >
-          {typeOptions.map((type) => (
-            <MenuItem key={type} value={type}>
-              {type}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+          <InputLabel>Type</InputLabel>
+          <Select
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            label="Type"
+          >
+            {typeOptions.map((type) => (
+              <MenuItem key={type} value={type}>
+                {type}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <TextField
           margin="dense"
           label="Director"
@@ -317,32 +256,24 @@ const MovieForm = ({
         <Select
           multiple
           name="categories"
-          value={categoryOptions.filter((key) => formData[key] === 1)}
-          onChange={(e) => {
-            const selected = e.target.value as string[];
-
-            const updatedBooleans = Object.fromEntries(
-              categoryOptions.map((key) => [key, selected.includes(key) ? 1 : 0])
-            );
-
+          value={formData.categories}
+          onChange={(e) =>
             setFormData((prev) => ({
               ...prev,
-              ...updatedBooleans,
-            }));
-          }}
-          input={<OutlinedInput label="Categories" />}
-          renderValue={(selected) =>
-            (selected as string[]).map(formatCategoryLabel).join(', ')
+              categories: e.target.value as string[],
+            }))
           }
+          input={<OutlinedInput label="Categories" />}
+          renderValue={(selected) => (selected as string[]).join(', ')}
         >
-          {categoryOptions.map((key) => (
-            <MenuItem key={key} value={key}>
-              <Checkbox checked={formData[key] === 1} />
-              <ListItemText primary={formatCategoryLabel(key)} />
+          {categoryOptions.map((option) => (
+            <MenuItem key={option} value={option}>
+              <Checkbox checked={formData.categories.includes(option)} />
+              <ListItemText primary={option} />
             </MenuItem>
           ))}
         </Select>
-      </FormControl>
+        </FormControl>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
@@ -360,29 +291,64 @@ const AdminMovies = () => {
   const [openForm, setOpenForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [pageSize, setPageSize] = useState<number>(50);
+  const [pageSize, setPageSize] = useState<number>(10);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [editingMovie, setEditingMovie] = useState<movie | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+
 
   useEffect(() => {
     const loadMovies = async () => {
       try {
-        const data = await fetchMovies(pageSize, pageNumber, []);
-        setMovies(data.movies);
-        setTotalPages(Math.ceil(data.totalMovies / pageSize));
+        setLoading(true);
+        setError(null);
+  
+        if (searchQuery.trim()) {
+          // ✅ Search mode: fetch all matches
+          const searchResults = await searchMovies(searchQuery);
+          setMovies(searchResults);
+          setIsSearching(true);
+        } else {
+          // ✅ Normal paginated fetch
+          const data = await fetchMovies(pageSize, pageNumber, []);
+          setMovies(data.movies);
+          setTotalPages(Math.ceil(data.totalMovies / pageSize));
+          setIsSearching(false);
+        }
       } catch (error) {
         setError((error as Error).message);
       } finally {
         setLoading(false);
       }
     };
+  
     loadMovies();
-  }, [pageSize, pageNumber]);
-
-  const handleAdd = () => {
-    setSelectedMovie(null);
-    setOpenForm(true);
+  }, [pageSize, pageNumber, searchQuery]); // ← ✅ include searchQuery as a dependency
+  
+  const handleAdd = async () => {
+    try {
+      const nextId = await getNextShowId();
+      setSelectedMovie({
+        showId: nextId,
+        title: '',
+        type: '',
+        director: '',
+        cast: '',
+        country: '',
+        releaseYear: '',
+        rating: '',
+        duration: '',
+        description: '',
+        categories: [],
+      });
+      setOpenForm(true);
+    } catch (err) {
+      console.error('Failed to fetch next ShowId:', err);
+      setError((err as Error).message);
+    }
   };
 
   const handleEdit = (movie: movie) => {
@@ -409,56 +375,41 @@ const AdminMovies = () => {
   const handleFormSubmit = async (movieData: MovieFormData) => {
     try {
       let updatedMovies: movie[];
-
-      // Convert string showId to number if needed for API
-      const numericShowId = movieData.showId
-        ? parseInt(movieData.showId)
-        : undefined;
-
-      if (numericShowId) {
-        const updated = await updateMovie(numericShowId, {
-          showId: movieData.showId || '', 
-          type: movieData.type, 
-          title: movieData.title,
-          director: movieData.director,
-          cast: movieData.cast,
-          country: movieData.country,
-          releaseYear: movieData.releaseYear,
-          rating: movieData.rating,
-          duration: movieData.duration,
-          description: movieData.description,
-          categories: [],
+  
+      if (!movieData.showId && !selectedMovie) {
+        throw new Error("Missing showId for new movie.");
+      }
+      if (selectedMovie) {
+        // Update existing movie
+        const updated = await updateMovie(movieData.showId || '', {
+          ...movieData,
+          showId: movieData.showId || '', // Ensure showId is always a string
+          categories: movieData.categories || [],
         });
-
+  
         updatedMovies = movies.map((m) =>
           m.showId === updated.showId ? updated : m
         );
       } else {
+        // Add new movie
         const added = await addMovie({
-          showId: '',
-          type: movieData.type,
-          title: movieData.title,
-          director: movieData.director,
-          cast: movieData.cast,
-          country: movieData.country,
-          releaseYear: movieData.releaseYear,
-          rating: movieData.rating,
-          duration: movieData.duration,
-          description: movieData.description,
-          categories: [],
+          ...movieData,
+          showId: movieData.showId || '', // Ensure showId is always a string
+          categories: movieData.categories || [],
         });
-
+  
         updatedMovies = [...movies, added];
       }
-
+  
       setMovies(updatedMovies);
       setOpenForm(false);
+      setSelectedMovie(null); // Reset for next add
     } catch (err) {
       console.error('Form submission error:', err);
       setError((err as Error).message);
     }
   };
-
+  
   return (
     <div style={{ padding: '20px' }}>
       <h1>Movies Admin</h1>
@@ -470,11 +421,29 @@ const AdminMovies = () => {
       >
         Add New Movie
       </Button>
+      <TextField
+        label="Search by title, director, cast..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+
+      {isSearching && (
+        <Button
+          onClick={() => setSearchQuery('')}
+          variant="outlined"
+          size="small"
+          style={{ marginTop: '8px', marginBottom: '16px' }}
+        >
+          Clear Search
+        </Button>
+      )}
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Show ID</TableCell>
               <TableCell>Title</TableCell>
               <TableCell>Director</TableCell>
               <TableCell>Release Year</TableCell>
@@ -485,7 +454,6 @@ const AdminMovies = () => {
           <TableBody>
             {movies.map((movie: movie) => (
               <TableRow key={movie.showId}>
-                <TableCell>{movie.showId}</TableCell>
                 <TableCell>{movie.title}</TableCell>
                 <TableCell>{movie.director}</TableCell>
                 <TableCell>{movie.releaseYear}</TableCell>
@@ -511,50 +479,23 @@ const AdminMovies = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Pagination
-        currentPage={pageNumber}
-        totalPages={totalPages}
-        pageSize={pageSize}
-        onPageChange={setPageNumber}
-        onPageSizeChange={(newSize) => {
-          setPageSize(newSize);
-          setPageNumber(1);
-        }}
-      />
+      {!isSearching && (
+        <Pagination
+          currentPage={pageNumber}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageChange={setPageNumber}
+          onPageSizeChange={(newSize) => {
+            setPageSize(newSize);
+            setPageNumber(1);
+          }}
+        />
+      )}
       <MovieForm
         open={openForm}
         onClose={() => setOpenForm(false)}
         onSubmit={handleFormSubmit}
-        initialData={
-          
-          selectedMovie
-            ? {
-                showId: selectedMovie.showId,
-                title: selectedMovie.title,
-                type: selectedMovie.type,
-                director: selectedMovie.director,
-                cast: selectedMovie.cast || '',
-                country: selectedMovie.country || '',
-                releaseYear: selectedMovie.releaseYear,
-                rating: selectedMovie.rating,
-                duration: selectedMovie.duration || '',
-                description: selectedMovie.description || '',
-                categories: selectedMovie.categories || [],
-              }
-            : {
-                showId: '',
-                title: '',
-                type: '',
-                director: '',
-                cast: '',
-                country: '',
-                releaseYear: '',
-                rating: '',
-                duration: '',
-                description: '',
-                categories: [],
-              }
-        }
+        initialData={selectedMovie || undefined}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Footer from './Footer'; // Import the Footer component
+import Footer from '../components/Footer'; // Import the Footer component
 import './Home.css'; // Assuming you have a CSS module for styles
 
 const Home: React.FC = () => {
