@@ -3,6 +3,7 @@ using CineNiche.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Net.Http.Headers;
@@ -24,8 +25,8 @@ public class RecommendController : ControllerBase
         _AppDbContext = appDbContext;
     }
     
-    [HttpGet("RecommenderContent")]
-    public IActionResult RecommenderContent(string showId = "s1")
+    [HttpGet("RecommenderContentOld")]
+    public IActionResult RecommenderContentOld(string showId = "s1")
     {
         var recommendedMovies = (from rec in _MoviesDbContext.recommender_content
                                 join movie in _MoviesDbContext.MoviesTitles
@@ -337,4 +338,80 @@ public class RecommendController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("RecommenderContent")]
+    public async Task<IActionResult> RecommenderContent(string showId)
+    {
+        if (string.IsNullOrEmpty(showId))
+        {
+            return BadRequest("showId is required.");
+        }
+
+        // Check number of ratings for this show
+        int ratingCount = await _MoviesDbContext.MoviesRatings
+            .CountAsync(r => r.ShowId == showId);
+
+        if (ratingCount >= 3)
+        {
+            // Collaborative filtering (Viewers Also Enjoy)
+            var collabRow = await _MoviesDbContext.recommender_collab_item
+                .Where(r => r.show_id == showId)
+                .Select(r => new
+                {
+                    r.rec_1,
+                    r.rec_2,
+                    r.rec_3,
+                    r.rec_4,
+                    r.rec_5,
+                    r.rec_6,
+                    r.rec_7,
+                    r.rec_8,
+                    r.rec_9,
+                    r.rec_10
+                })
+                .FirstOrDefaultAsync();
+
+            if (collabRow == null)
+            {
+                return NotFound("No collaborative recommendations found for this show.");
+            }
+
+            var recommendations = new
+            {
+                recommendType = "Viewers Also Enjoy",
+                moviesList = new List<string>
+                {
+                    collabRow.rec_1,
+                    collabRow.rec_2,
+                    collabRow.rec_3,
+                    collabRow.rec_4,
+                    collabRow.rec_5,
+                    collabRow.rec_6,
+                    collabRow.rec_7,
+                    collabRow.rec_8,
+                    collabRow.rec_9,
+                    collabRow.rec_10,
+                }
+            };
+
+            return Ok(recommendations);
+        }
+        else
+        {
+            // Content filtering (Similar Movies)
+            var contentResults = await _MoviesDbContext.recommender_content
+                .Where(r => r.show_id == showId)
+                .OrderByDescending(r => r.similarity)
+                .Take(10)
+                .Select(r => r.other_show_id)
+                .ToListAsync();
+
+            var recommendations = new
+            {
+                recommendType = "Similar Movies",
+                moviesList = contentResults
+            };
+
+            return Ok(recommendations);
+        }
+    }
 }
