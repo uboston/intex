@@ -58,6 +58,8 @@ input.form-control:focus {
   background-color: #111;
   border-color: #001F3F;
   box-shadow: none;
+  color: #fff; /* Force text color to stay white */
+  caret-color: #fff; /* Force cursor color to stay white */
 }
 /* Buttons */
 .btn-login,
