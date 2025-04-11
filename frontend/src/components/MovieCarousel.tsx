@@ -34,7 +34,8 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ genre, showId }) => {
           setCarouselHeader(data.recommendType);
         } else if (genre === '') {
           const data = await getContentRecommended(showId || 's1');
-          setMovieList(data);
+          setMovieList(data.moviesList);
+          setCarouselHeader(data.recommendType);
         } else {
           const data = await getMoviesFromGenre(genre);
           setMovieList(data);
