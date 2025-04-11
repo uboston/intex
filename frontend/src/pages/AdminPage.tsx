@@ -257,7 +257,7 @@ const MovieForm = ({
         <InputLabel>Categories</InputLabel>
         <Select
           multiple
-          name="categories"
+          name="Genres"
           value={formData.categories}
           onChange={(e) =>
             setFormData((prev) => ({
@@ -265,7 +265,7 @@ const MovieForm = ({
               categories: e.target.value as string[],
             }))
           }
-          input={<OutlinedInput label="Categories" />}
+          input={<OutlinedInput label="Genres" />}
           renderValue={(selected) => (selected as string[]).join(', ')}
         >
           {categoryOptions.map((option) => (

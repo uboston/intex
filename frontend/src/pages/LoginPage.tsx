@@ -149,16 +149,6 @@ function LoginPage() {
                     Register
                   </button>
                 </div>
-                <hr className="my-4" />
-                <div className="d-grid mb-2">
-                  <button
-                    className="btn btn-google btn-login text-uppercase fw-bold"
-                    onClick={handleGoogleLogin}
-                    type="button"
-                  >
-                    Sign in with Google
-                  </button>
-                </div>
               </form>
 
               {error && <p className="error">{error}</p>}
