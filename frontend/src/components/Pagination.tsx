@@ -14,82 +14,79 @@ interface PaginationProps {
     onPageSizeChange,
   }: PaginationProps) => {
     return (
-      <>
-      <div className="pagination-container">
-        {/* Previous Button */}
-        <button
-          className="btn btn-secondary"
-          disabled={currentPage === 1}
-          onClick={() => onPageChange(currentPage - 1)}
-        >
-          Previous
-        </button>
-
-        {/* First page */}
-        {currentPage > 2 && (
-          <>
-            <button
-              className="btn btn-outline-light"
-              onClick={() => onPageChange(1)}
-            >
-              1
+      <div className="d-flex flex-column align-items-center mt-4 gap-3">
+        {/* Pagination buttons (top row) */}
+        <ul className="pagination justify-content-center m-0">
+          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={() => onPageChange(currentPage - 1)}>
+              &laquo; Previous
             </button>
-            {currentPage > 3 && <span className="mx-2">…</span>}
-          </>
-        )}
-
-        {/* CurrentPage - 1 */}
-        {currentPage > 1 && (
-          <button
-            className="btn btn-outline-light"
-            onClick={() => onPageChange(currentPage - 1)}
-          >
-            {currentPage - 1}
-          </button>
-        )}
-
-        {/* Current Page */}
-        <button className="btn btn-primary" disabled>
-          {currentPage}
-        </button>
-
-        {/* CurrentPage + 1 */}
-        {currentPage < totalPages && (
-          <button
-            className="btn btn-outline-light"
-            onClick={() => onPageChange(currentPage + 1)}
-          >
-            {currentPage + 1}
-          </button>
-        )}
-
-        {/* Last page */}
-        {currentPage < totalPages - 1 && (
-          <>
-            {currentPage < totalPages - 2 && <span className="mx-2">…</span>}
-            <button
-              className="btn btn-outline-light"
-              onClick={() => onPageChange(totalPages)}
-            >
-              {totalPages}
+          </li>
+    
+          {currentPage > 2 && (
+            <>
+              <li className="page-item">
+                <button className="page-link" onClick={() => onPageChange(1)}>
+                  1
+                </button>
+              </li>
+              {currentPage > 3 && (
+                <li className="page-item disabled">
+                  <span className="page-link">…</span>
+                </li>
+              )}
+            </>
+          )}
+    
+          {currentPage > 1 && (
+            <li className="page-item">
+              <button className="page-link" onClick={() => onPageChange(currentPage - 1)}>
+                {currentPage - 1}
+              </button>
+            </li>
+          )}
+    
+          <li className="page-item active">
+            <span className="page-link">{currentPage}</span>
+          </li>
+    
+          {currentPage < totalPages && (
+            <li className="page-item">
+              <button className="page-link" onClick={() => onPageChange(currentPage + 1)}>
+                {currentPage + 1}
+              </button>
+            </li>
+          )}
+    
+          {currentPage < totalPages - 1 && (
+            <>
+              {currentPage < totalPages - 2 && (
+                <li className="page-item disabled">
+                  <span className="page-link">…</span>
+                </li>
+              )}
+              <li className="page-item">
+                <button className="page-link" onClick={() => onPageChange(totalPages)}>
+                  {totalPages}
+                </button>
+              </li>
+            </>
+          )}
+    
+          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={() => onPageChange(currentPage + 1)}>
+              Next &raquo;
             </button>
-          </>
-        )}
-
-        {/* Next Button */}
-        <button
-          className="btn btn-secondary"
-          disabled={currentPage === totalPages}
-          onClick={() => onPageChange(currentPage + 1)}
-        >
-          Next
-        </button>
-      </div>
-        {/* Results per page dropdown */}
-        <div className="text-center">
-          <label className="me-2">Results per page:</label>
+          </li>
+        </ul>
+    
+        {/* Dropdown (second row, centered) */}
+        <div className="d-flex align-items-center">
+          <label className="me-2 mb-0" style={{ color: '#000' }}>
+            Results per page:</label>
           <select
-            className="form-select w-auto d-inline-block bg-dark text-light border-light"
+            className="form-select form-select-sm"
+            style={{ width: '80px' }}
             value={pageSize}
             onChange={(e) => onPageSizeChange(Number(e.target.value))}
           >
@@ -98,9 +95,8 @@ interface PaginationProps {
             <option value="50">50</option>
           </select>
         </div>
-      </>
+      </div>
     );
-  };
-  
-  export default Pagination;
-  
+    
+  }
+export default Pagination;
