@@ -375,22 +375,34 @@ public class RecommendController : ControllerBase
                 return NotFound("No collaborative recommendations found for this show.");
             }
 
+            var showIds = new[]
+            {
+                collabRow.rec_1,
+                collabRow.rec_2,
+                collabRow.rec_3,
+                collabRow.rec_4,
+                collabRow.rec_5,
+                collabRow.rec_6,
+                collabRow.rec_7,
+                collabRow.rec_8,
+                collabRow.rec_9,
+                collabRow.rec_10,
+            };
+
+            var recommendedMovies = await _MoviesDbContext.MoviesTitles
+                .Where(m => showIds.Contains(m.ShowId))
+                .ToListAsync();
+
+            // Maintain original order from the recommendation list
+            var orderedMovies = showIds
+                .Select(id => recommendedMovies.FirstOrDefault(m => m.ShowId == id))
+                .Where(m => m != null)
+                .ToList();
+
             var recommendations = new
             {
                 recommendType = "Viewers Also Enjoy",
-                moviesList = new List<string>
-                {
-                    collabRow.rec_1,
-                    collabRow.rec_2,
-                    collabRow.rec_3,
-                    collabRow.rec_4,
-                    collabRow.rec_5,
-                    collabRow.rec_6,
-                    collabRow.rec_7,
-                    collabRow.rec_8,
-                    collabRow.rec_9,
-                    collabRow.rec_10,
-                }
+                moviesList = orderedMovies
             };
 
             return Ok(recommendations);
@@ -405,13 +417,23 @@ public class RecommendController : ControllerBase
                 .Select(r => r.other_show_id)
                 .ToListAsync();
 
+            var recommendedMovies = await _MoviesDbContext.MoviesTitles
+                .Where(m => contentResults.Contains(m.ShowId))
+                .ToListAsync();
+
+            var orderedMovies = contentResults
+                .Select(id => recommendedMovies.FirstOrDefault(m => m.ShowId == id))
+                .Where(m => m != null)
+                .ToList();
+
             var recommendations = new
             {
                 recommendType = "Similar Movies",
-                moviesList = contentResults
+                moviesList = orderedMovies
             };
 
             return Ok(recommendations);
         }
     }
+
 }
