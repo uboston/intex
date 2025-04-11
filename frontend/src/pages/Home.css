@@ -151,3 +151,9 @@
   margin-left: -50vw;
   margin-right: -50vw;
 }
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 100;
+  width: 100%;
+}
