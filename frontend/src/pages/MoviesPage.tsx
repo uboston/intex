@@ -1,104 +1,92 @@
+import { useEffect, useState } from 'react';
 import MovieCarousel from '../components/MovieCarousel';
 import Header from '../components/Header';
-import Footer from '../components/Footer'; // Import the Footer component
-import { useEffect, useState } from 'react';
+import Footer from '../components/Footer';
 import AuthorizeView from '../components/AuthorizeView';
-import './MoviesPage.css';
 import { getGenres, randomGenres } from '../api/MoviesAPI';
+import './MoviesPage.css';
 
 function MoviePage() {
-  const [genres, setGenres] = useState<string[]>([]); // Displayed genres
-  const [allGenres, setAllGenres] = useState<string[]>([]); // All genres including previously loaded ones
+  const [genres, setGenres] = useState<string[]>([]);
+  const [allGenres, setAllGenres] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMoreGenres, setHasMoreGenres] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [loadingMore, setLoadingMore] = useState<boolean>(false);
-  const [hasMoreGenres, setHasMoreGenres] = useState<boolean>(true);
 
+  // Initial load
   useEffect(() => {
-    const loadGenres = async () => {
+    const loadInitialGenres = async () => {
       try {
-        setLoading(true);
-        const data = await getGenres(); // Fetch top genres (only 5)
-        setGenres(data); // Set the first 5 genres
-        setAllGenres(data); // Add them to the allGenres list
-      } catch (error) {
-        setError((error as Error).message);
+        const initial = await getGenres(); // 5 base genres
+        setGenres(initial);
+        setAllGenres(initial);
+      } catch (err) {
+        setError((err as Error).message);
       } finally {
         setLoading(false);
       }
     };
-
-    loadGenres();
+    loadInitialGenres();
   }, []);
 
+  // Infinite scroll: only triggers at page bottom
   useEffect(() => {
-    const handleScroll = async () => {
-      const bottom =
-        Math.ceil(window.innerHeight + document.documentElement.scrollTop) ===
-        document.documentElement.offsetHeight;
-      if (bottom && !loadingMore && hasMoreGenres) {
+    const onScroll = async () => {
+      const nearBottom =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
+
+      if (nearBottom && !loadingMore && hasMoreGenres) {
         setLoadingMore(true);
         try {
-          // Fetch more genres, passing the already loaded ones
-          const moreGenres = await randomGenres(allGenres);
-
-          // If we received new genres, update the lists
-          if (moreGenres.length > 0) {
-            setGenres((prev) => [...prev, ...moreGenres]); // Add new genres to the display list
-            setAllGenres((prev) => [...prev, ...moreGenres]); // Add them to the full list
+          const more = await randomGenres(allGenres);
+          if (more.length > 0) {
+            setGenres((prev) => [...prev, ...more]);
+            setAllGenres((prev) => [...prev, ...more]);
           } else {
-            setHasMoreGenres(false); // No more genres to load
+            setHasMoreGenres(false);
           }
-        } catch (error) {
-          console.error('Error loading more genres:', error);
+        } catch (err) {
+          console.error('Genre fetch error:', err);
         } finally {
           setLoadingMore(false);
         }
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll); // Clean up event listener on unmount
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, [loadingMore, hasMoreGenres, allGenres]);
 
   if (loading) return <p>Loading movies...</p>;
-  if (error) return <p className="text-danger">Error: {error}</p>;
+  if (error) return <p className="error">Error: {error}</p>;
 
   return (
     <AuthorizeView>
       <div className="movies-page">
-        <div >
-          {/* Header and Logout Section */}
-          <div >
-            <div className="col-12 d-flex justify-content-between align-items-center">
-              <Header />
-            </div>
-          </div>
+        <Header />
 
-          {/* Main Content Section */}
-          <div className="row">
-            <div className="col-12">
-              {/* Top Carousel for Recommended Movies */}
-              <div className="mb-5">
-                <MovieCarousel genre="Recommended" />
+        {/* Main Content */}
+        <div className="row">
+          <div className="col-12">
+            <div className="mb-5">
+              <MovieCarousel genre="Recommended" />
+            </div>
+
+            {genres.map((genre) => (
+              <div key={genre} className="mb-5">
+                <MovieCarousel genre={genre} />
               </div>
+            ))}
 
-              {/* Carousels for each genre */}
-              {genres.map((genre) => (
-                <div key={genre} className="mb-5">
-                  <MovieCarousel genre={genre} />
-                </div>
-              ))}
-
-              {/* Loading more genres indicator */}
-              
+            {loadingMore && (
               <div className="spinner-border" role="status">
-  <span className="visually-hidden">Loading...</span>
-</div>
-            </div>
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )}
           </div>
         </div>
-        {/* Add Footer here */}
+
         <Footer />
       </div>
     </AuthorizeView>

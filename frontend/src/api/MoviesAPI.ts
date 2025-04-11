@@ -288,7 +288,10 @@ export const searchMovies = async (query: string): Promise<movie[]> => {
 
 export const getContentRecommended = async (
   showId: string
-): Promise<movie[]> => {
+): Promise<{
+  recommendType: string;
+  moviesList: movie[];
+}> => {
   try {
     const response = await fetch(
       `${API_URL}/Recommend/RecommenderContent?showId=${showId}`,
