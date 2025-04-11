@@ -1,4 +1,5 @@
 // components/AdminMovies.js
+import './Admin.css';
 import React, { useState, useEffect, ChangeEvent, useMemo } from 'react';
 import {
   fetchMovies,

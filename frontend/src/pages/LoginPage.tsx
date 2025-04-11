@@ -15,7 +15,6 @@ function LoginPage() {
       'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net/external-login/google';
   };
 
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, checked, value } = e.target;
     if (type === 'checkbox') {
@@ -77,71 +76,90 @@ function LoginPage() {
       */}
       <div className="container login-page">
         <div className="row justify-content-center">
-        <div className="auth-card">
-
+          <div className="auth-card">
             <div className="container">
-            <div className="text-center mb-5">
-  <h5 className="form-check-label fw-light fs-5">
-    Sign in to <img src="/newlogo.png" alt="CineNiche Logo" className="login-logo" />
-  </h5>
-</div>
+              <div className="text-center mb-5">
+                <h5 className="form-check-label fw-light fs-5">
+                  Sign in to{' '}
+                  <img
+                    src="/newlogo.png"
+                    alt="CineNiche Logo"
+                    className="login-logo"
+                  />
+                </h5>
+              </div>
 
               <form onSubmit={handleSubmit}>
-  <div className="form-group mb-3 text-start">
-    <label htmlFor="email" className="form-label">Email address:</label>
-    <input
-      className="form-control input-aligned"
-      type="email"
-      id="email"
-      name="email"
-      value={email}
-      onChange={handleChange}
-    />
-  </div>
-  <br></br>
-  <div className="form-group mb-3 text-start">
-    <label htmlFor="password" className="form-label">Password:</label>
-    <input
-      className="form-control input-aligned"
-      type="password"
-      id="password"
-      name="password"
-      value={password}
-      onChange={handleChange}
-    />
-  </div>
-  <br></br>
-  <div className="form-check mb-3 text-start">
-    <input
-      className="form-check-input"
-      type="checkbox"
-      id="rememberme"
-      name="rememberme"
-      checked={rememberme}
-      onChange={handleChange}
-    />
-    <label className="form-check-label" htmlFor="rememberme">
-      Remember password
-    </label>
-  </div>
-  <br></br>
-  <div className="d-grid mb-2">
-    <button className="btn-login text-uppercase fw-bold" type="submit">
-      Sign in
-    </button>
-  </div>
-  <div className="d-grid mb-2">
-    <button className="btn-register text-uppercase fw-bold" onClick={handleRegisterClick} type="button">
-      Register
-    </button>
-  </div>
-  <hr className="my-4" />
-  <div className="d-grid mb-2">
-    <button className="btn btn-google btn-login text-uppercase fw-bold" onClick={handleGoogleLogin} type="button">
-      Sign in with Google
-    </button>
-  </div>
-</form>
+                <div className="form-group mb-3 text-start">
+                  <label htmlFor="email" className="form-label">
+                    Email address:
+                  </label>
+                  <input
+                    className="form-control input-aligned"
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={email}
+                    onChange={handleChange}
+                  />
+                </div>
+                <br></br>
+                <div className="form-group mb-3 text-start">
+                  <label htmlFor="password" className="form-label">
+                    Password:
+                  </label>
+                  <input
+                    className="form-control input-aligned"
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={password}
+                    onChange={handleChange}
+                  />
+                </div>
+                <br></br>
+                <div className="form-check mb-3 text-start">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="rememberme"
+                    name="rememberme"
+                    checked={rememberme}
+                    onChange={handleChange}
+                  />
+                  <label className="form-check-label" htmlFor="rememberme">
+                    Remember password
+                  </label>
+                </div>
+                <br></br>
+                <div className="d-grid mb-2">
+                  <button
+                    className="btn-login text-uppercase fw-bold"
+                    type="submit"
+                  >
+                    Sign in
+                  </button>
+                </div>
+                <div className="d-grid mb-2">
+                  <button
+                    className="btn-register text-uppercase fw-bold"
+                    onClick={handleRegisterClick}
+                    type="button"
+                  >
+                    Register
+                  </button>
+                </div>
+                <hr className="my-4" />
+                <div className="d-grid mb-2">
+                  <button
+                    className="btn btn-google btn-login text-uppercase fw-bold"
+                    onClick={handleGoogleLogin}
+                    type="button"
+                  >
+                    Sign in with Google
+                  </button>
+                </div>
+              </form>
 
               {error && <p className="error">{error}</p>}
             </div>
