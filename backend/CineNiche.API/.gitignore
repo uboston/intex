@@ -2,6 +2,7 @@
 
 .env
 wwwroot/posters/**
+publish/
 
 # User specific
 **/.idea/**/workspace.xml
