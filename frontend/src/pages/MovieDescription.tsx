@@ -135,7 +135,6 @@ function MovieDescription() {
         </div>
       </div>
       <div className="related-movies">
-        <h2>Similar Movies</h2>
         <MovieCarousel genre={''} showId={movie.showId} />
       </div>
     </div>
