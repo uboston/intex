@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const API_URL = 'https://localhost:5000';
+const API_URL = 'https://cinenicheee-c0fqg8b9hscqe7bk.eastus-01.azurewebsites.net';
 
 interface User {
   id: string;
