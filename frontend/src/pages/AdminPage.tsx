@@ -257,7 +257,7 @@ const MovieForm = ({
         <InputLabel>Categories</InputLabel>
         <Select
           multiple
-          name="categories"
+          name="Genres"
           value={formData.categories}
           onChange={(e) =>
             setFormData((prev) => ({
@@ -265,7 +265,7 @@ const MovieForm = ({
               categories: e.target.value as string[],
             }))
           }
-          input={<OutlinedInput label="Categories" />}
+          input={<OutlinedInput label="Genres" />}
           renderValue={(selected) => (selected as string[]).join(', ')}
         >
           {categoryOptions.map((option) => (
@@ -315,7 +315,7 @@ const AdminMovies = () => {
   const debouncedSearch = useMemo(() => {
     return debounce((value: string) => {
       setDebouncedQuery(value); // This triggers your useEffect
-    }, 2000);
+    }, 500);
   }, []);
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -395,9 +395,6 @@ const AdminMovies = () => {
     }
   };
 
-  if (loading) return <p>Loading movies...</p>;
-  if (error) return <p className="text-red-500">Error: {error}</p>;
-
   const handleFormSubmit = async (movieData: MovieFormData) => {
     try {
       let updatedMovies: movie[];
@@ -437,44 +434,46 @@ const AdminMovies = () => {
   };
   
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ position: 'relative', padding: '20px',  }}>
+    <div style={{ position: 'absolute', top: 0, left: 0 }}>
       <BackArrow />
-  
+      </div>
       {error ? (
         <div>
           <p className="text-red-600 mt-4">{error}</p>
         </div>
       ) : (
         <>
-          <h1>Movies Admin</h1>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAdd}
-            style={{ marginBottom: '20px' }}
-          >
-            Add New Movie
-          </Button>
-          <TextField
-            label="Search by title, director, cast..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            fullWidth
-            margin="normal"
-          />
-  
-          {isSearching && (
-            <Button
-              onClick={() => setSearchQuery('')}
-              variant="outlined"
-              size="small"
-              style={{ marginTop: '8px', marginBottom: '16px' }}
-            >
-              Clear Search
-            </Button>
-          )}
-  
-          <TableContainer component={Paper}>
+                      <div style={{ marginBottom: '20px' }}>
+              <h1>Movies Admin</h1>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAdd}
+                style={{ marginBottom: '10px' }}
+              >
+                Add New Movie
+              </Button>
+              <TextField
+                label="Search by title, director, cast..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                fullWidth
+                margin="normal"
+              />
+              {isSearching && (
+                <Button
+                  onClick={() => setSearchQuery('')}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginTop: '8px' }}
+                >
+                  Clear Search
+                </Button>
+              )}
+            </div>
+
+          <TableContainer component={Paper} style={{ width: '1000px', overflowX: 'auto' }}>
             <Table>
               <TableHead>
                 <TableRow>

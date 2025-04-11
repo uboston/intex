@@ -1,4 +1,4 @@
-/* Admin Movies Page Styling */
+/* Admin Movies Page Styling 
 .admin-page {
     background: linear-gradient(135deg, #000000, #424242);
     min-height: 100vh;
@@ -50,7 +50,7 @@
     color: #fff;
   }
   
-  /* MUI Table Styling Override */
+  
   .MuiPaper-root {
     background-color: rgba(30, 30, 30, 0.95) !important;
     color: #fff;
@@ -92,7 +92,7 @@
     background-color: rgba(244, 67, 54, 0.1);
   }
   
-  /* Dialog Styling */
+  
   .MuiDialog-paper {
     background-color: #1c1c1c !important;
     color: #fff;
@@ -118,9 +118,13 @@
     background-color: #fd1c27 !important;
   }
   
-  /* Pagination override if needed */
+
   .pagination-container {
     margin-top: 2rem;
     color: #fff;
   }
-  
+.admin-page {
+  background: linear-gradient(135deg, #000000, #918787);
+  transition: background 0.3s ease-in-out;
+
+} */
